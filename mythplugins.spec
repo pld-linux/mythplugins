@@ -1,0 +1,447 @@
+Summary:	Main MythTV plugins.
+Name:		mythplugins
+Version:	0.18.1
+Release:	0.112
+License:	GPL2
+Group:		Applications/Multimedia
+URL:		http://www.mythtv.org/
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
+###
+#Patch1:	mythmusic-0.18-fftw2singleprec.patch
+#Patch2:	mythmusic-0.12-cdda.patch
+#Patch10:	mythvideo-0.16-math.patch
+BuildRequires:	XFree86-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	libmyth-devel
+### mythmusic
+BuildRequires:	/usr/include/GL/gl.h
+BuildRequires:	SDL-devel
+BuildRequires:	XFree86-devel
+BuildRequires:	cdparanoia-devel
+BuildRequires:	faad2-devel
+BuildRequires:	fftw2-devel < 3
+BuildRequires:	fftw2-devel >= 2.1.3
+BuildRequires:	flac-devel >= 1.0.4
+BuildRequires:	libcdaudio-devel >= 0.99.6
+BuildRequires:	libid3tag-devel
+BuildRequires:	libmad-devel
+BuildRequires:	libvorbis-devel >= 1.0
+### mythgallery
+BuildRequires:	/usr/include/GL/gl.h
+BuildRequires:	libexif-devel
+BuildRequires:	libtiff-devel
+### mythgame
+BuildRequires:	zlib-devel
+### mythdvd
+BuildRequires:	libdvdread-devel >= 0.9.4
+BuildRequires:	nasm
+# nasm >= 0.98.36
+BuildRequires:	a52dec-devel
+BuildRequires:	libdvdcss-devel >= 1.2.7
+BuildRequires:	libfame-devel >= 0.9.0
+BuildRequires:	mjpegtools-devel >= 1.6.1
+BuildRequires:	transcode >= 0.6.8
+BuildRequires:	xvidcore-devel >= 0.9.1
+# For <= RH8.0
+BuildRequires:	freetype-devel
+### mythbrowser
+BuildRequires:	XFree86-devel
+BuildRequires:	kdelibs-devel
+BuildRequires:	libmyth-devel >= %{epoch}:%{version}-%{release}
+### mythphone
+#BuildRequires: festival-devel
+BuildRequires:	libmyth-devel >= %{epoch}:%{version}-%{release}
+BuildRequires:	libtermcap-devel
+Requires:	mythbrowser >= %{epoch}:%{version}-%{release}
+Requires:	mythdvd >= %{epoch}:%{version}-%{release}
+Requires:	mythgallery >= %{epoch}:%{version}-%{release}
+Requires:	mythgame >= %{epoch}:%{version}-%{release}
+Requires:	mythmusic >= %{epoch}:%{version}-%{release}
+Requires:	mythnews >= %{epoch}:%{version}-%{release}
+Requires:	mythphone >= %{epoch}:%{version}-%{release}
+Requires:	mythvideo >= %{epoch}:%{version}-%{release}
+Requires:	mythweather >= %{epoch}:%{version}-%{release}
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%description
+This is a consolidation of all the official MythTV plugins that used
+to be distributed as separate downloads from mythtv.org.
+
+%package -n mythmusic
+Summary:	The music player add-on module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythmusic
+Music add-on for mythtv.
+
+%package -n mythvideo
+Summary:	A generic video player frontend module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mplayer
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythvideo
+A generic video player frontend module for MythTV.
+
+%package -n mythweather
+Summary:	A MythTV module that displays a weather forcast.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythweather
+A MythTV module that displays a weather forcast.
+
+%package -n mythgallery
+Summary:	A gallery/slideshow module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythgallery
+A gallery/slideshow module for MythTV.
+
+%package -n mythgame
+Summary:	A game frontend (xmame, nes, snes, pc) for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythgame
+A game frontend (xmame, nes, snes, pc) for MythTV.
+
+%package -n mythdvd
+Summary:	A DVD player module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	transcode >= 0.6.8
+
+%description -n mythdvd
+MythDVD is a MythTV module that allows you to play DVD's on a myth-box
+and (optionally) rip DVD's and transcode their video and audio content
+to other (generally smaller) formats. The playing features are simply
+myth-style wrappers for your favourite DVD playing software (mplayer,
+ogle, xine, etc). The transcoding is based on and derived from the
+excellent transcode package.
+
+%package -n mythnews
+Summary:	A RSS News Feed Plugin for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythnews
+
+%package -n mythbrowser
+Summary:	A small web browser module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythbrowser
+MythBrowser is a full fledged web-browser (multiple tabs) to display
+webpages in full-screen mode. Simple page navigation is possible.
+Starting with version 0.13 it also has full support for mouse driven
+navigation (right mouse opens and clos es the popup menu).
+
+MythBrowser also contains a BookmarkManager to manage the website
+links in a simple mythplugin.
+
+%package -n mythphone
+Summary:	A video conferencing module for MythTV.
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+
+%description -n mythphone
+Mythphone is a phone and videophone capability on MYTH using the
+standard SIP protocol. It is compatible with Microsoft XP Messenger
+and with SIP Service Providers such as Free World Dialup
+(fwd.pulver.com).
+
+%prep
+%setup -q
+#patch0 -p1 -b .cvsfixes
+
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+
+echo "include ( %{_datadir}/mythtv/build/settings.pro )" >> settings.pro
+
+%ifnarch %{ix86}
+cat >> settings.pro << EOF
+DEFINES -= HAVE_MMX
+EOF
+%endif
+
+
+%patch1 -p0 -b .sfftw
+cd mythmusic
+%patch2 -p0 -b .cdda
+
+
+# Fix /lib/ -> %%{_lib}
+grep -rl /lib/ . | xargs perl -pi -e's|/lib/|/%{_lib}/|g'
+
+# Fix /mnt/store -> /var/lib/mythmusic
+perl -pi -e's|/mnt/store/music|%{_varlibdir}/mythmusic|' mythmusic/globalsettings.cpp
+
+## Fix buggy flac assert.h
+#echo '#include "/usr/include/assert.h"' > mythmusic/assert.h
+
+cd ..
+cd mythvideo
+%patch10 -p0 -b .math
+
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+# Fix /mnt/store -> /var/lib/mythmusic
+perl -pi -e's|/share/Movies/dvd|%{_varlibdir}/mythvideo|' mythvideo/globalsettings.cpp
+
+cd ..
+cd mythweather
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+cd ..
+cd mythgallery
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cd ..
+cd mythgame
+#FIXME
+#patch20 -p1 -b .paths
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cd ..
+cd mythdvd
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cd ..
+cd mythnews
+#patch30 -p0 -b .toTime
+# Fix /usr/local -> %{_prefix}
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cd ..
+cd mythbrowser
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cd ..
+cd mythphone
+#patch40 -p0
+grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
+find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+
+cat >> ../settings.pro << EOF
+INCLUDEPATH += %{_includedir}/mythtv
+#INCLUDEPATH += %{_includedir}/festival
+INCLUDEPATH += %{_includedir}/speech_tools
+EOF
+cd ..
+
+%build
+./configure --enable-all --disable-festival
+qmake mythplugins.pro
+%{__make}
+#cd mythbrowser
+#qmake mythbrowser.pro
+#cd ..
+#make -C mythbrowser
+
+%install
+rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
+%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
+%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT -C mythbrowser
+
+install -d $RPM_BUILD_ROOT%{_varlibdir}/mythmusic
+install -d $RPM_BUILD_ROOT%{_varlibdir}/mythvideo
+install -d $RPM_BUILD_ROOT%{_varlibdir}/pictures
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
+#mkdir -p %{buildroot}%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
+install -d $RPM_BUILD_ROOT%{_datadir}/xmame
+ln -s %{_datadir}/xmame $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame
+install -d $RPM_BUILD_ROOT%{_datadir}/xmame/flyers
+ln -s snap $RPM_BUILD_ROOT%{_datadir}/xmame/screens
+
+cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/
+
+%clean
+rm -rf %{_buildroot}
+
+
+%files
+%defattr(644,root,root,755)
+%doc COPYING
+
+%files -n mythmusic
+%defattr(644,root,root,755)
+%doc mythmusic/README mythmusic/UPGRADING mythmusic/COPYING mythmusic/AUTHORS mythmusic/musicdb
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
+%{_varlibdir}/mythmusic
+%{_datadir}/mythtv/musicmenu.xml
+%{_datadir}/mythtv/music_settings.xml
+%{_datadir}/mythtv/i18n/mythmusic_*.qm
+%{_datadir}/mythtv/themes/default/ff_button_off.png
+%{_datadir}/mythtv/themes/default/ff_button_on.png
+%{_datadir}/mythtv/themes/default/ff_button_pushed.png
+%{_datadir}/mythtv/themes/default/mm_blackhole_border.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_off.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_on.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_pushed.png
+%{_datadir}/mythtv/themes/default/mm_checked.png
+%{_datadir}/mythtv/themes/default/mm_checked_high.png
+%{_datadir}/mythtv/themes/default/mm_down_arrow.png
+%{_datadir}/mythtv/themes/default/mm_left_arrow.png
+%{_datadir}/mythtv/themes/default/mm_leftright_off.png
+%{_datadir}/mythtv/themes/default/mm_leftright_on.png
+%{_datadir}/mythtv/themes/default/mm_leftright_pushed.png
+%{_datadir}/mythtv/themes/default/mm_rating.png
+%{_datadir}/mythtv/themes/default/mm_right_arrow.png
+%{_datadir}/mythtv/themes/default/mm_unchecked.png
+%{_datadir}/mythtv/themes/default/mm_unchecked_high.png
+%{_datadir}/mythtv/themes/default/mm_up_arrow.png
+%{_datadir}/mythtv/themes/default/mm_volume_background.png
+%{_datadir}/mythtv/themes/default/mm_volume_tick.png
+%{_datadir}/mythtv/themes/default/mm_waiting.png
+%{_datadir}/mythtv/themes/default/music-sel-bg.png
+%{_datadir}/mythtv/themes/default/music-ui.xml
+%{_datadir}/mythtv/themes/default/next_button_off.png
+%{_datadir}/mythtv/themes/default/next_button_on.png
+%{_datadir}/mythtv/themes/default/next_button_pushed.png
+%{_datadir}/mythtv/themes/default/pause_button_off.png
+%{_datadir}/mythtv/themes/default/pause_button_on.png
+%{_datadir}/mythtv/themes/default/pause_button_pushed.png
+%{_datadir}/mythtv/themes/default/play_button_off.png
+%{_datadir}/mythtv/themes/default/play_button_on.png
+%{_datadir}/mythtv/themes/default/play_button_pushed.png
+%{_datadir}/mythtv/themes/default/prev_button_off.png
+%{_datadir}/mythtv/themes/default/prev_button_on.png
+%{_datadir}/mythtv/themes/default/prev_button_pushed.png
+%{_datadir}/mythtv/themes/default/rew_button_off.png
+%{_datadir}/mythtv/themes/default/rew_button_on.png
+%{_datadir}/mythtv/themes/default/rew_button_pushed.png
+%{_datadir}/mythtv/themes/default/selectionbar.png
+%{_datadir}/mythtv/themes/default/stop_button_off.png
+%{_datadir}/mythtv/themes/default/stop_button_on.png
+%{_datadir}/mythtv/themes/default/stop_button_pushed.png
+%{_datadir}/mythtv/themes/default/text_button_off.png
+%{_datadir}/mythtv/themes/default/text_button_on.png
+%{_datadir}/mythtv/themes/default/text_button_pushed.png
+%{_datadir}/mythtv/themes/default/track_info_background.png
+
+%files -n mythvideo
+%defattr(644,root,root,755)
+%doc mythvideo/README mythvideo/UPGRADING mythvideo/COPYING mythvideo/videodb
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
+%{_datadir}/mythtv/i18n/mythvideo_*.qm
+%{_datadir}/mythtv/themes/default/video-ui.xml
+%{_datadir}/mythtv/themes/default/mv-*.png
+%{_datadir}/mythtv/themes/default/mv_*.png
+%{_datadir}/mythtv/video_settings.xml
+%{_datadir}/mythtv/videomenu.xml
+%{_datadir}/mythtv/mythvideo/scripts/README
+%{_datadir}/mythtv/mythvideo/scripts/imdb.pl
+%{_datadir}/mythtv/mythvideo/scripts/allocine.pl
+%{_varlibdir}/mythvideo
+
+%files -n mythweather
+%defattr(644,root,root,755)
+%doc mythweather/README mythweather/COPYING
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
+%{_datadir}/mythtv/i18n/mythweather_*.qm
+%{_datadir}/mythtv/mythweather
+%{_datadir}/mythtv/themes/default/weather-ui.xml
+%{_datadir}/mythtv/themes/default/cloudy.png
+%{_datadir}/mythtv/themes/default/fair.png
+%{_datadir}/mythtv/themes/default/flurries.png
+%{_datadir}/mythtv/themes/default/fog.png
+%{_datadir}/mythtv/themes/default/logo.png
+%{_datadir}/mythtv/themes/default/lshowers.png
+%{_datadir}/mythtv/themes/default/mcloudy.png
+%{_datadir}/mythtv/themes/default/mw-*.png
+%{_datadir}/mythtv/themes/default/mwmain.png
+%{_datadir}/mythtv/themes/default/pcloudy.png
+%{_datadir}/mythtv/themes/default/rainsnow.png
+%{_datadir}/mythtv/themes/default/showers.png
+%{_datadir}/mythtv/themes/default/snowshow.png
+%{_datadir}/mythtv/themes/default/sunny.png
+%{_datadir}/mythtv/themes/default/thunshowers.png
+%{_datadir}/mythtv/themes/default/unknown.png
+
+%files -n mythgallery
+%defattr(644,root,root,755)
+%doc mythgallery/README mythgallery/UPGRADING mythgallery/COPYING
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
+%{_datadir}/mythtv/themes/default/gallery-ui.xml
+%{_datadir}/mythtv/themes/default/gallery-*.png
+%{_datadir}/mythtv/i18n/mythgallery_*.qm
+%{_varlibdir}/pictures
+
+%files -n mythgame
+%defattr(644,root,root,755)
+%doc mythgame/README mythgame/UPGRADING
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
+%{_datadir}/mythtv/games
+%config %{_datadir}/mythtv/games/PC/gamelist.xml
+%{_datadir}/xmame/screens
+%{_datadir}/xmame/flyers
+%{_datadir}/mythtv/game_settings.xml
+%{_datadir}/mythtv/themes/default/game-ui.xml
+%{_datadir}/mythtv/i18n/mythgame_*.qm
+
+%files -n mythdvd
+%defattr(644,root,root,755)
+%doc mythdvd/README mythdvd/UPGRADING mythdvd/COPYING mythdvd/AUTHORS
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
+%{_datadir}/mythtv/dvd_settings.xml
+%{_datadir}/mythtv/dvdmenu.xml
+%{_datadir}/mythtv/themes/default/dvd-ui.xml
+%{_datadir}/mythtv/themes/default/md_*.png
+%{_datadir}/mythtv/i18n/mythdvd_*.qm
+%attr(755,root,root) %{_bindir}/mtd
+
+%files -n mythnews
+%defattr(644,root,root,755)
+%doc mythnews/README mythnews/AUTHORS mythnews/COPYING
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
+%{_datadir}/mythtv/mythnews
+%{_datadir}/mythtv/themes/default/news-ui.xml
+%{_datadir}/mythtv/themes/default/news-info-bg.png
+%{_datadir}/mythtv/i18n/mythnews_*.qm
+
+%files -n mythbrowser
+%defattr(644,root,root,755)
+%doc mythbrowser/README mythbrowser/COPYING mythbrowser/AUTHORS
+%attr(755,root,root) %{_bindir}/mythbrowser
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
+%{_datadir}/mythtv/themes/default/webpage.png
+%{_datadir}/mythtv/i18n/mythbrowser_*.qm
+
+%files -n mythphone
+%defattr(644,root,root,755)
+%doc mythphone/README mythphone/COPYING mythphone/AUTHORS mythphone/TODO
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythphone.so
+%{_datadir}/mythtv/themes/default/phone-ui.xml
+%{_datadir}/mythtv/themes/default/webcam-ui.xml
+%{_datadir}/mythtv/themes/default/mp_*.png
+%{_datadir}/mythtv/themes/default/phone.png
+%{_datadir}/mythtv/i18n/mythphone_*.qm
