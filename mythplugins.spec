@@ -29,7 +29,7 @@ BuildRequires:	libexif-devel
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel >= 0:%{version}
+BuildRequires:	libmyth-devel >= 0.18.1-0.21
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1.0
