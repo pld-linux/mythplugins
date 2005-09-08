@@ -4,7 +4,7 @@
 Summary:	Main MythTV plugins.
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112
+Release:	0.112.2
 License:	GPL v2
 Group:		Applications/Multimedia
 URL:		http://www.mythtv.org/
@@ -12,7 +12,7 @@ Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 ###
 Patch0:		%{name}-configure.patch
-#Patch1:		mythmusic-0.18-fftw2singleprec.patch
+#Patch1:	mythmusic-0.18-fftw2singleprec.patch
 #Patch2:	mythmusic-0.12-cdda.patch
 #Patch10:	mythvideo-0.16-math.patch
 BuildRequires:	SDL-devel
@@ -46,10 +46,10 @@ Requires:	mythbrowser
 Requires:	mythdvd
 Requires:	mythgallery
 Requires:	mythgame
-Requires:	mythmusic
+%{?with_mythmusic:Requires:	mythmusic}
 Requires:	mythnews
 %{?with_mythphone:Requires:	mythphone}
-%{?with_mythvideo:Requires:	mythvideo}
+Requires:	mythvideo
 Requires:	mythweather
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -284,7 +284,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mythmusic}
 %files -n mythmusic
 %defattr(644,root,root,755)
-%doc mythmusic/README mythmusic/UPGRADING mythmusic/COPYING mythmusic/AUTHORS mythmusic/musicdb
+%doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
 /var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
@@ -341,7 +341,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythvideo
 %defattr(644,root,root,755)
-%doc mythvideo/README mythvideo/UPGRADING mythvideo/COPYING mythvideo/videodb
+%doc mythvideo/README mythvideo/UPGRADING mythvideo/videodb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
 %{_datadir}/mythtv/i18n/mythvideo_*.qm
 %{_datadir}/mythtv/themes/default/video-ui.xml
@@ -356,7 +356,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythweather
 %defattr(644,root,root,755)
-%doc mythweather/README mythweather/COPYING
+%doc mythweather/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
 %{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/mythweather
@@ -380,7 +380,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythgallery
 %defattr(644,root,root,755)
-%doc mythgallery/README mythgallery/UPGRADING mythgallery/COPYING
+%doc mythgallery/README mythgallery/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
@@ -401,7 +401,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythdvd
 %defattr(644,root,root,755)
-%doc mythdvd/README mythdvd/UPGRADING mythdvd/COPYING mythdvd/AUTHORS
+%doc mythdvd/README mythdvd/UPGRADING mythdvd/AUTHORS
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
 %{_datadir}/mythtv/dvd_settings.xml
 %{_datadir}/mythtv/dvdmenu.xml
@@ -412,7 +412,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythnews
 %defattr(644,root,root,755)
-%doc mythnews/README mythnews/AUTHORS mythnews/COPYING
+%doc mythnews/README mythnews/AUTHOR
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
@@ -421,7 +421,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythbrowser
 %defattr(644,root,root,755)
-%doc mythbrowser/README mythbrowser/COPYING mythbrowser/AUTHORS
+%doc mythbrowser/README mythbrowser/AUTHORS
 %attr(755,root,root) %{_bindir}/mythbrowser
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
 %{_datadir}/mythtv/themes/default/webpage.png
@@ -430,7 +430,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mythphone}
 %files -n mythphone
 %defattr(644,root,root,755)
-%doc mythphone/README mythphone/COPYING mythphone/AUTHORS mythphone/TODO
+%doc mythphone/README mythphone/AUTHORS mythphone/TODO
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythphone.so
 %{_datadir}/mythtv/themes/default/phone-ui.xml
 %{_datadir}/mythtv/themes/default/webcam-ui.xml
