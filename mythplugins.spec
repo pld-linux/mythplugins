@@ -2,67 +2,54 @@ Summary:	Main MythTV plugins.
 Name:		mythplugins
 Version:	0.18.1
 Release:	0.112
-License:	GPL2
+License:	GPL v2
 Group:		Applications/Multimedia
 URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 ###
-#Patch1:	mythmusic-0.18-fftw2singleprec.patch
+Patch1:	mythmusic-0.18-fftw2singleprec.patch
 #Patch2:	mythmusic-0.12-cdda.patch
 #Patch10:	mythvideo-0.16-math.patch
-BuildRequires:	XFree86-devel
-BuildRequires:	libstdc++-devel
-BuildRequires:	libmyth-devel
-### mythmusic
-BuildRequires:	/usr/include/GL/gl.h
 BuildRequires:	SDL-devel
+BuildRequires:	X11-OpenGL-devel
 BuildRequires:	XFree86-devel
-BuildRequires:	cdparanoia-devel
-BuildRequires:	faad2-devel
-BuildRequires:	fftw2-devel < 3
-BuildRequires:	fftw2-devel >= 2.1.3
+BuildRequires:	a52dec-libs-devel
+BuildRequires:	cdparanoia-III-devel
+BuildRequires:	faad2-devel >= 2.0-5.2
+BuildRequires:	fftw-devel >= 2.1.3
 BuildRequires:	flac-devel >= 1.0.4
-BuildRequires:	libcdaudio-devel >= 0.99.6
+BuildRequires:	freetype-devel
+BuildRequires:	kdelibs-devel
+BuildRequires:	libcdaudio-devel
+BuildRequires:	libdvdcss-devel >= 1.2.7
+BuildRequires:	libdvdread-devel >= 0.9.4
+BuildRequires:	libexif-devel
+BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libvorbis-devel >= 1.0
-### mythgallery
-BuildRequires:	/usr/include/GL/gl.h
-BuildRequires:	libexif-devel
+BuildRequires:	libmyth-devel >= 0:%{version}
+BuildRequires:	libstdc++-devel
+#BuildRequires:	libtermcap-devel
 BuildRequires:	libtiff-devel
-### mythgame
-BuildRequires:	zlib-devel
-### mythdvd
-BuildRequires:	libdvdread-devel >= 0.9.4
-BuildRequires:	nasm
-# nasm >= 0.98.36
-BuildRequires:	a52dec-devel
-BuildRequires:	libdvdcss-devel >= 1.2.7
-BuildRequires:	libfame-devel >= 0.9.0
+BuildRequires:	libvorbis-devel >= 1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
+BuildRequires:	nasm
 BuildRequires:	transcode >= 0.6.8
-BuildRequires:	xvidcore-devel >= 0.9.1
-# For <= RH8.0
-BuildRequires:	freetype-devel
-### mythbrowser
-BuildRequires:	XFree86-devel
-BuildRequires:	kdelibs-devel
-BuildRequires:	libmyth-devel >= %{epoch}:%{version}-%{release}
-### mythphone
-#BuildRequires: festival-devel
-BuildRequires:	libmyth-devel >= %{epoch}:%{version}-%{release}
-BuildRequires:	libtermcap-devel
-Requires:	mythbrowser >= %{epoch}:%{version}-%{release}
-Requires:	mythdvd >= %{epoch}:%{version}-%{release}
-Requires:	mythgallery >= %{epoch}:%{version}-%{release}
-Requires:	mythgame >= %{epoch}:%{version}-%{release}
-Requires:	mythmusic >= %{epoch}:%{version}-%{release}
-Requires:	mythnews >= %{epoch}:%{version}-%{release}
-Requires:	mythphone >= %{epoch}:%{version}-%{release}
-Requires:	mythvideo >= %{epoch}:%{version}-%{release}
-Requires:	mythweather >= %{epoch}:%{version}-%{release}
+BuildRequires:	xvid-devel >= 1:0.9.1
+BuildRequires:	zlib-devel
+Requires:	mythbrowser
+Requires:	mythdvd
+Requires:	mythgallery
+Requires:	mythgame
+Requires:	mythmusic
+Requires:	mythnews
+Requires:	mythphone
+Requires:	mythvideo
+Requires:	mythweather
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		api_ver %(echo %{version} | cut -d. -f1,2)
 
 %description
 This is a consolidation of all the official MythTV plugins that used
@@ -71,7 +58,7 @@ to be distributed as separate downloads from mythtv.org.
 %package -n mythmusic
 Summary:	The music player add-on module for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythmusic
 Music add-on for mythtv.
@@ -80,7 +67,7 @@ Music add-on for mythtv.
 Summary:	A generic video player frontend module for MythTV.
 Group:		Applications/Multimedia
 Requires:	mplayer
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythvideo
 A generic video player frontend module for MythTV.
@@ -88,7 +75,7 @@ A generic video player frontend module for MythTV.
 %package -n mythweather
 Summary:	A MythTV module that displays a weather forcast.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
@@ -96,7 +83,7 @@ A MythTV module that displays a weather forcast.
 %package -n mythgallery
 Summary:	A gallery/slideshow module for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
@@ -104,7 +91,7 @@ A gallery/slideshow module for MythTV.
 %package -n mythgame
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
@@ -112,7 +99,7 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 %package -n mythdvd
 Summary:	A DVD player module for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 Requires:	transcode >= 0.6.8
 
 %description -n mythdvd
@@ -126,14 +113,14 @@ excellent transcode package.
 %package -n mythnews
 Summary:	A RSS News Feed Plugin for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythnews
 
 %package -n mythbrowser
 Summary:	A small web browser module for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythbrowser
 MythBrowser is a full fledged web-browser (multiple tabs) to display
@@ -147,7 +134,7 @@ links in a simple mythplugin.
 %package -n mythphone
 Summary:	A video conferencing module for MythTV.
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %(echo %{epoch}:%{version}-%{release} | awk -F. '{print $1 "." $2}')
+Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythphone
 Mythphone is a phone and videophone capability on MYTH using the
@@ -157,106 +144,106 @@ and with SIP Service Providers such as Free World Dialup
 
 %prep
 %setup -q
-#patch0 -p1 -b .cvsfixes
 
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+# lib64 fix
+find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
+	xargs grep -l /lib/ . | xargs sed -i -e 's,/lib/,/%{_lib}/,g'
 
-echo "include ( %{_datadir}/mythtv/build/settings.pro )" >> settings.pro
+#grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
 
-%ifnarch %{ix86}
-cat >> settings.pro << EOF
-DEFINES -= HAVE_MMX
-EOF
-%endif
+# include mythtv build settings
+cp %{_datadir}/mythtv/build/config.mak .
+sed -i -e '1iinclude(config.mak)'  settings.pro
+#sed -i -e '1iinclude(%{_datadir}/mythtv/build/settings.pro)'  settings.pro
+exit 0
+
+#%ifnarch %{ix86}
+#cat >> settings.pro << EOF
+#DEFINES -= HAVE_MMX
+#EOF
+#%endif
 
 
 %patch1 -p0 -b .sfftw
 cd mythmusic
-%patch2 -p0 -b .cdda
+#%patch2 -p0 -b .cdda
 
-
-# Fix /lib/ -> %%{_lib}
-grep -rl /lib/ . | xargs perl -pi -e's|/lib/|/%{_lib}/|g'
 
 # Fix /mnt/store -> /var/lib/mythmusic
 perl -pi -e's|/mnt/store/music|%{_varlibdir}/mythmusic|' mythmusic/globalsettings.cpp
 
-## Fix buggy flac assert.h
-#echo '#include "/usr/include/assert.h"' > mythmusic/assert.h
-
 cd ..
 cd mythvideo
-%patch10 -p0 -b .math
+#%patch10 -p0 -b .math
 
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
+#find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 # Fix /mnt/store -> /var/lib/mythmusic
 perl -pi -e's|/share/Movies/dvd|%{_varlibdir}/mythvideo|' mythvideo/globalsettings.cpp
 
 cd ..
 cd mythweather
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 cd ..
 cd mythgallery
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cd ..
 cd mythgame
 #FIXME
 #patch20 -p1 -b .paths
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cd ..
 cd mythdvd
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cd ..
 cd mythnews
 #patch30 -p0 -b .toTime
-# Fix /usr/local -> %{_prefix}
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cd ..
 cd mythbrowser
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cd ..
 cd mythphone
 #patch40 -p0
-grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
-find . -type f | xargs grep -l /lib/mythtv/ | xargs perl -pi -e's,/lib/mythtv/,/%{_lib}/mythtv/,'
 find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 cat >> ../settings.pro << EOF
 INCLUDEPATH += %{_includedir}/mythtv
-#INCLUDEPATH += %{_includedir}/festival
 INCLUDEPATH += %{_includedir}/speech_tools
 EOF
 cd ..
 
 %build
-./configure --enable-all --disable-festival
+export QTDIR="%{_prefix}"
+# not gnu configure
+%configure \
+	--enable-all \
+	--disable-festival \
+	--disable-mythmusic \
+	--disable-mythphone
+
+# disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
+
+#	--enable-all             Enable all options
+#	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
+#
+#	--enable-transcode       enable DVD ripping and transcoding [default=no]
+#	--enable-vcd             enable VCD playing [default=no]
+#
+#	--enable-exif            enable reading of EXIF headers [default=no]
+#
+#	--enable-fftw            enable fftw visualizers [default=no]
+#	--enable-sdl             use SDL for the synaesthesia output [default=no]
+#	--enable-aac             enable AAC/MP4 audio file decompression [default=no]
+#
+#	--enable-festival        enable festival TTS Engine [default=no]
+
+
 qmake mythplugins.pro
 %{__make}
 #cd mythbrowser
@@ -265,7 +252,6 @@ qmake mythplugins.pro
 #make -C mythbrowser
 
 %install
-rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 %{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
 %{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT -C mythbrowser
@@ -285,12 +271,10 @@ ln -s snap $RPM_BUILD_ROOT%{_datadir}/xmame/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/
 
 %clean
-rm -rf %{_buildroot}
-
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc COPYING
 
 %files -n mythmusic
 %defattr(644,root,root,755)
