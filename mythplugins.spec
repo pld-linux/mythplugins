@@ -1,3 +1,6 @@
+# disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
+%bcond_with	mythmusic
+%bcond_with mythphone
 Summary:	Main MythTV plugins.
 Name:		mythplugins
 Version:	0.18.1
@@ -8,7 +11,8 @@ URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 ###
-Patch1:	mythmusic-0.18-fftw2singleprec.patch
+Patch0:		%{name}-configure.patch
+#Patch1:		mythmusic-0.18-fftw2singleprec.patch
 #Patch2:	mythmusic-0.12-cdda.patch
 #Patch10:	mythvideo-0.16-math.patch
 BuildRequires:	SDL-devel
@@ -44,8 +48,8 @@ Requires:	mythgallery
 Requires:	mythgame
 Requires:	mythmusic
 Requires:	mythnews
-Requires:	mythphone
-Requires:	mythvideo
+%{?with_mythphone:Requires:	mythphone}
+%{?with_mythvideo:Requires:	mythvideo}
 Requires:	mythweather
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -144,6 +148,7 @@ and with SIP Service Providers such as Free World Dialup
 
 %prep
 %setup -q
+%patch0 -p1
 
 # lib64 fix
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
@@ -164,13 +169,13 @@ exit 0
 #%endif
 
 
-%patch1 -p0 -b .sfftw
+#%patch1 -p0 -b .sfftw
 cd mythmusic
 #%patch2 -p0 -b .cdda
 
 
 # Fix /mnt/store -> /var/lib/mythmusic
-perl -pi -e's|/mnt/store/music|%{_varlibdir}/mythmusic|' mythmusic/globalsettings.cpp
+perl -pi -e's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/globalsettings.cpp
 
 cd ..
 cd mythvideo
@@ -179,7 +184,7 @@ cd mythvideo
 #find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
 
 # Fix /mnt/store -> /var/lib/mythmusic
-perl -pi -e's|/share/Movies/dvd|%{_varlibdir}/mythvideo|' mythvideo/globalsettings.cpp
+perl -pi -e's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/globalsettings.cpp
 
 cd ..
 cd mythweather
@@ -224,10 +229,8 @@ export QTDIR="%{_prefix}"
 %configure \
 	--enable-all \
 	--disable-festival \
-	--disable-mythmusic \
-	--disable-mythphone
-
-# disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
+	%{!?with_mythmusic:--disable-mythmusic} \
+	%{!?with_mythphone:--disable-mythphone}
 
 #	--enable-all             Enable all options
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
@@ -253,15 +256,17 @@ qmake mythplugins.pro
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
-%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT -C mythbrowser
 
-install -d $RPM_BUILD_ROOT%{_varlibdir}/mythmusic
-install -d $RPM_BUILD_ROOT%{_varlibdir}/mythvideo
-install -d $RPM_BUILD_ROOT%{_varlibdir}/pictures
+export QTDIR="%{_prefix}"
+%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
+#%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT -C mythbrowser
+
+install -d $RPM_BUILD_ROOT/var/lib/mythmusic
+install -d $RPM_BUILD_ROOT/var/lib/mythvideo
+install -d $RPM_BUILD_ROOT/var/lib/pictures
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
-#mkdir -p %{buildroot}%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
+#install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 install -d $RPM_BUILD_ROOT%{_datadir}/xmame
 ln -s %{_datadir}/xmame $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame
@@ -276,11 +281,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 
+%if %{with mythmusic}
 %files -n mythmusic
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/COPYING mythmusic/AUTHORS mythmusic/musicdb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
-%{_varlibdir}/mythmusic
+/var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
@@ -331,6 +337,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/text_button_on.png
 %{_datadir}/mythtv/themes/default/text_button_pushed.png
 %{_datadir}/mythtv/themes/default/track_info_background.png
+%endif
 
 %files -n mythvideo
 %defattr(644,root,root,755)
@@ -345,7 +352,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/mythvideo/scripts/README
 %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
 %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
-%{_varlibdir}/mythvideo
+/var/lib/mythvideo
 
 %files -n mythweather
 %defattr(644,root,root,755)
@@ -378,14 +385,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
-%{_varlibdir}/pictures
+/var/lib/pictures
 
 %files -n mythgame
 %defattr(644,root,root,755)
 %doc mythgame/README mythgame/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
-%config %{_datadir}/mythtv/games/PC/gamelist.xml
+#%config %{_datadir}/mythtv/games/PC/gamelist.xml
 %{_datadir}/xmame/screens
 %{_datadir}/xmame/flyers
 %{_datadir}/mythtv/game_settings.xml
@@ -420,6 +427,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/webpage.png
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 
+%if %{with mythphone}
 %files -n mythphone
 %defattr(644,root,root,755)
 %doc mythphone/README mythphone/COPYING mythphone/AUTHORS mythphone/TODO
@@ -429,3 +437,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
 %{_datadir}/mythtv/i18n/mythphone_*.qm
+%endif
