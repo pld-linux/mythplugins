@@ -1,20 +1,17 @@
 # disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
 %bcond_with	mythmusic
 %bcond_with mythphone
+#
 Summary:	Main MythTV plugins.
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.2
+Release:	0.112.3
 License:	GPL v2
 Group:		Applications/Multimedia
 URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
-###
 Patch0:		%{name}-configure.patch
-#Patch1:	mythmusic-0.18-fftw2singleprec.patch
-#Patch2:	mythmusic-0.12-cdda.patch
-#Patch10:	mythvideo-0.16-math.patch
 BuildRequires:	SDL-devel
 BuildRequires:	X11-OpenGL-devel
 BuildRequires:	XFree86-devel
@@ -34,7 +31,6 @@ BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
 BuildRequires:	libmyth-devel >= 0:%{version}
 BuildRequires:	libstdc++-devel
-#BuildRequires:	libtermcap-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
@@ -152,121 +148,51 @@ and with SIP Service Providers such as Free World Dialup
 
 # lib64 fix
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
-	xargs grep -l /lib/ . | xargs sed -i -e 's,/lib/,/%{_lib}/,g'
-
-#grep -rl %{_prefix}/local . | xargs perl -pi -e's|%{_prefix}/local|'%{_prefix}'|g'
+xargs grep -l /lib/ . | xargs sed -i -e '
+	s,/usr/lib/,/usr/%{_lib}/,g
+	s,{PREFIX}/lib,{PREFIX}/%{_lib}/,g
+'
 
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
 sed -i -e '1iinclude(config.mak)'  settings.pro
-#sed -i -e '1iinclude(%{_datadir}/mythtv/build/settings.pro)'  settings.pro
-exit 0
-
-#%ifnarch %{ix86}
-#cat >> settings.pro << EOF
-#DEFINES -= HAVE_MMX
-#EOF
-#%endif
-
-
-#%patch1 -p0 -b .sfftw
-cd mythmusic
-#%patch2 -p0 -b .cdda
-
 
 # Fix /mnt/store -> /var/lib/mythmusic
-perl -pi -e's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/globalsettings.cpp
-
-cd ..
-cd mythvideo
-#%patch10 -p0 -b .math
-
-#find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
+sed -i -e's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
 # Fix /mnt/store -> /var/lib/mythmusic
-perl -pi -e's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/globalsettings.cpp
-
-cd ..
-cd mythweather
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-cd ..
-cd mythgallery
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cd ..
-cd mythgame
-#FIXME
-#patch20 -p1 -b .paths
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cd ..
-cd mythdvd
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cd ..
-cd mythnews
-#patch30 -p0 -b .toTime
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cd ..
-cd mythbrowser
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cd ..
-cd mythphone
-#patch40 -p0
-find . -type f -name \*.pro | xargs grep -l /lib$ | xargs perl -pi -e's,/lib$,/%{_lib},'
-
-cat >> ../settings.pro << EOF
-INCLUDEPATH += %{_includedir}/mythtv
-INCLUDEPATH += %{_includedir}/speech_tools
-EOF
-cd ..
+sed -i -e's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
 
 %build
 export QTDIR="%{_prefix}"
-# not gnu configure
+# Not gnu configure
 %configure \
 	--enable-all \
 	--disable-festival \
 	%{!?with_mythmusic:--disable-mythmusic} \
 	%{!?with_mythphone:--disable-mythphone}
 
-#	--enable-all             Enable all options
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
-#
 #	--enable-transcode       enable DVD ripping and transcoding [default=no]
 #	--enable-vcd             enable VCD playing [default=no]
-#
 #	--enable-exif            enable reading of EXIF headers [default=no]
-#
 #	--enable-fftw            enable fftw visualizers [default=no]
 #	--enable-sdl             use SDL for the synaesthesia output [default=no]
 #	--enable-aac             enable AAC/MP4 audio file decompression [default=no]
-#
 #	--enable-festival        enable festival TTS Engine [default=no]
-
 
 qmake mythplugins.pro
 %{__make}
-#cd mythbrowser
-#qmake mythbrowser.pro
-#cd ..
-#make -C mythbrowser
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 export QTDIR="%{_prefix}"
 %{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
-#%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT -C mythbrowser
 
-install -d $RPM_BUILD_ROOT/var/lib/mythmusic
-install -d $RPM_BUILD_ROOT/var/lib/mythvideo
-install -d $RPM_BUILD_ROOT/var/lib/pictures
+install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
-#install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 install -d $RPM_BUILD_ROOT%{_datadir}/xmame
 ln -s %{_datadir}/xmame $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame
@@ -412,7 +338,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n mythnews
 %defattr(644,root,root,755)
-%doc mythnews/README mythnews/AUTHOR
+%doc mythnews/README mythnews/AUTHORS
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
