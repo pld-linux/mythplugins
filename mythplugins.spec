@@ -1,17 +1,20 @@
 # disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
-%bcond_with	mythmusic
-%bcond_with mythphone
+%bcond_without	mythmusic
+%bcond_without mythphone
 #
+%include	/usr/lib/rpm/macros.perl
 Summary:	Main MythTV plugins.
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.3
+Release:	0.112.9
 License:	GPL v2
 Group:		Applications/Multimedia
 URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 Patch0:		%{name}-configure.patch
+BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	sed >= 4.0
 BuildRequires:	SDL-devel
 BuildRequires:	X11-OpenGL-devel
 BuildRequires:	XFree86-devel
@@ -157,6 +160,11 @@ xargs grep -l /lib/ . | xargs sed -i -e '
 cp %{_datadir}/mythtv/build/config.mak .
 sed -i -e '1iinclude(config.mak)'  settings.pro
 
+%ifarch %{x8664}
+	# mmx asm isn't x86_64 compatible in mythmusic
+    echo 'DEFINES -= HAVE_MMX' >> settings.pro
+%endif
+
 # Fix /mnt/store -> /var/lib/mythmusic
 sed -i -e's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
 # Fix /mnt/store -> /var/lib/mythmusic
@@ -194,12 +202,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
-install -d $RPM_BUILD_ROOT%{_datadir}/xmame
-ln -s %{_datadir}/xmame $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame
-install -d $RPM_BUILD_ROOT%{_datadir}/xmame/flyers
-ln -s snap $RPM_BUILD_ROOT%{_datadir}/xmame/screens
-
-cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/
+cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -275,9 +278,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mv_*.png
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
+%dir %{_datadir}/mythtv/mythvideo
+%dir %{_datadir}/mythtv/mythvideo/scripts
 %{_datadir}/mythtv/mythvideo/scripts/README
-%{_datadir}/mythtv/mythvideo/scripts/imdb.pl
-%{_datadir}/mythtv/mythvideo/scripts/allocine.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
 /var/lib/mythvideo
 
 %files -n mythweather
@@ -319,8 +324,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 #%config %{_datadir}/mythtv/games/PC/gamelist.xml
-%{_datadir}/xmame/screens
-%{_datadir}/xmame/flyers
+#%{_datadir}/xmame/screens
+#%{_datadir}/xmame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
