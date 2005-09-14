@@ -156,6 +156,11 @@ xargs grep -l /lib/ . | xargs sed -i -e '
 	s,{PREFIX}/lib,{PREFIX}/%{_lib}/,g
 '
 
+sed -i -e 's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
+sed -i -e 's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
+sed -i -e 's|/mnt/cdrom:/mnt/camera|/media/cdrom:/mnt/camera|' mythgallery/mythgallery/gallerysettings.cpp
+
+
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
 sed -i -e '1iinclude(config.mak)'  settings.pro
@@ -165,10 +170,6 @@ sed -i -e '1iinclude(config.mak)'  settings.pro
     echo 'DEFINES -= HAVE_MMX' >> settings.pro
 %endif
 
-# Fix /mnt/store -> /var/lib/mythmusic
-sed -i -e's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
-# Fix /mnt/store -> /var/lib/mythmusic
-sed -i -e's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
 
 %build
 export QTDIR="%{_prefix}"
