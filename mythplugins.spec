@@ -1,22 +1,22 @@
+#
 # disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
 %bcond_without	mythmusic
-%bcond_without mythphone
+%bcond_without	mythphone
 #
 %include	/usr/lib/rpm/macros.perl
-Summary:	Main MythTV plugins.
+Summary:	Main MythTV plugins
+Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
 Release:	0.112.9
 License:	GPL v2
 Group:		Applications/Multimedia
-URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 Patch0:		%{name}-configure.patch
-BuildRequires:	rpm-perlprov >= 4.1-13
-BuildRequires:	sed >= 4.0
+URL:		http://www.mythtv.org/
+BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
-BuildRequires:	X11-OpenGL-devel
 BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
 BuildRequires:	cdparanoia-III-devel
@@ -38,6 +38,8 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
+BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	sed >= 4.0
 BuildRequires:	transcode >= 0.6.8
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
@@ -58,16 +60,25 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This is a consolidation of all the official MythTV plugins that used
 to be distributed as separate downloads from mythtv.org.
 
+%description -l pl
+Jest to zbiór wszystkich oficjalnych wtyczek MythTV, które by³y
+wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
+
 %package -n mythmusic
-Summary:	The music player add-on module for MythTV.
+Summary:	The music player add-on module for MythTV
+Summary(pl):	Modu³ odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythmusic
-Music add-on for mythtv.
+Music add-on for MythTV.
+
+%description -n mythmusic -l pl
+Odtwarzacz muzyki dla MythTV.
 
 %package -n mythvideo
-Summary:	A generic video player frontend module for MythTV.
+Summary:	A generic video player frontend module for MythTV
+Summary(pl):	Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
 Requires:	mythtv-frontend-api = %{api_ver}
@@ -75,53 +86,83 @@ Requires:	mythtv-frontend-api = %{api_ver}
 %description -n mythvideo
 A generic video player frontend module for MythTV.
 
+%description -n mythvideo -l pl
+Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV.
+
 %package -n mythweather
-Summary:	A MythTV module that displays a weather forcast.
+Summary:	A MythTV module that displays a weather forcast
+Summary(pl):	Modu³ MythTV wy¶wietlaj±cy prognozê pogody
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
 
+%description -n mythweather -l pl
+Modu³ MythTV wy¶wietlaj±cy prognozê pogody.
+
 %package -n mythgallery
-Summary:	A gallery/slideshow module for MythTV.
+Summary:	A gallery/slideshow module for MythTV
+Summary(pl):	Modu³ galerii/pokazu slajdów dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
 
+%description -n mythgallery -l pl
+Modu³ galerii/pokazu slajdów dla MythTV.
+
 %package -n mythgame
-Summary:	A game frontend (xmame, nes, snes, pc) for MythTV.
+Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
+Summary(pl):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
+%description -n mythgame -l pl
+Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
+
 %package -n mythdvd
-Summary:	A DVD player module for MythTV.
+Summary:	A DVD player module for MythTV
+Summary(pl):	Modu³ odtwarzacza DVD dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 Requires:	transcode >= 0.6.8
 
 %description -n mythdvd
-MythDVD is a MythTV module that allows you to play DVD's on a myth-box
+MythDVD is a MythTV module that allows you to play DVDs on a myth-box
 and (optionally) rip DVD's and transcode their video and audio content
 to other (generally smaller) formats. The playing features are simply
 myth-style wrappers for your favourite DVD playing software (mplayer,
 ogle, xine, etc). The transcoding is based on and derived from the
 excellent transcode package.
 
+%description -n mythdvd -l pl
+MythDVD to modu³ MythTV umo¿liwiaj±cy odtwarzanie p³yt DVD w MythTV i
+(opcjonalnie) rippowanie ich oraz przekodowywanie obrazu i d¼wiêku do
+innych (zwykle mniej zajmuj±cych) formatów. Mo¿liwo¶ci odtwarzania to
+po prostu obudowanie w stylu myth dla ulubionego oprogramowania do
+odtwarzania DVD (mplayer, ogle, xine itp.). Przekodowywanie jest
+oparte i wywodzi siê z wspania³ego pakietu transcode.
+
 %package -n mythnews
-Summary:	A RSS News Feed Plugin for MythTV.
+Summary:	A RSS News Feed plugin for MythTV
+Summary(pl):	Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythnews
+A RSS News Feed plugin for MythTV.
+
+%description -n mythnews -l pl
+Wtyczka czytnika nowinek RSS dla MythTV.
 
 %package -n mythbrowser
-Summary:	A small web browser module for MythTV.
+Summary:	A small web browser module for MythTV
+Summary(pl):	Modu³ ma³ej przegl±darki WWW dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
@@ -129,20 +170,37 @@ Requires:	mythtv-frontend-api = %{api_ver}
 MythBrowser is a full fledged web-browser (multiple tabs) to display
 webpages in full-screen mode. Simple page navigation is possible.
 Starting with version 0.13 it also has full support for mouse driven
-navigation (right mouse opens and clos es the popup menu).
+navigation (right mouse opens and closes the popup menu).
 
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
 
+%description -n mythbrowser -l pl
+MythBrowser to w pe³ni funkcjonalna przegl±darka WWW (z wieloma
+zak³adkami) wy¶wietlaj±ca strony WWW w trybie pe³noekranowym. Mo¿liwa
+jest prosta nawigacja po stronie. Pocz±wszy od wersji 0.13 ma pe³n±
+obs³ugê nawigacji myszk± (prawy przycisk otwiera i zamywa wyskakuj±ce
+menu).
+
+MythBrowser zawiera tak¿e BookmarkManagera do zarz±dzania odno¶nikami
+do stron w prostej wtyczce myth.
+
 %package -n mythphone
-Summary:	A video conferencing module for MythTV.
+Summary:	A video conferencing module for MythTV
+Summary(pl):	Modu³ wideokonferencji dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythphone
-Mythphone is a phone and videophone capability on MYTH using the
+Mythphone is a phone and videophone capability on Myth using the
 standard SIP protocol. It is compatible with Microsoft XP Messenger
 and with SIP Service Providers such as Free World Dialup
+(fwd.pulver.com).
+
+%description -n mythphone -l pl
+Mythphone to funkcjonalno¶æ telefonu i wideofonu w Myth przy u¿yciu
+standardowego protoko³u SIP. Jest kompatybilny z Microsoft XP
+Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 (fwd.pulver.com).
 
 %prep
@@ -160,16 +218,14 @@ sed -i -e 's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalset
 sed -i -e 's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
 sed -i -e 's|/mnt/cdrom:/mnt/camera|/media/cdrom:/mnt/camera|' mythgallery/mythgallery/gallerysettings.cpp
 
-
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
 sed -i -e '1iinclude(config.mak)'  settings.pro
 
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
-    echo 'DEFINES -= HAVE_MMX' >> settings.pro
+	echo 'DEFINES -= HAVE_MMX' >> settings.pro
 %endif
-
 
 %build
 export QTDIR="%{_prefix}"
@@ -196,7 +252,8 @@ qmake mythplugins.pro
 rm -rf $RPM_BUILD_ROOT
 
 export QTDIR="%{_prefix}"
-%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
+%{__make} install \
+	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
