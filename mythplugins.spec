@@ -47,6 +47,7 @@ Requires:	mythnews
 Requires:	mythphone
 Requires:	mythvideo
 Requires:	mythweather
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		api_ver %(echo %{version} | cut -d. -f1,2)
