@@ -1,14 +1,9 @@
-#
-# disable mythmusic,mythphone due to https://bugs.pld-linux.org/?do=details&id=5687
-%bcond_without	mythmusic
-%bcond_without	mythphone
-#
 %include	/usr/lib/rpm/macros.perl
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.9
+Release:	0.112.10
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -47,9 +42,9 @@ Requires:	mythbrowser
 Requires:	mythdvd
 Requires:	mythgallery
 Requires:	mythgame
-%{?with_mythmusic:Requires:	mythmusic}
+Requires:	mythmusic
 Requires:	mythnews
-%{?with_mythphone:Requires:	mythphone}
+Requires:	mythphone
 Requires:	mythvideo
 Requires:	mythweather
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -232,9 +227,7 @@ export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
 	--enable-all \
-	--disable-festival \
-	%{!?with_mythmusic:--disable-mythmusic} \
-	%{!?with_mythphone:--disable-mythphone}
+	--disable-festival
 
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
 #	--enable-transcode       enable DVD ripping and transcoding [default=no]
@@ -268,7 +261,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 
-%if %{with mythmusic}
 %files -n mythmusic
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
@@ -324,7 +316,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/text_button_on.png
 %{_datadir}/mythtv/themes/default/text_button_pushed.png
 %{_datadir}/mythtv/themes/default/track_info_background.png
-%endif
 
 %files -n mythvideo
 %defattr(644,root,root,755)
@@ -416,7 +407,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/webpage.png
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 
-%if %{with mythphone}
 %files -n mythphone
 %defattr(644,root,root,755)
 %doc mythphone/README mythphone/AUTHORS mythphone/TODO
@@ -426,4 +416,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
 %{_datadir}/mythtv/i18n/mythphone_*.qm
-%endif
