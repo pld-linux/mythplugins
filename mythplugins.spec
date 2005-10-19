@@ -3,7 +3,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.10
+Release:	0.112.11
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -207,7 +207,7 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib/ . | xargs sed -i -e '
 	s,/usr/lib/,/usr/%{_lib}/,g
-	s,{PREFIX}/lib,{PREFIX}/%{_lib}/,g
+	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
 '
 
 sed -i -e 's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
@@ -216,7 +216,7 @@ sed -i -e 's|/mnt/cdrom:/mnt/camera|/media/cdrom:/mnt/camera|' mythgallery/mythg
 
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
-sed -i -e '1iinclude(config.mak)'  settings.pro
+sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
 
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
