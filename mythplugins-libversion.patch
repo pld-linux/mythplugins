@@ -1,0 +1,11 @@
+--- ./settings.pro~	2005-10-20 23:14:01.000000000 +0300
++++ ./settings.pro	2005-10-20 23:16:37.000000000 +0300
+@@ -6,7 +6,7 @@
+     PREFIX = /usr/local
+ }
+ 
+-LIBVERSION = 0.18.1
++LIBVERSION = 0.18
+ 
+ INCLUDEPATH += $${PREFIX}/include
+ #INCLUDEPATH += /usr/include/cdda
