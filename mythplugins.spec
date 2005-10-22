@@ -3,13 +3,18 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.11
+%define	_snap 20051022
+%define	_rel 0.1
+Release:	0.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
+#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{_snap}.tar.bz2
+# Source0-md5:	e3a5d3c8063cd9527f93f50875c80af2
 Patch0:		%{name}-configure.patch
 Patch1:		%{name}-libversion.patch
+Patch2:		%{name}-lib64.patch
+Patch3:		%{name}-paths.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
@@ -201,20 +206,13 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 (fwd.pulver.com).
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
-
-# lib64 fix
-find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
-xargs grep -l /lib/ . | xargs sed -i -e '
-	s,/usr/lib/,/usr/%{_lib}/,g
-	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
-'
-
-sed -i -e 's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
-sed -i -e 's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
-sed -i -e 's|/mnt/cdrom:/mnt/camera|/media/cdrom:/mnt/camera|' mythgallery/mythgallery/gallerysettings.cpp
+%setup -q %{?_snap:-n %{name}}
+#%patch0 -p1
+#%patch1 -p1
+%if %{_lib} != "lib"
+%patch2 -p1
+%endif
+%patch3 -p1
 
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
@@ -223,6 +221,16 @@ sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
 	echo 'DEFINES -= HAVE_MMX' >> settings.pro
+%endif
+
+# lib64 fix - enable to update patch
+%if %{_lib} != "lib" && 0
+find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
+xargs grep -l /lib/ . | xargs sed -i -e '
+	s,/usr/lib/,/usr/%{_lib}/,g
+	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
+'
+exit 1
 %endif
 
 %build
