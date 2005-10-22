@@ -9,6 +9,7 @@ Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
 Patch0:		%{name}-configure.patch
+Patch1:		%{name}-libversion.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
@@ -202,6 +203,7 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # lib64 fix
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
