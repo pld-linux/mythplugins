@@ -3,12 +3,14 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.11
+Release:	0.112.16
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
+Source1:	mythweb.conf
 Patch0:		%{name}-configure.patch
+Patch1:		mythweb-config.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
@@ -199,14 +201,25 @@ standardowego protoko³u SIP. Jest kompatybilny z Microsoft XP
 Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 (fwd.pulver.com).
 
+%package -n mythweb
+Summary:	The web interface to MythTV
+Group:		Applications/Multimedia
+Requires:	apache >= 1.3.33-2
+Requires:	php >= 3:4.2.2
+Requires:	php-mysql >= 3:4.2.2
+
+%description -n mythweb
+The web interface to MythTV.
+
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # lib64 fix
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib/ . | xargs sed -i -e '
-	s,/usr/lib/,/usr/%{_lib}/,g
+	s,/''usr/lib/,%{_prefix}/%{_lib}/,g
 	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
 '
 
@@ -252,12 +265,36 @@ export QTDIR="%{_prefix}"
 install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
-install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
+install -d $rpm_build_root%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 
+# mythweb
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/languages,/var/cache/mythweb/{image_cache,php_sessions}}
+# trash
+rm -f mythweb/themes/compact.tar.bz2
+cp -a mythweb/*.{html,php} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
+cp -a mythweb/{images,includes,js,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/{images,includes,js,languages,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/config/* $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
+touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%triggerin -n mythweb -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/mythweb/apache.conf
+
+%triggerun -n mythweb -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1
+
+%triggerin -n mythweb -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/mythweb/apache.conf
+
+%triggerun -n mythweb -- apache >= 2.0.0
+%apache_config_uninstall -v 2
 
 %files
 %defattr(644,root,root,755)
@@ -417,3 +454,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
 %{_datadir}/mythtv/i18n/mythphone_*.qm
+
+%files -n mythweb
+%defattr(644,root,root,755)
+%doc mythweb/{README,TODO} mythweb/languages/*.{pl,txt}
+%attr(750,root,http) %dir %{_sysconfdir}/mythweb
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/apache.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.dat
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/htpasswd
+%{_datadir}/mythweb
+%dir /var/cache/mythweb
+%dir %attr(771,root,http) /var/cache/mythweb/image_cache
+%dir %attr(771,root,http) /var/cache/mythweb/php_sessions
