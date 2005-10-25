@@ -3,7 +3,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-Release:	0.112.16
+Release:	0.112.17
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -269,7 +269,7 @@ export QTDIR="%{_prefix}"
 install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
-install -d $rpm_build_root%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 
