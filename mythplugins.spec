@@ -1,6 +1,10 @@
 #
 # Conditional build:
 %bcond_without	binary		# skip binary plugins (build only mythweb)
+%bcond_with	mythmusic	# mythmusic plugin (broken now)
+%bcond_with	mythgallery	# mythgallery plugin (broken now)
+%bcond_with	mythbrowser	# mythbrowser plugin (broken now)
+%bcond_with	mythcontrols	# mythcontrols plugin (not done)
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	Main MythTV plugins
@@ -52,11 +56,11 @@ BuildRequires:	transcode >= 0.6.8
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
-Requires:	mythbrowser
+%{?with_mythbrowser:Requires:	mythbrowser}
 Requires:	mythdvd
-Requires:	mythgallery
+%{?with_mythgallery:Requires:	mythgallery}
 Requires:	mythgame
-Requires:	mythmusic
+%{?with_mythmysic:Requires:	mythmusic}
 Requires:	mythnews
 Requires:	mythphone
 Requires:	mythvideo
@@ -334,6 +338,7 @@ exit 0
 %defattr(644,root,root,755)
 
 %if %{with binary}
+%if %{with mythmusic}
 %files -n mythmusic
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
@@ -342,53 +347,8 @@ exit 0
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
-%{_datadir}/mythtv/themes/default/ff_button_off.png
-%{_datadir}/mythtv/themes/default/ff_button_on.png
-%{_datadir}/mythtv/themes/default/ff_button_pushed.png
-%{_datadir}/mythtv/themes/default/mm_blackhole_border.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_off.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_on.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_pushed.png
-%{_datadir}/mythtv/themes/default/mm_checked.png
-%{_datadir}/mythtv/themes/default/mm_checked_high.png
-%{_datadir}/mythtv/themes/default/mm_down_arrow.png
-%{_datadir}/mythtv/themes/default/mm_left_arrow.png
-%{_datadir}/mythtv/themes/default/mm_leftright_off.png
-%{_datadir}/mythtv/themes/default/mm_leftright_on.png
-%{_datadir}/mythtv/themes/default/mm_leftright_pushed.png
-%{_datadir}/mythtv/themes/default/mm_rating.png
-%{_datadir}/mythtv/themes/default/mm_right_arrow.png
-%{_datadir}/mythtv/themes/default/mm_unchecked.png
-%{_datadir}/mythtv/themes/default/mm_unchecked_high.png
-%{_datadir}/mythtv/themes/default/mm_up_arrow.png
-%{_datadir}/mythtv/themes/default/mm_volume_background.png
-%{_datadir}/mythtv/themes/default/mm_volume_tick.png
-%{_datadir}/mythtv/themes/default/mm_waiting.png
-%{_datadir}/mythtv/themes/default/music-sel-bg.png
-%{_datadir}/mythtv/themes/default/music-ui.xml
-%{_datadir}/mythtv/themes/default/next_button_off.png
-%{_datadir}/mythtv/themes/default/next_button_on.png
-%{_datadir}/mythtv/themes/default/next_button_pushed.png
-%{_datadir}/mythtv/themes/default/pause_button_off.png
-%{_datadir}/mythtv/themes/default/pause_button_on.png
-%{_datadir}/mythtv/themes/default/pause_button_pushed.png
-%{_datadir}/mythtv/themes/default/play_button_off.png
-%{_datadir}/mythtv/themes/default/play_button_on.png
-%{_datadir}/mythtv/themes/default/play_button_pushed.png
-%{_datadir}/mythtv/themes/default/prev_button_off.png
-%{_datadir}/mythtv/themes/default/prev_button_on.png
-%{_datadir}/mythtv/themes/default/prev_button_pushed.png
-%{_datadir}/mythtv/themes/default/rew_button_off.png
-%{_datadir}/mythtv/themes/default/rew_button_on.png
-%{_datadir}/mythtv/themes/default/rew_button_pushed.png
-%{_datadir}/mythtv/themes/default/selectionbar.png
-%{_datadir}/mythtv/themes/default/stop_button_off.png
-%{_datadir}/mythtv/themes/default/stop_button_on.png
-%{_datadir}/mythtv/themes/default/stop_button_pushed.png
-%{_datadir}/mythtv/themes/default/text_button_off.png
-%{_datadir}/mythtv/themes/default/text_button_on.png
-%{_datadir}/mythtv/themes/default/text_button_pushed.png
-%{_datadir}/mythtv/themes/default/track_info_background.png
+%{_datadir}/mythtv/themes
+%endif
 
 %files -n mythvideo
 %defattr(644,root,root,755)
@@ -431,6 +391,7 @@ exit 0
 %{_datadir}/mythtv/themes/default/thunshowers.png
 %{_datadir}/mythtv/themes/default/unknown.png
 
+%if %{with mythgallery}
 %files -n mythgallery
 %defattr(644,root,root,755)
 %doc mythgallery/README mythgallery/UPGRADING
@@ -438,7 +399,9 @@ exit 0
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
 %{_datadir}/mythtv/i18n/mythgallery_*.qm
+# FIXME: this is definately stupid path
 /var/lib/pictures
+%endif
 
 %files -n mythgame
 %defattr(644,root,root,755)
@@ -472,6 +435,7 @@ exit 0
 %{_datadir}/mythtv/themes/default/news-info-bg.png
 %{_datadir}/mythtv/i18n/mythnews_*.qm
 
+%if %{with mythbrowser}
 %files -n mythbrowser
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
@@ -479,6 +443,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
 %{_datadir}/mythtv/themes/default/webpage.png
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
+%endif
 
 %files -n mythphone
 %defattr(644,root,root,755)
