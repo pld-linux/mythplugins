@@ -1,21 +1,26 @@
+#
+# Conditional build:
+%bcond_without	binary		# skip binary plugins (build only mythweb)
+#
 %include	/usr/lib/rpm/macros.perl
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-%define	_snap 20051022
+%define	_snap 20051104
 %define	_rel 0.1
-Release:	0.%{_snap}.%{_rel}
+Release:	0.113.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source0:	%{name}-%{_snap}.tar.bz2
-# Source0-md5:	e3a5d3c8063cd9527f93f50875c80af2
+# Source0-md5:	021633295bdcc34f31580239cb0b1074
 Patch0:		%{name}-configure.patch
 Patch1:		%{name}-libversion.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-paths.patch
 URL:		http://www.mythtv.org/
+%if %{with binary}
 BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
 BuildRequires:	XFree86-devel
@@ -44,6 +49,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	transcode >= 0.6.8
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
+%endif
 Requires:	mythbrowser
 Requires:	mythdvd
 Requires:	mythgallery
@@ -214,6 +220,7 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 %endif
 %patch3 -p1
 
+%if %{with binary}
 # include mythtv build settings
 cp %{_datadir}/mythtv/build/config.mak .
 sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
@@ -221,6 +228,7 @@ sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
 	echo 'DEFINES -= HAVE_MMX' >> settings.pro
+%endif
 %endif
 
 # lib64 fix - enable to update patch
@@ -234,6 +242,7 @@ exit 1
 %endif
 
 %build
+%if %{with binary}
 export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
@@ -251,10 +260,12 @@ export QTDIR="%{_prefix}"
 
 qmake mythplugins.pro
 %{__make}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with binary}
 export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -265,6 +276,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
