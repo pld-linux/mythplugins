@@ -8,7 +8,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
 %define	_snap 20051104
-%define	_rel 0.1
+%define	_rel 0.5
 Release:	0.113.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
@@ -16,8 +16,8 @@ Group:		Applications/Multimedia
 Source0:	%{name}-%{_snap}.tar.bz2
 # Source0-md5:	021633295bdcc34f31580239cb0b1074
 Source1:	mythweb.conf
-Patch0:		%{name}-configure.patch
-Patch1:		%{name}-libversion.patch
+#Patch0:		%{name}-configure.patch
+#Patch1:		%{name}-libversion.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-paths.patch
 Patch4:		mythweb-config.patch
@@ -61,6 +61,7 @@ Requires:	mythnews
 Requires:	mythphone
 Requires:	mythvideo
 Requires:	mythweather
+Requires:	mythweb
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -229,13 +230,17 @@ Interfejs WWW do MythTV.
 
 %prep
 %setup -q %{?_snap:-n %{name}}
-%patch0 -p1
-%patch1 -p1
+#%patch0 -p1
+#%patch1 -p1
 %if %{_lib} != "lib"
 %patch2 -p1
 %endif
 %patch3 -p1
 %patch4 -p1
+
+# trash
+rm mythweb/themes/compact.tar.bz2
+rm mythweb/images/icons/.cvsignore
 
 %if %{with binary}
 # include mythtv build settings
@@ -296,14 +301,12 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 %endif
 
 # mythweb
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/languages,/var/cache/mythweb/{image_cache,php_sessions}}
-# trash
-rm -f mythweb/themes/compact.tar.bz2
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages},/var/cache/mythweb/{image_cache,php_sessions}}
 cp -a mythweb/*.{html,php} $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
-cp -a mythweb/{images,includes,js,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/{images,includes,js,languages,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/config/* $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
+cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
+cp -a mythweb/{images,js,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
 touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
 
@@ -312,19 +315,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %triggerin -n mythweb -- apache1 >= 1.3.33-2
 %apache_config_install -v 1 -c %{_sysconfdir}/mythweb/apache.conf
+exit 0
 
 %triggerun -n mythweb -- apache1 >= 1.3.33-2
 %apache_config_uninstall -v 1
+exit 0
 
 %triggerin -n mythweb -- apache >= 2.0.0
 %apache_config_install -v 2 -c %{_sysconfdir}/mythweb/apache.conf
+exit 0
 
 %triggerun -n mythweb -- apache >= 2.0.0
 %apache_config_uninstall -v 2
+exit 0
 
 %files
 %defattr(644,root,root,755)
 
+%if %{with binary}
 %files -n mythmusic
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
@@ -480,6 +488,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
 %{_datadir}/mythtv/i18n/mythphone_*.qm
+%endif
 
 %files -n mythweb
 %defattr(644,root,root,755)
