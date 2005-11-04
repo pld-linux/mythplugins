@@ -93,7 +93,7 @@ diff -u ./mythweb/config/conf.php /tmp/conf/conf.php
  //    mythweb_errors@mydomain.com.
  //
 -    define('error_email', 'mythweb_errors@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
-+    define('Error_Email', 'root@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
++    define('error_email', 'root@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
  
  // For the "movies" search -- set this to the word your listings provider uses to
  //   describe movies/films/peliculas/etc.
