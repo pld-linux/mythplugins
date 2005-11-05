@@ -97,3 +97,14 @@ diff -u ./mythweb/config/conf.php /tmp/conf/conf.php
  
  // For the "movies" search -- set this to the word your listings provider uses to
  //   describe movies/films/peliculas/etc.
+--- /mythweb/includes/mythbackend.php~	2005-10-22 13:31:12.000000000 +0300
++++ /mythweb/includes/mythbackend.php	2005-11-04 23:31:31.707600269 +0200
+@@ -335,7 +335,7 @@
+             // Make sure the local path exists
+                 $path = '';
+                 foreach (split('/+', dirname($pngpath)) as $dir) {
+-                    $path .= $path ? '/' . $dir : $dir;
++					$path .= $path ? ('/' . $dir) : ($dir ? $dir : "/$dir");
+                     if(!is_dir($path) && !mkdir($path, 0755))
+                         trigger_error('Error creating path for '.$path.': Please check permissions.', FATAL);
+                 }
