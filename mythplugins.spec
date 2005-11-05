@@ -1,10 +1,30 @@
 #
 # Conditional build:
-%bcond_without	binary		# skip binary plugins (build only mythweb)
-%bcond_without	mythmusic	# mythmusic plugin (broken now)
-%bcond_without	mythgallery	# mythgallery plugin (broken now)
-%bcond_without	mythbrowser	# mythbrowser plugin (broken now)
+%bcond_without	binary		# skip building binary plugins (build only mythweb)
+%bcond_without	mythbrowser	# disable building mythbrowser plugin
+%bcond_without	mythdvd		# disable building mythgallery plugin
+%bcond_without	mythgallery	# disable building mythgallery plugin
+%bcond_without	mythgame	# disable building mythgallery plugin
+%bcond_without	mythmusic	# disable building mythmusic plugin
+%bcond_without	mythnews	# disable building mythgallery plugin
+%bcond_without	mythphone	# disable building mythgallery plugin
+%bcond_without	mythvideo	# disable building mythgallery plugin
+%bcond_without	mythweather	# disable building mythgallery plugin
+%bcond_without	mythweb		# disable building mythgallery plugin
 %bcond_with	mythcontrols	# mythcontrols plugin (not done)
+#
+%if %{without binary}
+%undefine	with_mythbrowser
+%undefine	with_mythdvd
+%undefine	with_mythgallery
+%undefine	with_mythgame
+%undefine	with_mythmusic
+%undefine	with_mythnews
+%undefine	with_mythphone
+%undefine	with_mythvideo
+%undefine	with_mythweather
+%undefine	with_mythcontrols
+%endif
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	Main MythTV plugins
@@ -57,19 +77,19 @@ BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
 %{?with_mythbrowser:Requires:	mythbrowser}
-Requires:	mythdvd
+%{?with_mythdvd:Requires:	mythdvd}
 %{?with_mythgallery:Requires:	mythgallery}
-Requires:	mythgame
+%{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
-Requires:	mythnews
-Requires:	mythphone
-Requires:	mythvideo
-Requires:	mythweather
-Requires:	mythweb
+%{?with_mythnews:Requires:	mythnews}
+%{?with_mythphone:Requires:	mythphone}
+%{?with_mythvideo:Requires:	mythvideo}
+%{?with_mythweather:Requires:	mythweather}
+%{?with_mythweb:Requires:	mythweb}
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		api_ver %(echo %{version} | cut -d. -f1,2)
+%define		api_ver %(awk '/LIBVERSION/{print $3}' %%{_datadir}/mythtv/build/settings.pro)
 
 %description
 This is a consolidation of all the official MythTV plugins that used
@@ -274,6 +294,17 @@ export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
 	--enable-all \
+	%{?without_mythbrowser:--disable-mythbrowser} \
+	%{?without_mythdvd:--disable-mythdvd} \
+	%{?without_mythgallery:--disable-mythgallery} \
+	%{?without_mythgame:--disable-mythgame} \
+	%{?without_mythmusic:--disable-mythmusic} \
+	%{?without_mythnews:--disable-mythnews} \
+	%{?without_mythphone:--disable-mythphone} \
+	%{?without_mythvideo:--disable-mythvideo} \
+	%{?without_mythweather:--disable-mythweather} \
+	%{?without_mythweb:--disable-mythweb} \
+	%{?without_mythcontrols:--disable-mythcontrols} \
 	--disable-festival
 
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
@@ -298,14 +329,16 @@ export QTDIR="%{_prefix}"
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
+%if %{with mythgame}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 %endif
+%endif
 
-# mythweb
+%if %{with mythweb}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages},/var/cache/mythweb/{image_cache,php_sessions}}
 cp -a mythweb/*.{html,php} $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
@@ -314,6 +347,7 @@ cp -a mythweb/{images,js,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythw
 cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
 touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -337,7 +371,6 @@ exit 0
 %files
 %defattr(644,root,root,755)
 
-%if %{with binary}
 %if %{with mythmusic}
 %files -n mythmusic
 %defattr(644,root,root,755)
@@ -350,6 +383,7 @@ exit 0
 %{_datadir}/mythtv/themes
 %endif
 
+%if %{with mythvideo}
 %files -n mythvideo
 %defattr(644,root,root,755)
 %doc mythvideo/README mythvideo/UPGRADING mythvideo/videodb
@@ -366,7 +400,9 @@ exit 0
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
 /var/lib/mythvideo
+%endif
 
+%if %{with mythweather}
 %files -n mythweather
 %defattr(644,root,root,755)
 %doc mythweather/README
@@ -390,6 +426,7 @@ exit 0
 %{_datadir}/mythtv/themes/default/sunny.png
 %{_datadir}/mythtv/themes/default/thunshowers.png
 %{_datadir}/mythtv/themes/default/unknown.png
+%endif
 
 %if %{with mythgallery}
 %files -n mythgallery
@@ -403,6 +440,7 @@ exit 0
 /var/lib/pictures
 %endif
 
+%if %{with mythgame}
 %files -n mythgame
 %defattr(644,root,root,755)
 %doc mythgame/README mythgame/UPGRADING
@@ -414,18 +452,22 @@ exit 0
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
+%endif
 
+%if %{with mythdvd}
 %files -n mythdvd
 %defattr(644,root,root,755)
 %doc mythdvd/README mythdvd/UPGRADING mythdvd/AUTHORS
+%attr(755,root,root) %{_bindir}/mtd
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
 %{_datadir}/mythtv/dvd_settings.xml
 %{_datadir}/mythtv/dvdmenu.xml
 %{_datadir}/mythtv/themes/default/dvd-ui.xml
 %{_datadir}/mythtv/themes/default/md_*.png
 %{_datadir}/mythtv/i18n/mythdvd_*.qm
-%attr(755,root,root) %{_bindir}/mtd
+%endif
 
+%if %{with mythnews}
 %files -n mythnews
 %defattr(644,root,root,755)
 %doc mythnews/README mythnews/AUTHORS
@@ -434,6 +476,7 @@ exit 0
 %{_datadir}/mythtv/themes/default/news-ui.xml
 %{_datadir}/mythtv/themes/default/news-info-bg.png
 %{_datadir}/mythtv/i18n/mythnews_*.qm
+%endif
 
 %if %{with mythbrowser}
 %files -n mythbrowser
@@ -445,6 +488,7 @@ exit 0
 %{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
+%if %{with mythphone}
 %files -n mythphone
 %defattr(644,root,root,755)
 %doc mythphone/README mythphone/AUTHORS mythphone/TODO
@@ -456,6 +500,7 @@ exit 0
 %{_datadir}/mythtv/i18n/mythphone_*.qm
 %endif
 
+%if %{with mythweb}
 %files -n mythweb
 %defattr(644,root,root,755)
 %doc mythweb/{README,TODO} mythweb/languages/*.{pl,txt}
@@ -468,3 +513,4 @@ exit 0
 %dir /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
 %dir %attr(771,root,http) /var/cache/mythweb/php_sessions
+%endif
