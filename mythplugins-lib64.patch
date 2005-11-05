@@ -1,3 +1,14 @@
+--- ./configure~	2005-11-04 01:23:51.000000000 +0200
++++ ./configure	2005-11-05 16:18:39.000000000 +0200
+@@ -250,7 +250,7 @@
+         done
+     fi
+ 
+-    LIBPATHS="`echo $LIBPATHS $prefix/lib /lib /usr/lib /usr/local/lib /usr/X11R6/lib | sed s/'\/ '/' '/g` "
++    LIBPATHS="`echo $LIBPATHS $prefix/lib64 /lib64 /usr/lib64 /usr/local/lib64 /usr/X11R6/lib64 | sed s/'\/ '/' '/g` "
+ 
+     HAS_IT="no"
+     for LIBPATH in $LIBPATHS ; do
 diff -u -r mythplugins-lib32/mythbrowser/mythbookmarkmanager/mythbookmarkmanager.pro mythplugins/mythbrowser/mythbookmarkmanager/mythbookmarkmanager.pro
 --- mythplugins-lib32/mythbrowser/mythbookmarkmanager/mythbookmarkmanager.pro	2005-10-22 13:31:23.000000000 +0300
 +++ mythplugins/mythbrowser/mythbookmarkmanager/mythbookmarkmanager.pro	2005-10-22 18:37:31.000000000 +0300
