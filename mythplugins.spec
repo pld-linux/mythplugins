@@ -1,9 +1,9 @@
 #
 # Conditional build:
 %bcond_without	binary		# skip binary plugins (build only mythweb)
-%bcond_with	mythmusic	# mythmusic plugin (broken now)
-%bcond_with	mythgallery	# mythgallery plugin (broken now)
-%bcond_with	mythbrowser	# mythbrowser plugin (broken now)
+%bcond_without	mythmusic	# mythmusic plugin (broken now)
+%bcond_without	mythgallery	# mythgallery plugin (broken now)
+%bcond_without	mythbrowser	# mythbrowser plugin (broken now)
 %bcond_with	mythcontrols	# mythcontrols plugin (not done)
 #
 %include	/usr/lib/rpm/macros.perl
@@ -12,7 +12,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
 %define	_snap 20051104
-%define	_rel 0.5
+%define	_rel 0.6
 Release:	0.113.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
