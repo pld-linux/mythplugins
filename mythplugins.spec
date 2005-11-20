@@ -205,9 +205,10 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 Summary:	The web interface to MythTV
 Summary(pl):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
-Requires:	apache >= 1.3.33-2
+Requires:	webserver = apache
 Requires:	php >= 3:4.2.2
 Requires:	php-mysql >= 3:4.2.2
+Conflicts:	apache1 < 1.3.33-2
 
 %description -n mythweb
 The web interface to MythTV.
