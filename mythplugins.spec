@@ -31,14 +31,15 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.18.1
-%define	_snap 20051104
-%define	_rel 0.6
-Release:	0.113.%{_snap}.%{_rel}
+%define	_snap 20051221
+%define	_rev 8332
+%define	_rel 1
+Release:	0.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_snap}.tar.bz2
-# Source0-md5:	021633295bdcc34f31580239cb0b1074
+Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
+# Source0-md5:	ec09b35d6b4c29a33c382fd89e0887eb
 Source1:	mythweb.conf
 #Patch0:		%{name}-configure.patch
 #Patch1:		%{name}-libversion.patch
@@ -89,7 +90,7 @@ BuildRequires:	zlib-devel
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		api_ver %(awk '/LIBVERSION/{print $3}' %%{_datadir}/mythtv/build/settings.pro)
+%define		api_ver %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
 
 %description
 This is a consolidation of all the official MythTV plugins that used
@@ -264,13 +265,12 @@ Interfejs WWW do MythTV.
 %patch4 -p1
 
 # trash
-rm mythweb/themes/compact.tar.bz2
 rm mythweb/images/icons/.cvsignore
 
 %if %{with binary}
 # include mythtv build settings
-cp %{_datadir}/mythtv/build/config.mak .
-sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
+#cp %{_datadir}/mythtv/build/config.mak .
+#sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
 
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
@@ -294,17 +294,17 @@ export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
 	--enable-all \
-	%{?without_mythbrowser:--disable-mythbrowser} \
-	%{?without_mythdvd:--disable-mythdvd} \
-	%{?without_mythgallery:--disable-mythgallery} \
-	%{?without_mythgame:--disable-mythgame} \
-	%{?without_mythmusic:--disable-mythmusic} \
-	%{?without_mythnews:--disable-mythnews} \
-	%{?without_mythphone:--disable-mythphone} \
-	%{?without_mythvideo:--disable-mythvideo} \
-	%{?without_mythweather:--disable-mythweather} \
-	%{?without_mythweb:--disable-mythweb} \
-	%{?without_mythcontrols:--disable-mythcontrols} \
+	%{!?with_mythbrowser:--disable-mythbrowser} \
+	%{!?with_mythdvd:--disable-mythdvd} \
+	%{!?with_mythgallery:--disable-mythgallery} \
+	%{!?with_mythgame:--disable-mythgame} \
+	%{!?with_mythmusic:--disable-mythmusic} \
+	%{!?with_mythnews:--disable-mythnews} \
+	%{!?with_mythphone:--disable-mythphone} \
+	%{!?with_mythvideo:--disable-mythvideo} \
+	%{!?with_mythweather:--disable-mythweather} \
+	%{!?with_mythweb:--disable-mythweb} \
+	%{!?with_mythcontrols:--disable-mythcontrols} \
 	--disable-festival
 
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
@@ -316,7 +316,9 @@ export QTDIR="%{_prefix}"
 #	--enable-aac             enable AAC/MP4 audio file decompression [default=no]
 #	--enable-festival        enable festival TTS Engine [default=no]
 
-qmake mythplugins.pro
+echo 'QMAKE_CXX=%{__cxx}' >> settings.pro
+echo 'QMAKE_CC=%{__cc}' >> settings.pro
+
 %{__make}
 %endif
 
@@ -340,7 +342,7 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 
 %if %{with mythweb}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages},/var/cache/mythweb/{image_cache,php_sessions}}
-cp -a mythweb/*.{html,php} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
 cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
 cp -a mythweb/{images,js,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
