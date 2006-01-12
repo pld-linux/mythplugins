@@ -30,11 +30,11 @@
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
-Version:	0.18.1
 %define	_snap 20051221
 %define	_rev 8332
-%define	_rel 1
-Release:	0.%{_snap}.%{_rel}
+%define	_rel 1.3
+Version:	0.19.0.%{_snap}
+Release:	0.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -243,10 +243,11 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 Summary:	The web interface to MythTV
 Summary(pl):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
-Requires:	apache >= 1.3.33-2
+Requires:	webserver = apache
 Requires:	apache(mod_env)
-Requires:	php >= 3:4.2.2
-Requires:	php-mysql >= 3:4.2.2
+Requires:	php >= 3:4.3
+Requires:	php-mysql
+Requires:	php-posix
 
 %description -n mythweb
 The web interface to MythTV.
@@ -266,6 +267,8 @@ Interfejs WWW do MythTV.
 
 # trash
 rm mythweb/images/icons/.cvsignore
+# make it visible
+mv mythweb/{.,}htaccess
 
 %if %{with binary}
 # include mythtv build settings
@@ -345,7 +348,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,
 cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
 cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
-cp -a mythweb/{images,js,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/{images,js,skins,modules,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
 touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
@@ -512,7 +515,7 @@ exit 0
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.dat
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/htpasswd
 %{_datadir}/mythweb
-%dir /var/cache/mythweb
+%dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
 %dir %attr(771,root,http) /var/cache/mythweb/php_sessions
 %endif
