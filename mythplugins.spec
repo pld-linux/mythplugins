@@ -1,3 +1,12 @@
+# TODO
+#   /usr/lib/mythtv/plugins/libmythflix.so
+#   /usr/share/mythtv/i18n/mythflix_es.qm
+#   /usr/share/mythtv/i18n/mythflix_fi.qm
+#   /usr/share/mythtv/i18n/mythflix_sv.qm
+#   /usr/share/mythtv/mythflix/netflix-rss.xml
+#   /usr/share/mythtv/mythflix/scripts/netflix.pl
+#   /usr/share/mythtv/mythvideo/scripts/ofdb.pl
+#   /usr/share/mythtv/netflix_menu.xml
 #
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
@@ -30,16 +39,16 @@
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
-%define	_snap 20051221
-%define	_rev 8332
-%define	_rel 1.3
+%define	_snap 20060129
+%define	_rev 8763
+%define	_rel 1
 Version:	0.19.0.%{_snap}
 Release:	0.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	ec09b35d6b4c29a33c382fd89e0887eb
+# Source0-md5:	05de971282d1ab353ec0ee751550983b
 Source1:	mythweb.conf
 #Patch0:		%{name}-configure.patch
 #Patch1:		%{name}-libversion.patch
@@ -265,8 +274,6 @@ Interfejs WWW do MythTV.
 %patch3 -p1
 %patch4 -p1
 
-# trash
-rm mythweb/images/icons/.cvsignore
 # make it visible
 mv mythweb/{.,}htaccess
 
@@ -348,7 +355,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,
 cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
 cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
-cp -a mythweb/{images,js,skins,modules,themes,templates,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/{images,js,skins,modules,themes,templates} $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
 touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
