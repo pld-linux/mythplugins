@@ -58,3 +58,24 @@ diff -ur ./mythweb/includes/init.php /tmp/mythweb/includes/init.php
  
  // Make sure the image cache path exists and is writable
      if (!is_dir(cache_dir) && !mkdir(cache_dir, 0755)) {
+--- ./mythweb/modules/tv/handler.php	2006-02-01 21:18:41.000000000 +0200
++++ ./modules/tv/handler.php	2006-02-01 21:18:43.170715902 +0200
+@@ -14,14 +14,14 @@
+ /**/
+ 
+ // Make sure the image cache path exists and is writable
+-    if (!is_dir('data/tv_icons') && !mkdir('data/tv_icons', 0755)) {
+-        $Error = 'Error creating data/tv_icons: Please check permissions on the data directory.';
++    if (!is_dir('/var/cache/mythweb/tv_icons') && !mkdir('/var/cache/mythweb/tv_icons', 0755)) {
++        $Error = 'Error creating /var/cache/mythweb/tv_icons: Please check permissions on the data directory.';
+         require_once 'templates/_error.php';
+         exit;
+     }
+-    if (!is_writable('data/tv_icons')) {
++    if (!is_writable('/var/cache/mythweb/tv_icons')) {
+         $process_user = posix_getpwuid(posix_geteuid());
+-        $Error = 'data/tv_icons directory is not writable by '.$process_user['name'].'. Please check permissions.';
++        $Error = '/var/cache/mythweb/tv_icons directory is not writable by '.$process_user['name'].'. Please check permissions.';
+         require_once 'templates/_error.php';
+         exit;
+     }
