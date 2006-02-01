@@ -32,3 +32,29 @@ diff -ur ./mythweb/includes/init.php /tmp/mythweb/includes/init.php
                      if(!is_dir($path) && !mkdir($path, 0755))
                          trigger_error('Error creating path for '.$path.': Please check permissions.', FATAL);
                  }
+--- ./mythweb/includes/init.php	2006-01-07 02:10:47.000000000 +0200
++++ /tmp/init.php	2006-01-08 01:02:40.000000000 +0200
+@@ -232,12 +232,12 @@
+     define('theme_url', root.theme_dir);
+ 
+ // Make sure the data directory exists and is writable
+-    if (!is_dir('data') && !mkdir('data', 0755)) {
++    if (!is_dir('/var/cache/mythweb') && !mkdir('/var/cache/mythweb', 0755)) {
+         $Error = 'Error creating the data directory. Please check permissions.';
+         require_once 'templates/_error.php';
+         exit;
+     }
+-    if (!is_writable('data')) {
++    if (!is_writable('/var/cache/mythweb')) {
+         $process_user = posix_getpwuid(posix_geteuid());
+         $Error = 'data directory is not writable by '.$process_user['name'].'. Please check permissions.';
+         require_once 'templates/_error.php';
+@@ -245,7 +245,7 @@
+     }
+ 
+ // New hard-coded cache directory
+-    define('cache_dir', 'data/cache');
++    define('cache_dir', '/var/cache/mythweb');
+ 
+ // Make sure the image cache path exists and is writable
+     if (!is_dir(cache_dir) && !mkdir(cache_dir, 0755)) {
