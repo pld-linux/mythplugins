@@ -41,7 +41,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1.2
+%define	_rel 1.7
 Version:	0.19.0.%{_snap}
 Release:	0.%{_rev}.%{_rel}
 License:	GPL v2
@@ -100,6 +100,8 @@ ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		api_ver %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
+%define		_webapps	/etc/webapps
+%define		_webapp		mythweb
 
 %description
 This is a consolidation of all the official MythTV plugins that used
@@ -252,8 +254,9 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 Summary:	The web interface to MythTV
 Summary(pl):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
-Requires:	webserver = apache
-Requires:	apache(mod_env)
+Requires:	webapps
+#Suggests:	apache(mod_auth)
+#Suggests:	apache(mod_env)
 Requires:	php >= 3:4.3
 Requires:	php-mysql
 Requires:	php-posix
@@ -351,35 +354,67 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 %endif
 
 %if %{with mythweb}
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages}}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythweb/{includes,languages}
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
+install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
 cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
 cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
 cp -a mythweb/{images,js,skins,modules,themes,templates} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
+cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
+touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 %endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -n mythweb -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/mythweb/apache.conf
-exit 0
+%triggerin -n mythweb -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -n mythweb -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
-exit 0
+%triggerun -n mythweb -- apache1
+%webapp_unregister apache %{_webapp}
 
 %triggerin -n mythweb -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/mythweb/apache.conf
-exit 0
+%webapp_register httpd %{_webapp}
 
 %triggerun -n mythweb -- apache >= 2.0.0
-%apache_config_uninstall -v 2
-exit 0
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -n mythweb -- mythweb < 0.19.0.20060129-0.8763.1.6
+for i in canned_searches.php conf.php htpasswd theme_Default.php theme_compact.php theme_vxml.php theme_wap.php theme_wml.php weathertypes.dat; do
+	if [ -f /etc/mythweb/$i.rpmsave ]; then
+		mv -f %{_webapps}/%{_webapp}/$i{,.rpmnew}
+		mv -f /etc/mythweb/$i.rpmsave %{_webapps}/%{_webapp}/$i
+	fi
+done
+sed -i -e 's,/etc/mythweb,%{_webapps}/%{_webapp},' %{_webapps}/%{_webapp}/{apache,httpd}.conf
+
+# migrate from apache-config macros
+if [ -f /etc/mythweb/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/apache.conf{,.rpmnew}
+		cp -f /etc/mythweb/apache.conf.rpmsave %{_webapps}/%{_webapp}/apache.conf
+	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/httpd.conf{,.rpmnew}
+		cp -f /etc/mythweb/apache.conf.rpmsave %{_webapps}/%{_webapp}/httpd.conf
+	fi
+	rm -f /etc/mythweb/apache.conf.rpmsave
+fi
+
+if [ -L /etc/apache/conf.d/99_mythplugins.conf ]; then
+	rm -f /etc/apache/conf.d/99_mythplugins.conf
+	/usr/sbin/webapp register apache %{_webapp}
+	%service -q apache reload
+fi
+if [ -L /etc/httpd/httpd.conf/99_mythplugins.conf ]; then
+	rm -f /etc/httpd/httpd.conf/99_mythplugins.conf
+	/usr/sbin/webapp register httpd %{_webapp}
+	%service -q httpd reload
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -517,11 +552,12 @@ exit 0
 %files -n mythweb
 %defattr(644,root,root,755)
 %doc mythweb/{README,TODO} mythweb/languages/*.{pl,txt}
-%attr(750,root,http) %dir %{_sysconfdir}/mythweb
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/apache.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.dat
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/htpasswd
+%dir %attr(750,root,http) %{_webapps}/%{_webapp}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
 %{_datadir}/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
