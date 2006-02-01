@@ -6,7 +6,7 @@ diff -ur ./mythweb/includes/init.php /tmp/mythweb/includes/init.php
  
  // Load the user-defined configuration settings
 -    require_once 'config/conf.php';
-+    require_once '/etc/mythweb/conf.php';
++    require_once '/etc/webapps/mythweb/conf.php';
  
  // Clean up some variables
      if (!ereg('/$', $_SERVER['DOCUMENT_ROOT']))
