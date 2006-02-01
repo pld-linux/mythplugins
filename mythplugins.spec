@@ -41,7 +41,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1
+%define	_rel 1.1
 Version:	0.19.0.%{_snap}
 Release:	0.%{_rev}.%{_rel}
 License:	GPL v2
@@ -351,7 +351,8 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 %endif
 
 %if %{with mythweb}
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages},/var/cache/mythweb/{image_cache,php_sessions}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/{includes,languages}}
+install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
 cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
