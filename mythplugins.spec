@@ -41,7 +41,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1.1
+%define	_rel 1.2
 Version:	0.19.0.%{_snap}
 Release:	0.%{_rev}.%{_rel}
 License:	GPL v2
@@ -526,4 +526,5 @@ exit 0
 %dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
 %dir %attr(771,root,http) /var/cache/mythweb/php_sessions
+%dir %attr(771,root,http) /var/cache/mythweb/tv_icons
 %endif
