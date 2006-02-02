@@ -576,8 +576,9 @@ fi
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
-%{_datadir}/mythtv/themes/default/news-info-bg.png
 %{_datadir}/mythtv/i18n/mythnews_*.qm
+# DUPLICATE WITH MYTHFLIX?
+%{_datadir}/mythtv/themes/default/news-info-bg.png
 %endif
 
 %if %{with mythbrowser}
@@ -634,4 +635,6 @@ fi
 %{_datadir}/mythtv/netflix_menu.xml
 %{_datadir}/mythtv/themes/default/title_netflix.png
 %{_datadir}/mythtv/themes/default/netflix-ui.xml
+# DUPLICATE WITH MYTHNEWS?
+%{_datadir}/mythtv/themes/default/news-info-bg.png
 %endif
