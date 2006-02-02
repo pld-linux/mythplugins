@@ -376,10 +376,10 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun -n mythweb -- apache1
 %webapp_unregister apache %{_webapp}
 
-%triggerin -n mythweb -- apache >= 2.0.0
+%triggerin -n mythweb -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -n mythweb -- apache >= 2.0.0
+%triggerun -n mythweb -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -n mythweb -- mythweb < 0.19
