@@ -624,9 +624,7 @@ fi
 %files -n mythflix
 %defattr(644,root,root,755)
 %doc mythflix/{AUTHORS,ChangeLog,README}
-#%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
-# FIXME lib64
-%{_prefix}/lib/mythtv/plugins/libmythflix.so
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
 %{_datadir}/mythtv/i18n/mythflix_*.qm
 %dir %{_datadir}/mythtv/mythflix
 %{_datadir}/mythtv/mythflix/netflix-rss.xml
