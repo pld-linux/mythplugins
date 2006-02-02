@@ -1,13 +1,3 @@
-# TODO
-#   /usr/lib/mythtv/plugins/libmythflix.so
-#   /usr/share/mythtv/i18n/mythflix_es.qm
-#   /usr/share/mythtv/i18n/mythflix_fi.qm
-#   /usr/share/mythtv/i18n/mythflix_sv.qm
-#   /usr/share/mythtv/mythflix/netflix-rss.xml
-#   /usr/share/mythtv/mythflix/scripts/netflix.pl
-#   /usr/share/mythtv/mythvideo/scripts/ofdb.pl
-#   /usr/share/mythtv/netflix_menu.xml
-#
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
@@ -20,6 +10,7 @@
 %bcond_without	mythvideo	# disable building mythgallery plugin
 %bcond_without	mythweather	# disable building mythgallery plugin
 %bcond_without	mythweb		# disable building mythgallery plugin
+%bcond_without	mythflix	# disable building mythflix plugin
 %bcond_with	mythcontrols	# mythcontrols plugin (not done)
 #
 %if %{without binary}
@@ -33,6 +24,7 @@
 %undefine	with_mythvideo
 %undefine	with_mythweather
 %undefine	with_mythcontrols
+%undefine	with_mythflix
 %endif
 #
 %include	/usr/lib/rpm/macros.perl
@@ -41,7 +33,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1
+%define	_rel 1.1
 Version:	0.19
 Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
@@ -77,7 +69,7 @@ BuildRequires:	libmad-devel
 BuildRequires:	libmyth-devel >= 0.18.1-0.21
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libvorbis-devel >= 1.0
+BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -88,6 +80,7 @@ BuildRequires:	zlib-devel
 %endif
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythdvd:Requires:	mythdvd}
+%{?with_mythflix:Requires:	mythflix}
 %{?with_mythgallery:Requires:	mythgallery}
 %{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
@@ -267,6 +260,18 @@ The web interface to MythTV.
 %description -n mythweb -l pl
 Interfejs WWW do MythTV.
 
+%package -n mythflix
+Summary:	MythFlix (A NetFlix MythTV)
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{api_ver}
+
+%description -n mythflix
+MyhtFlix is a MythTV plugin for adding movies to your Netflix queue.
+It currently supports the ablity to view your queue and add movies to
+your queue. The browse feature is based on the Netflix RSS feeds. This
+plugin is not very mature, which means things might not work right
+and/or it might break other things.
+
 %prep
 %setup -q %{?_snap:-n %{name}}
 #%patch0 -p1
@@ -318,6 +323,7 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
 	%{!?with_mythcontrols:--disable-mythcontrols} \
+	%{!?with_mythflix:--disable-mythflix} \
 	--disable-festival
 
 #	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
@@ -428,7 +434,56 @@ fi
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
-%{_datadir}/mythtv/themes
+#%{_datadir}/mythtv/themes
+%{_datadir}/mythtv/themes/default/music-ui.xml
+# these might be in wrong package
+%{_datadir}/mythtv/themes/default/ff_button_off.png
+%{_datadir}/mythtv/themes/default/ff_button_on.png
+%{_datadir}/mythtv/themes/default/ff_button_pushed.png
+%{_datadir}/mythtv/themes/default/mm_blackhole_border.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_off.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_on.png
+%{_datadir}/mythtv/themes/default/mm_blankbutton_pushed.png
+%{_datadir}/mythtv/themes/default/mm_checked.png
+%{_datadir}/mythtv/themes/default/mm_checked_high.png
+%{_datadir}/mythtv/themes/default/mm_down_arrow.png
+%{_datadir}/mythtv/themes/default/mm_left_arrow.png
+%{_datadir}/mythtv/themes/default/mm_leftright_off.png
+%{_datadir}/mythtv/themes/default/mm_leftright_on.png
+%{_datadir}/mythtv/themes/default/mm_leftright_pushed.png
+%{_datadir}/mythtv/themes/default/mm_rating.png
+%{_datadir}/mythtv/themes/default/mm_right_arrow.png
+%{_datadir}/mythtv/themes/default/mm_unchecked.png
+%{_datadir}/mythtv/themes/default/mm_unchecked_high.png
+%{_datadir}/mythtv/themes/default/mm_up_arrow.png
+%{_datadir}/mythtv/themes/default/mm_volume_background.png
+%{_datadir}/mythtv/themes/default/mm_volume_tick.png
+%{_datadir}/mythtv/themes/default/mm_waiting.png
+%{_datadir}/mythtv/themes/default/music-sel-bg.png
+%{_datadir}/mythtv/themes/default/next_button_off.png
+%{_datadir}/mythtv/themes/default/next_button_on.png
+%{_datadir}/mythtv/themes/default/next_button_pushed.png
+%{_datadir}/mythtv/themes/default/pause_button_off.png
+%{_datadir}/mythtv/themes/default/pause_button_on.png
+%{_datadir}/mythtv/themes/default/pause_button_pushed.png
+%{_datadir}/mythtv/themes/default/play_button_off.png
+%{_datadir}/mythtv/themes/default/play_button_on.png
+%{_datadir}/mythtv/themes/default/play_button_pushed.png
+%{_datadir}/mythtv/themes/default/prev_button_off.png
+%{_datadir}/mythtv/themes/default/prev_button_on.png
+%{_datadir}/mythtv/themes/default/prev_button_pushed.png
+%{_datadir}/mythtv/themes/default/rew_button_off.png
+%{_datadir}/mythtv/themes/default/rew_button_on.png
+%{_datadir}/mythtv/themes/default/rew_button_pushed.png
+%{_datadir}/mythtv/themes/default/selectionbar.png
+%{_datadir}/mythtv/themes/default/stop_button_off.png
+%{_datadir}/mythtv/themes/default/stop_button_on.png
+%{_datadir}/mythtv/themes/default/stop_button_pushed.png
+%{_datadir}/mythtv/themes/default/text_button_off.png
+%{_datadir}/mythtv/themes/default/text_button_on.png
+%{_datadir}/mythtv/themes/default/text_button_pushed.png
+%{_datadir}/mythtv/themes/default/track_info_background.png
+
 %endif
 
 %if %{with mythvideo}
@@ -447,7 +502,9 @@ fi
 %{_datadir}/mythtv/mythvideo/scripts/README
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/ofdb.pl
 /var/lib/mythvideo
+
 %endif
 
 %if %{with mythweather}
@@ -494,9 +551,6 @@ fi
 %doc mythgame/README mythgame/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
-#%config %{_datadir}/mythtv/games/PC/gamelist.xml
-#%{_datadir}/xmame/screens
-#%{_datadir}/xmame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
 %{_datadir}/mythtv/i18n/mythgame_*.qm
@@ -563,4 +617,21 @@ fi
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
 %dir %attr(771,root,http) /var/cache/mythweb/php_sessions
 %dir %attr(771,root,http) /var/cache/mythweb/tv_icons
+%endif
+
+%if %{with mythflix}
+%files -n mythflix
+%defattr(644,root,root,755)
+%doc mythflix/{AUTHORS,ChangeLog,README}
+#%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
+# FIXME lib64
+%{_prefix}/lib/mythtv/plugins/libmythflix.so
+%{_datadir}/mythtv/i18n/mythflix_*.qm
+%dir %{_datadir}/mythtv/mythflix
+%{_datadir}/mythtv/mythflix/netflix-rss.xml
+%dir %{_datadir}/mythtv/mythflix/scripts
+%attr(755,root,root) %{_datadir}/mythtv/mythflix/scripts/netflix.pl
+%{_datadir}/mythtv/netflix_menu.xml
+%{_datadir}/mythtv/themes/default/title_netflix.png
+%{_datadir}/mythtv/themes/default/netflix-ui.xml
 %endif
