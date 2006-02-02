@@ -41,9 +41,9 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1.7
-Version:	0.19.0.%{_snap}
-Release:	0.%{_rev}.%{_rel}
+%define	_rel 1
+Version:	0.19
+Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -382,7 +382,7 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun -n mythweb -- apache >= 2.0.0
 %webapp_unregister httpd %{_webapp}
 
-%triggerpostun -n mythweb -- mythweb < 0.19.0.20060129-0.8763.1.6
+%triggerpostun -n mythweb -- mythweb < 0.19
 for i in canned_searches.php conf.php htpasswd theme_Default.php theme_compact.php theme_vxml.php theme_wap.php theme_wml.php weathertypes.dat; do
 	if [ -f /etc/mythweb/$i.rpmsave ]; then
 		mv -f %{_webapps}/%{_webapp}/$i{,.rpmnew}
