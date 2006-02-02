@@ -129,3 +129,14 @@ diff -u -r mythplugins-lib32/mythweather/mythweather/mythweather.pro mythplugins
  INSTALLS += target
  
  uifiles.path = $${PREFIX}/share/mythtv/themes/default
+--- ./mythplugins.libdir/mythflix/mythflix/mythflix.pro	2005-12-21 00:52:42.000000000 +0200
++++ mythplugins/mythflix/mythflix/mythflix.pro	2006-02-02 17:52:35.000000000 +0200
+@@ -4,7 +4,7 @@
+ TEMPLATE = lib
+ CONFIG += plugin thread warn_on debug
+ TARGET = mythflix
+-target.path = $${PREFIX}/lib/mythtv/plugins
++target.path = $${PREFIX}/lib64/mythtv/plugins
+ INSTALLS += target
+ 
+ uifiles.path = $${PREFIX}/share/mythtv/themes/default
