@@ -33,7 +33,7 @@ Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1.1
+%define	_rel 1.2
 Version:	0.19
 Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
@@ -379,6 +379,13 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 %endif
 
+d=
+for p in mythmusic mythvideo mythweather mythgallery mythgame mythdvd mythnews mythbrowser mythphone mythflix mythcontrols; do
+	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
+		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+	done > $p.lang
+done
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -432,14 +439,13 @@ fi
 %defattr(644,root,root,755)
 
 %if %{with mythmusic}
-%files -n mythmusic
+%files -n mythmusic -f mythmusic.lang
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
 /var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
-%{_datadir}/mythtv/i18n/mythmusic_*.qm
 %{_datadir}/mythtv/themes/default/music-ui.xml
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
@@ -490,11 +496,10 @@ fi
 %endif
 
 %if %{with mythvideo}
-%files -n mythvideo
+%files -n mythvideo -f mythvideo.lang
 %defattr(644,root,root,755)
 %doc mythvideo/README mythvideo/UPGRADING mythvideo/videodb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
-%{_datadir}/mythtv/i18n/mythvideo_*.qm
 %{_datadir}/mythtv/themes/default/video-ui.xml
 %{_datadir}/mythtv/themes/default/mv-*.png
 %{_datadir}/mythtv/themes/default/mv_*.png
@@ -511,11 +516,10 @@ fi
 %endif
 
 %if %{with mythweather}
-%files -n mythweather
+%files -n mythweather -f mythweather.lang
 %defattr(644,root,root,755)
 %doc mythweather/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
-%{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/mythweather
 %{_datadir}/mythtv/themes/default/weather-ui.xml
 %{_datadir}/mythtv/themes/default/cloudy.png
@@ -537,30 +541,28 @@ fi
 %endif
 
 %if %{with mythgallery}
-%files -n mythgallery
+%files -n mythgallery -f mythgallery.lang
 %defattr(644,root,root,755)
 %doc mythgallery/README mythgallery/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
-%{_datadir}/mythtv/i18n/mythgallery_*.qm
 # FIXME: this is definately stupid path
 /var/lib/pictures
 %endif
 
 %if %{with mythgame}
-%files -n mythgame
+%files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
 %doc mythgame/README mythgame/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
-%{_datadir}/mythtv/i18n/mythgame_*.qm
 %endif
 
 %if %{with mythdvd}
-%files -n mythdvd
+%files -n mythdvd -f mythdvd.lang
 %defattr(644,root,root,755)
 %doc mythdvd/README mythdvd/UPGRADING mythdvd/AUTHORS
 %attr(755,root,root) %{_bindir}/mtd
@@ -569,33 +571,30 @@ fi
 %{_datadir}/mythtv/dvdmenu.xml
 %{_datadir}/mythtv/themes/default/dvd-ui.xml
 %{_datadir}/mythtv/themes/default/md_*.png
-%{_datadir}/mythtv/i18n/mythdvd_*.qm
 %endif
 
 %if %{with mythnews}
-%files -n mythnews
+%files -n mythnews -f mythnews.lang
 %defattr(644,root,root,755)
 %doc mythnews/README mythnews/AUTHORS
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
-%{_datadir}/mythtv/i18n/mythnews_*.qm
 # DUPLICATE WITH MYTHFLIX?
 %{_datadir}/mythtv/themes/default/news-info-bg.png
 %endif
 
 %if %{with mythbrowser}
-%files -n mythbrowser
+%files -n mythbrowser -f mythbrowser.lang
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
 %attr(755,root,root) %{_bindir}/mythbrowser
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
 %{_datadir}/mythtv/themes/default/webpage.png
-%{_datadir}/mythtv/i18n/mythbrowser_*.qm
 %endif
 
 %if %{with mythphone}
-%files -n mythphone
+%files -n mythphone -f mythphone.lang
 %defattr(644,root,root,755)
 %doc mythphone/README mythphone/AUTHORS mythphone/TODO
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythphone.so
@@ -603,7 +602,6 @@ fi
 %{_datadir}/mythtv/themes/default/webcam-ui.xml
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
-%{_datadir}/mythtv/i18n/mythphone_*.qm
 %endif
 
 %if %{with mythweb}
@@ -624,11 +622,10 @@ fi
 %endif
 
 %if %{with mythflix}
-%files -n mythflix
+%files -n mythflix -f mythflix.lang
 %defattr(644,root,root,755)
 %doc mythflix/{AUTHORS,ChangeLog,README}
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
-%{_datadir}/mythtv/i18n/mythflix_*.qm
 %dir %{_datadir}/mythtv/mythflix
 %{_datadir}/mythtv/mythflix/netflix-rss.xml
 %dir %{_datadir}/mythtv/mythflix/scripts
@@ -641,11 +638,10 @@ fi
 %endif
 
 %if %{with mythcontrols}
-%files -n mythcontrols
+%files -n mythcontrols -f mythcontrols.lang
 %defattr(644,root,root,755)
 %doc mythcontrols/{AUTHORS,README,TODO}
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythcontrols.so
-%{_datadir}/mythtv/i18n/mythcontrols_*.qm
 %{_datadir}/mythtv/themes/default/controls-ui.xml
 %{_datadir}/mythtv/themes/default/kb-button-off.png
 %{_datadir}/mythtv/themes/default/kb-button-on.png
