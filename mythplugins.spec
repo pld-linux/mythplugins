@@ -1,7 +1,3 @@
-<<<<<<< mythplugins.spec
-#
-=======
->>>>>>> 1.12.2.23
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
@@ -46,27 +42,27 @@ Group:		Applications/Multimedia
 Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 # Source0-md5:	05de971282d1ab353ec0ee751550983b
 Source1:	mythweb.conf
-#Patch0:		%{name}-configure.patch
-#Patch1:		%{name}-libversion.patch
-Patch2:		%{name}-lib64.patch
-Patch3:		%{name}-paths.patch
-Patch4:		mythweb-config.patch
+Patch0:		%{name}-lib64.patch
+Patch1:		%{name}-paths.patch
+Patch2:		mythweb-config.patch
 URL:		http://www.mythtv.org/
 %if %{with binary}
+%if %{with mythgallery} || %{with myhtmusic}
 BuildRequires:	OpenGL-devel
+%endif
 BuildRequires:	SDL-devel
 BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
-BuildRequires:	fftw-devel >= 2.1.3
+%{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
 BuildRequires:	flac-devel >= 1.0.4
 BuildRequires:	freetype-devel
 BuildRequires:	kdelibs-devel
 BuildRequires:	libcdaudio-devel
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
-BuildRequires:	libexif-devel >= 1:0.6.9
+%{?with_mythgallery:BuildRequires:	libexif-devel >= 1:0.6.9}
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
@@ -78,7 +74,7 @@ BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
-BuildRequires:	transcode >= 0.6.8
+%{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
@@ -300,23 +296,14 @@ bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
 
 %prep
 %setup -q %{?_snap:-n %{name}}
-#%patch0 -p1
-#%patch1 -p1
 %if %{_lib} != "lib"
-%patch2 -p1
+%patch0 -p1
 %endif
-%patch3 -p1
-%patch4 -p1
+%patch1 -p1
+%patch2 -p1
 
 # make it visible
 mv mythweb/{.,}htaccess
-
-%if %{with binary}
-%ifarch %{x8664}
-	# mmx asm isn't x86_64 compatible in mythmusic
-	echo 'DEFINES -= HAVE_MMX' >> settings.pro
-%endif
-%endif
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
