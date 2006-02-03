@@ -11,7 +11,7 @@
 %bcond_without	mythweather	# disable building mythgallery plugin
 %bcond_without	mythweb		# disable building mythgallery plugin
 %bcond_without	mythflix	# disable building mythflix plugin
-%bcond_with	mythcontrols	# mythcontrols plugin (not done)
+%bcond_without	mythcontrols	# disable mythcontrols plugin
 #
 %if %{without binary}
 %undefine	with_mythbrowser
@@ -62,7 +62,7 @@ BuildRequires:	kdelibs-devel
 BuildRequires:	libcdaudio-devel
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
-BuildRequires:	libexif-devel
+BuildRequires:	libexif-devel >= 0.6.9
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
@@ -286,10 +286,6 @@ and/or it might break other things.
 mv mythweb/{.,}htaccess
 
 %if %{with binary}
-# include mythtv build settings
-#cp %{_datadir}/mythtv/build/config.mak .
-#sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
-
 %ifarch %{x8664}
 	# mmx asm isn't x86_64 compatible in mythmusic
 	echo 'DEFINES -= HAVE_MMX' >> settings.pro
@@ -313,27 +309,17 @@ export QTDIR="%{_prefix}"
 %configure \
 	--enable-all \
 	%{!?with_mythbrowser:--disable-mythbrowser} \
-	%{!?with_mythdvd:--disable-mythdvd} \
-	%{!?with_mythgallery:--disable-mythgallery} \
+	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
+	%{!?with_mythgallery:--disable-mythgallery}%{?with_mythgallery:--enable-exif --enable-new-exif --enable-opengl} \
 	%{!?with_mythgame:--disable-mythgame} \
-	%{!?with_mythmusic:--disable-mythmusic} \
+	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
 	%{!?with_mythnews:--disable-mythnews} \
-	%{!?with_mythphone:--disable-mythphone} \
+	%{!?with_mythphone:--disable-mythphone}%{?with_mythphone:--disable-festival} \
 	%{!?with_mythvideo:--disable-mythvideo} \
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
 	%{!?with_mythcontrols:--disable-mythcontrols} \
 	%{!?with_mythflix:--disable-mythflix} \
-	--disable-festival
-
-#	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
-#	--enable-transcode       enable DVD ripping and transcoding [default=no]
-#	--enable-vcd             enable VCD playing [default=no]
-#	--enable-exif            enable reading of EXIF headers [default=no]
-#	--enable-fftw            enable fftw visualizers [default=no]
-#	--enable-sdl             use SDL for the synaesthesia output [default=no]
-#	--enable-aac             enable AAC/MP4 audio file decompression [default=no]
-#	--enable-festival        enable festival TTS Engine [default=no]
 
 echo 'QMAKE_CXX=%{__cxx}' >> settings.pro
 echo 'QMAKE_CC=%{__cc}' >> settings.pro
