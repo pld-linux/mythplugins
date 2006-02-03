@@ -1,3 +1,7 @@
+<<<<<<< mythplugins.spec
+#
+=======
+>>>>>>> 1.12.2.23
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
@@ -262,24 +266,37 @@ Interfejs WWW do MythTV.
 
 %package -n mythflix
 Summary:	MythFlix (A NetFlix MythTV)
+Summary(pl):	MythFlix (NetFlix MythTV)
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythflix
-MyhtFlix is a MythTV plugin for adding movies to your Netflix queue.
-It currently supports the ablity to view your queue and add movies to
+MythFlix is a MythTV plugin for adding movies to your Netflix queue.
+It currently supports the ability to view your queue and add movies to
 your queue. The browse feature is based on the Netflix RSS feeds. This
 plugin is not very mature, which means things might not work right
 and/or it might break other things.
 
+%description -n mythflix -l pl
+MythFlix to wtyczka MythTV do dodawania filmów do kolejki Netfliksa.
+Aktualnie daje mo¿liwo¶æ ogl±dania kolejki i dodawania do niej filmów.
+Przegl±danie jest oparte na kanale RSS Netfliksa. Ta wtyczka nie jest
+jeszcze zbyt dojrza³a, co znaczy, ¿e co¶ mo¿e nie dzia³aæ lub psuæ co¶
+innego.
+
 %package -n mythcontrols
 Summary:	MythTV keybindings editor
+SUmmary(pl):	Edytor przypisañ klawiszy MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
 %description -n mythcontrols
 This plugin allows you to configure your keybindings on the frontend
 without having to use mythweb or edit tables by hand.
+
+%description -n mythcontrols -l pl
+Ta wtyczka pozwala konfigurowaæ przypisania klawiszy we frontendzie
+bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
 
 %prep
 %setup -q %{?_snap:-n %{name}}
