@@ -321,8 +321,15 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythcontrols:--disable-mythcontrols} \
 	%{!?with_mythflix:--disable-mythflix} \
 
-echo 'QMAKE_CXX=%{__cxx}' >> settings.pro
-echo 'QMAKE_CC=%{__cc}' >> settings.pro
+mv mythconfig.mak mythconfig.mak.old
+cp mythconfig.mak.old mythconfig.mak
+cat <<'EOF'>> mythconfig.mak
+QMAKE_CXX=%{__cxx}
+QMAKE_CC=%{__cc}
+OPTFLAGS=%{rpmcflags} -Wall -Wno-switch
+ECFLAGS=%{rpmcflags} -fomit-frame-pointer
+ECXXFLAGS=%{rpmcflags} -fomit-frame-pointer
+EOF
 
 %{__make}
 %endif
