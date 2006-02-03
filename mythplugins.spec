@@ -62,7 +62,7 @@ BuildRequires:	kdelibs-devel
 BuildRequires:	libcdaudio-devel
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
-BuildRequires:	libexif-devel >= 0.6.9
+BuildRequires:	libexif-devel >= 1:0.6.9
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
@@ -272,6 +272,15 @@ your queue. The browse feature is based on the Netflix RSS feeds. This
 plugin is not very mature, which means things might not work right
 and/or it might break other things.
 
+%package -n mythcontrols
+Summary:	MythTV keybindings editor
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{api_ver}
+
+%description -n mythcontrols
+This plugin allows you to configure your keybindings on the frontend
+without having to use mythweb or edit tables by hand.
+
 %prep
 %setup -q %{?_snap:-n %{name}}
 #%patch0 -p1
@@ -427,9 +436,7 @@ fi
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/i18n/mythmusic_*.qm
-#%{_datadir}/mythtv/themes
 %{_datadir}/mythtv/themes/default/music-ui.xml
-# these might be in wrong package
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
 %{_datadir}/mythtv/themes/default/ff_button_pushed.png
@@ -476,7 +483,6 @@ fi
 %{_datadir}/mythtv/themes/default/text_button_on.png
 %{_datadir}/mythtv/themes/default/text_button_pushed.png
 %{_datadir}/mythtv/themes/default/track_info_background.png
-
 %endif
 
 %if %{with mythvideo}
@@ -628,4 +634,15 @@ fi
 %{_datadir}/mythtv/themes/default/netflix-ui.xml
 # DUPLICATE WITH MYTHNEWS?
 %{_datadir}/mythtv/themes/default/news-info-bg.png
+%endif
+
+%if %{with mythcontrols}
+%files -n mythcontrols
+%defattr(644,root,root,755)
+%doc mythcontrols/{AUTHORS,README,TODO}
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythcontrols.so
+%{_datadir}/mythtv/i18n/mythcontrols_*.qm
+%{_datadir}/mythtv/themes/default/controls-ui.xml
+%{_datadir}/mythtv/themes/default/kb-button-off.png
+%{_datadir}/mythtv/themes/default/kb-button-on.png
 %endif
