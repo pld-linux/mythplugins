@@ -26,21 +26,22 @@
 %undefine	with_mythcontrols
 %undefine	with_mythflix
 %endif
-#
+
 %include	/usr/lib/rpm/macros.perl
+
+%define	_snap 20060204
+%define	_rev 8859
+%define	_rel 1
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
-%define	_snap 20060129
-%define	_rev 8763
-%define	_rel 1.2
 Version:	0.19
 Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	05de971282d1ab353ec0ee751550983b
+# Source0-md5:	8bc1d93b2c92c6c47b4038e5162e8167
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
@@ -66,7 +67,7 @@ BuildRequires:	libdvdread-devel >= 0.9.4
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel >= 0.18.1-0.21
+BuildRequires:	libmyth-devel >= 0.19
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
@@ -282,7 +283,7 @@ innego.
 
 %package -n mythcontrols
 Summary:	MythTV keybindings editor
-SUmmary(pl):	Edytor przypisañ klawiszy MythTV
+Summary(pl):	Edytor przypisañ klawiszy MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{api_ver}
 
@@ -379,7 +380,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 %endif
 
-d=
 for p in mythmusic mythvideo mythweather mythgallery mythgame mythdvd mythnews mythbrowser mythphone mythflix mythcontrols; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
