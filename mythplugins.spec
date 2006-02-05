@@ -46,7 +46,6 @@ Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
 Patch2:		mythweb-config.patch
-Patch3:		%{name}-cdaudio.patch
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
@@ -61,7 +60,7 @@ BuildRequires:	faad2-devel >= 2.0-5.2
 BuildRequires:	flac-devel >= 1.0.4
 BuildRequires:	freetype-devel
 BuildRequires:	kdelibs-devel
-BuildRequires:	libcdaudio-devel
+BuildRequires:	libcdaudio-devel >= 0.99.12p2
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
 %{?with_mythgallery:BuildRequires:	libexif-devel >= 1:0.6.9}
@@ -303,7 +302,6 @@ bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
 %endif
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 # make it visible
 mv mythweb/{.,}htaccess
