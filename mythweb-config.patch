@@ -1,15 +1,3 @@
-diff -ur ./mythweb/canned_searches.php /tmp/mythweb/canned_searches.php
---- ./mythweb/canned_searches.php	2005-03-01 09:10:23.000000000 +0200
-+++ /tmp/mythweb/canned_searches.php	2005-10-26 00:17:02.000000000 +0300
-@@ -13,7 +13,7 @@
-     require_once "includes/init.php";
- 
- // Load the canned searches
--    require_once "config/canned_searches.php";
-+    require_once "/etc/mythweb/canned_searches.php";
- 
- // Load the class for this page
-     require_once theme_dir.'canned_searches.php';
 diff -ur ./mythweb/includes/init.php /tmp/mythweb/includes/init.php
 --- ./mythweb/includes/init.php	2005-02-28 00:52:48.000000000 +0200
 +++ /tmp/mythweb/includes/init.php	2005-10-26 00:11:25.000000000 +0300
@@ -18,82 +6,76 @@ diff -ur ./mythweb/includes/init.php /tmp/mythweb/includes/init.php
  
  // Load the user-defined configuration settings
 -    require_once 'config/conf.php';
-+    require_once '/etc/mythweb/conf.php';
++    require_once '/etc/webapps/mythweb/conf.php';
  
  // Clean up some variables
      if (!ereg('/$', $_SERVER['DOCUMENT_ROOT']))
-@@ -127,15 +127,15 @@
-     define('theme_dir', 'themes/'.Theme.'/');
- 
- // Load the theme config
--    require_once 'config/theme_'.Theme.'.php';
-+    require_once '/etc/mythweb/theme_'.Theme.'.php';
- 
- // Load the overall page theme class
-     require_once theme_dir."theme.php";
- 
- // Make sure the image cache path exists
-     $path = '';
--    foreach (split('/+', image_cache) as $dir) {
--        $path .= $path ? '/' . $dir : $dir;
-+    foreach (split("/+", image_cache) as $dir) {
-+        $path .= $path ? ('/' . $dir) : ($dir ? $dir : "/$dir");
-         if(!is_dir($path) && !mkdir($path, 0755))
-             trigger_error('Error creating path for '.$path.': Please check permissions.', FATAL);
-     }
-diff -ur ./mythweb/search.php /tmp/mythweb/search.php
---- ./mythweb/search.php	2005-03-01 09:10:23.000000000 +0200
-+++ /tmp/mythweb/search.php	2005-10-26 00:17:12.000000000 +0300
-@@ -64,7 +64,7 @@
-     if (preg_match('/^\s*canned:\s*(.+)\s*$/', $_SESSION['search']['searchstr'], $search_name)) {
-         $search_name = $search_name[1];
-     // Load the canned searches
--        require_once 'config/canned_searches.php';
-+        require_once '/etc/mythweb/canned_searches.php';
-     // Find the query
-         if ($Canned_Searches[$search_name]) {
-             $query = array($Canned_Searches[$search_name]);
-diff -ur ./mythweb/weather.php /tmp/mythweb/weather.php
---- ./mythweb/weather.php	2005-03-09 08:41:54.000000000 +0200
-+++ /tmp/mythweb/weather.php	2005-10-26 00:17:22.000000000 +0300
-@@ -253,7 +253,7 @@
- }
- 
- function getImageAndDescFromId($myid) {
--    $data = file("config/weathertypes.dat");
-+    $data = file("/etc/mythweb/weathertypes.dat");
-     foreach($data as $line) {
-     list($id, $name, $img) = explode(",", $line);
-     if($id != $myid) continue;
-@@ -263,7 +263,7 @@
- }
- 
- function getImageFromName($myname) {
--    $data = file("config/weathertypes.dat");
-+    $data = file("/etc/mythweb/weathertypes.dat");
-     foreach($data as $line) {
-     list($id, $name, $img) = explode(",", $line);
-     if($name != $myname) continue;
-diff -u ./mythweb/config/conf.php /tmp/conf/conf.php
---- ./mythweb/config/conf.php	2005-01-31 07:42:41.000000000 +0200
-+++ /tmp/conf/conf.php	2005-10-26 00:15:19.000000000 +0300
-@@ -41,7 +41,7 @@
-     define('fs_encoding', 'ISO-8859-1');
- 
- // Path to the image cache directory
--    define('image_cache', 'image_cache');
-+    define('image_cache', '/var/cache/mythweb/image_cache');
- 
- // Local (web-friendly) path to the mythtv video dir (use a symlink to the real one - one will be auto-created if it can be)
-     define('video_dir', 'video_dir');
---- ./mythweb/config/conf.php~	2005-01-31 07:42:41.000000000 +0200
-+++ ./mythweb/config/conf.php	2005-10-26 02:17:13.000000000 +0300
-@@ -26,7 +26,7 @@
-     define('server_domain', $_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']);
- 
- // Email address to which php and database errors are mailed to
--    define('Error_Email', 'php_errors@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
-+    define('Error_Email', 'root@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
+--- ./mythweb/config/conf.php~	2005-11-04 02:25:34.000000000 +0200
++++ ./mythweb/config/conf.php	2005-11-04 02:26:32.000000000 +0200
+@@ -29,7 +29,7 @@
+ //    defined as mythtv.mydomain.com in server_domain above, mail will go to
+ //    mythweb_errors@mydomain.com.
+ //
+-    define('error_email', 'mythweb_errors@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
++    define('error_email', 'root@'.preg_replace('/.*?\b([\w\-]+\.[\w\-]+)$/', '$1', server_domain));
  
  // For the "movies" search -- set this to the word your listings provider uses to
  //   describe movies/films/peliculas/etc.
+--- /mythweb/includes/mythbackend.php~	2005-10-22 13:31:12.000000000 +0300
++++ /mythweb/includes/mythbackend.php	2005-11-04 23:31:31.707600269 +0200
+@@ -335,7 +335,7 @@
+             // Make sure the local path exists
+                 $path = '';
+                 foreach (split('/+', dirname($pngpath)) as $dir) {
+-                    $path .= $path ? '/' . $dir : $dir;
++					$path .= $path ? ('/' . $dir) : ($dir ? $dir : "/$dir");
+                     if(!is_dir($path) && !mkdir($path, 0755))
+                         trigger_error('Error creating path for '.$path.': Please check permissions.', FATAL);
+                 }
+--- ./mythweb/includes/init.php	2006-01-07 02:10:47.000000000 +0200
++++ /tmp/init.php	2006-01-08 01:02:40.000000000 +0200
+@@ -232,12 +232,12 @@
+     define('theme_url', root.theme_dir);
+ 
+ // Make sure the data directory exists and is writable
+-    if (!is_dir('data') && !mkdir('data', 0755)) {
++    if (!is_dir('/var/cache/mythweb') && !mkdir('/var/cache/mythweb', 0755)) {
+         $Error = 'Error creating the data directory. Please check permissions.';
+         require_once 'templates/_error.php';
+         exit;
+     }
+-    if (!is_writable('data')) {
++    if (!is_writable('/var/cache/mythweb')) {
+         $process_user = posix_getpwuid(posix_geteuid());
+         $Error = 'data directory is not writable by '.$process_user['name'].'. Please check permissions.';
+         require_once 'templates/_error.php';
+@@ -245,7 +245,7 @@
+     }
+ 
+ // New hard-coded cache directory
+-    define('cache_dir', 'data/cache');
++    define('cache_dir', '/var/cache/mythweb');
+ 
+ // Make sure the image cache path exists and is writable
+     if (!is_dir(cache_dir) && !mkdir(cache_dir, 0755)) {
+--- ./mythweb/modules/tv/handler.php	2006-02-01 21:18:41.000000000 +0200
++++ ./modules/tv/handler.php	2006-02-01 21:18:43.170715902 +0200
+@@ -14,14 +14,14 @@
+ /**/
+ 
+ // Make sure the image cache path exists and is writable
+-    if (!is_dir('data/tv_icons') && !mkdir('data/tv_icons', 0755)) {
+-        $Error = 'Error creating data/tv_icons: Please check permissions on the data directory.';
++    if (!is_dir('/var/cache/mythweb/tv_icons') && !mkdir('/var/cache/mythweb/tv_icons', 0755)) {
++        $Error = 'Error creating /var/cache/mythweb/tv_icons: Please check permissions on the data directory.';
+         require_once 'templates/_error.php';
+         exit;
+     }
+-    if (!is_writable('data/tv_icons')) {
++    if (!is_writable('/var/cache/mythweb/tv_icons')) {
+         $process_user = posix_getpwuid(posix_geteuid());
+-        $Error = 'data/tv_icons directory is not writable by '.$process_user['name'].'. Please check permissions.';
++        $Error = '/var/cache/mythweb/tv_icons directory is not writable by '.$process_user['name'].'. Please check permissions.';
+         require_once 'templates/_error.php';
+         exit;
+     }

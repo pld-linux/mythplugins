@@ -1,0 +1,36 @@
+diff -u -r mythplugins-pre/mythgallery/mythgallery/gallerysettings.cpp mythplugins/mythgallery/mythgallery/gallerysettings.cpp
+--- mythplugins-pre/mythgallery/mythgallery/gallerysettings.cpp	2005-10-22 13:31:34.000000000 +0300
++++ mythplugins/mythgallery/mythgallery/gallerysettings.cpp	2005-10-22 18:39:49.000000000 +0300
+@@ -44,7 +44,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("GalleryImportDirs");
+     gc->setLabel(QObject::tr("Paths to import images from"));
+-    gc->setValue("/mnt/cdrom:/mnt/camera");
++    gc->setValue("/media/cdrom:/mnt/camera");
+     gc->setHelpText(QObject::tr("This is a colon separated list of paths. "
+                     "If the path in the list is a directory, its contents will "
+                     "be copied. If it is an executable, it will be run."));
+diff -u -r mythplugins-pre/mythmusic/mythmusic/globalsettings.cpp mythplugins/mythmusic/mythmusic/globalsettings.cpp
+--- mythplugins-pre/mythmusic/mythmusic/globalsettings.cpp	2005-10-22 13:31:22.000000000 +0300
++++ mythplugins/mythmusic/mythmusic/globalsettings.cpp	2005-10-22 18:39:49.000000000 +0300
+@@ -18,7 +18,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("MusicLocation");
+     gc->setLabel(QObject::tr("Directory to hold music"));
+-    gc->setValue("/mnt/store/music/");
++    gc->setValue("/var/lib/mythmusic/");
+     gc->setHelpText(QObject::tr("This directory must exist, and the user "
+                     "running MythMusic needs to have write permission "
+                     "to the directory."));
+diff -u -r mythplugins-pre/mythvideo/mythvideo/globalsettings.cpp mythplugins/mythvideo/mythvideo/globalsettings.cpp
+--- mythplugins-pre/mythvideo/mythvideo/globalsettings.cpp	2005-10-22 13:31:39.000000000 +0300
++++ mythplugins/mythvideo/mythvideo/globalsettings.cpp	2005-10-22 18:39:49.000000000 +0300
+@@ -159,7 +159,7 @@
+ {
+     HostLineEdit *gc = new HostLineEdit("VideoStartupDir");
+     gc->setLabel(QObject::tr("Directory that holds videos"));
+-    gc->setValue("/share/Movies/dvd");
++    gc->setValue("/var/lib/mythvideo");
+     gc->setHelpText(QObject::tr("This directory must exist, and the user "
+                     "running MythVideo only needs to have read permission "
+                     "to the directory."));
