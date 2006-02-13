@@ -1,58 +1,97 @@
+# Conditional build:
+%bcond_without	binary		# skip building binary plugins (build only mythweb)
+%bcond_without	mythbrowser	# disable building mythbrowser plugin
+%bcond_without	mythdvd		# disable building mythgallery plugin
+%bcond_without	mythgallery	# disable building mythgallery plugin
+%bcond_without	mythgame	# disable building mythgallery plugin
+%bcond_without	mythmusic	# disable building mythmusic plugin
+%bcond_without	mythnews	# disable building mythgallery plugin
+%bcond_without	mythphone	# disable building mythgallery plugin
+%bcond_without	mythvideo	# disable building mythgallery plugin
+%bcond_without	mythweather	# disable building mythgallery plugin
+%bcond_without	mythweb		# disable building mythgallery plugin
+%bcond_without	mythflix	# disable building mythflix plugin
+%bcond_without	mythcontrols	# disable mythcontrols plugin
+#
+%if %{without binary}
+%undefine	with_mythbrowser
+%undefine	with_mythdvd
+%undefine	with_mythgallery
+%undefine	with_mythgame
+%undefine	with_mythmusic
+%undefine	with_mythnews
+%undefine	with_mythphone
+%undefine	with_mythvideo
+%undefine	with_mythweather
+%undefine	with_mythcontrols
+%undefine	with_mythflix
+%endif
+
 %include	/usr/lib/rpm/macros.perl
+
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
-Version:	0.18.1
-Release:	0.112.17
+Version:	0.19
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	1d94d19e2a13c24a408ced9b6c4f5b47
+# Source0-md5:	201d60d5d60222038d8c97831f7e4288
 Source1:	mythweb.conf
-Patch0:		%{name}-configure.patch
-Patch1:		mythweb-config.patch
+Patch0:		%{name}-lib64.patch
+Patch1:		%{name}-paths.patch
+Patch2:		mythweb-config.patch
 URL:		http://www.mythtv.org/
+%if %{with binary}
+%if %{with mythgallery} || %{with myhtmusic}
 BuildRequires:	OpenGL-devel
+%endif
 BuildRequires:	SDL-devel
 BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
-BuildRequires:	fftw-devel >= 2.1.3
+%{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
 BuildRequires:	flac-devel >= 1.0.4
 BuildRequires:	freetype-devel
 BuildRequires:	kdelibs-devel
-BuildRequires:	libcdaudio-devel
+BuildRequires:	libcdaudio-devel >= 0.99.12p2
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
-BuildRequires:	libexif-devel
+%{?with_mythgallery:BuildRequires:	libexif-devel >= 1:0.6.9}
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel >= 0.18.1-0.21
+BuildRequires:	libmyth-devel >= 0.19
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libvorbis-devel >= 1.0
+BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
-BuildRequires:	transcode >= 0.6.8
+%{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
-Requires:	mythbrowser
-Requires:	mythdvd
-Requires:	mythgallery
-Requires:	mythgame
-Requires:	mythmusic
-Requires:	mythnews
-Requires:	mythphone
-Requires:	mythvideo
-Requires:	mythweather
+%endif
+%{?with_mythbrowser:Requires:	mythbrowser}
+%{?with_mythdvd:Requires:	mythdvd}
+%{?with_mythflix:Requires:	mythflix}
+%{?with_mythgallery:Requires:	mythgallery}
+%{?with_mythgame:Requires:	mythgame}
+%{?with_mythmysic:Requires:	mythmusic}
+%{?with_mythnews:Requires:	mythnews}
+%{?with_mythphone:Requires:	mythphone}
+%{?with_mythvideo:Requires:	mythvideo}
+%{?with_mythweather:Requires:	mythweather}
+%{?with_mythweb:Requires:	mythweb}
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		api_ver %(echo %{version} | cut -d. -f1,2)
+%define		myth_api_version %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
+%define		_webapps	/etc/webapps
+%define		_webapp		mythweb
 
 %description
 This is a consolidation of all the official MythTV plugins that used
@@ -66,7 +105,7 @@ wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
 Summary:	The music player add-on module for MythTV
 Summary(pl):	Modu³ odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
 Music add-on for MythTV.
@@ -79,7 +118,7 @@ Summary:	A generic video player frontend module for MythTV
 Summary(pl):	Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythvideo
 A generic video player frontend module for MythTV.
@@ -91,7 +130,7 @@ Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV.
 Summary:	A MythTV module that displays a weather forcast
 Summary(pl):	Modu³ MythTV wy¶wietlaj±cy prognozê pogody
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
@@ -103,7 +142,7 @@ Modu³ MythTV wy¶wietlaj±cy prognozê pogody.
 Summary:	A gallery/slideshow module for MythTV
 Summary(pl):	Modu³ galerii/pokazu slajdów dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
@@ -115,7 +154,7 @@ Modu³ galerii/pokazu slajdów dla MythTV.
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
 Summary(pl):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
@@ -127,7 +166,7 @@ Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 Summary:	A DVD player module for MythTV
 Summary(pl):	Modu³ odtwarzacza DVD dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 Requires:	transcode >= 0.6.8
 
 %description -n mythdvd
@@ -150,7 +189,7 @@ oparte i wywodzi siê z wspania³ego pakietu transcode.
 Summary:	A RSS News Feed plugin for MythTV
 Summary(pl):	Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythnews
 A RSS News Feed plugin for MythTV.
@@ -162,7 +201,7 @@ Wtyczka czytnika nowinek RSS dla MythTV.
 Summary:	A small web browser module for MythTV
 Summary(pl):	Modu³ ma³ej przegl±darki WWW dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythbrowser
 MythBrowser is a full fledged web-browser (multiple tabs) to display
@@ -187,7 +226,7 @@ do stron w prostej wtyczce myth.
 Summary:	A video conferencing module for MythTV
 Summary(pl):	Modu³ wideokonferencji dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythphone
 Mythphone is a phone and videophone capability on Myth using the
@@ -205,10 +244,12 @@ Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
 Summary:	The web interface to MythTV
 Summary(pl):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
-Requires:	webserver = apache
-Requires:	php >= 3:4.2.2
-Requires:	php-mysql >= 3:4.2.2
-Conflicts:	apache1 < 1.3.33-2
+Requires:	webapps
+#Suggests:	apache(mod_auth)
+#Suggests:	apache(mod_env)
+Requires:	php >= 3:4.3
+Requires:	php-mysql
+Requires:	php-posix
 
 %description -n mythweb
 The web interface to MythTV.
@@ -216,102 +257,192 @@ The web interface to MythTV.
 %description -n mythweb -l pl
 Interfejs WWW do MythTV.
 
-%prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
+%package -n mythflix
+Summary:	MythFlix (A NetFlix MythTV)
+Summary(pl):	MythFlix (NetFlix MythTV)
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
-# lib64 fix
+%description -n mythflix
+MythFlix is a MythTV plugin for adding movies to your Netflix queue.
+It currently supports the ability to view your queue and add movies to
+your queue. The browse feature is based on the Netflix RSS feeds. This
+plugin is not very mature, which means things might not work right
+and/or it might break other things.
+
+%description -n mythflix -l pl
+MythFlix to wtyczka MythTV do dodawania filmów do kolejki Netfliksa.
+Aktualnie daje mo¿liwo¶æ ogl±dania kolejki i dodawania do niej filmów.
+Przegl±danie jest oparte na kanale RSS Netfliksa. Ta wtyczka nie jest
+jeszcze zbyt dojrza³a, co znaczy, ¿e co¶ mo¿e nie dzia³aæ lub psuæ co¶
+innego.
+
+%package -n mythcontrols
+Summary:	MythTV keybindings editor
+Summary(pl):	Edytor przypisañ klawiszy MythTV
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{myth_api_version}
+
+%description -n mythcontrols
+This plugin allows you to configure your keybindings on the frontend
+without having to use mythweb or edit tables by hand.
+
+%description -n mythcontrols -l pl
+Ta wtyczka pozwala konfigurowaæ przypisania klawiszy we frontendzie
+bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
+
+%prep
+%setup -q %{?_snap:-n %{name}}
+%if %{_lib} != "lib"
+%patch0 -p1
+%endif
+%patch1 -p1
+%patch2 -p1
+
+# make it visible
+mv mythweb/{.,}htaccess
+
+# lib64 fix - enable to update patch
+%if %{_lib} != "lib" && 0
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib/ . | xargs sed -i -e '
-	s,/''usr/lib/,%{_prefix}/%{_lib}/,g
+	s,/usr/lib/,/usr/%{_lib}/,g
 	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
 '
-
-sed -i -e 's|/mnt/store/music|/var/lib/mythmusic|' mythmusic/mythmusic/globalsettings.cpp
-sed -i -e 's|/share/Movies/dvd|/var/lib/mythvideo|' mythvideo/mythvideo/globalsettings.cpp
-sed -i -e 's|/mnt/cdrom:/mnt/camera|/media/cdrom:/mnt/camera|' mythgallery/mythgallery/gallerysettings.cpp
-
-# include mythtv build settings
-cp %{_datadir}/mythtv/build/config.mak .
-sed -i -e "1iinclude(`pwd`/config.mak)"  settings.pro
-
-%ifarch %{x8664}
-	# mmx asm isn't x86_64 compatible in mythmusic
-	echo 'DEFINES -= HAVE_MMX' >> settings.pro
+exit 1
 %endif
 
 %build
+%if %{with binary}
 export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
 	--enable-all \
-	--disable-festival
+	%{!?with_mythbrowser:--disable-mythbrowser} \
+	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
+	%{!?with_mythgallery:--disable-mythgallery}%{?with_mythgallery:--enable-exif --enable-new-exif --enable-opengl} \
+	%{!?with_mythgame:--disable-mythgame} \
+	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
+	%{!?with_mythnews:--disable-mythnews} \
+	%{!?with_mythphone:--disable-mythphone}%{?with_mythphone:--disable-festival} \
+	%{!?with_mythvideo:--disable-mythvideo} \
+	%{!?with_mythweather:--disable-mythweather} \
+	%{!?with_mythweb:--disable-mythweb} \
+	%{!?with_mythcontrols:--disable-mythcontrols} \
+	%{!?with_mythflix:--disable-mythflix} \
 
-#	--enable-opengl          enable OpenGL (Music and Gallery) [default=no]
-#	--enable-transcode       enable DVD ripping and transcoding [default=no]
-#	--enable-vcd             enable VCD playing [default=no]
-#	--enable-exif            enable reading of EXIF headers [default=no]
-#	--enable-fftw            enable fftw visualizers [default=no]
-#	--enable-sdl             use SDL for the synaesthesia output [default=no]
-#	--enable-aac             enable AAC/MP4 audio file decompression [default=no]
-#	--enable-festival        enable festival TTS Engine [default=no]
+mv mythconfig.mak mythconfig.mak.old
+cp mythconfig.mak.old mythconfig.mak
+cat <<'EOF'>> mythconfig.mak
+QMAKE_CXX=%{__cxx}
+QMAKE_CC=%{__cc}
+OPTFLAGS=%{rpmcflags} -Wall -Wno-switch
+ECFLAGS=%{rpmcflags} -fomit-frame-pointer
+ECXXFLAGS=%{rpmcflags} -fomit-frame-pointer
+EOF
 
-qmake mythplugins.pro
 %{__make}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with binary}
 export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythvideo,pictures}
+%if %{with mythgame}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/xmame/{roms,screens,flyers,cabs}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC/screens
 cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
+%endif
+%endif
 
-# mythweb
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/mythweb,%{_datadir}/mythweb/languages,/var/cache/mythweb/{image_cache,php_sessions}}
-# trash
-rm -f mythweb/themes/compact.tar.bz2
-cp -a mythweb/*.{html,php} $RPM_BUILD_ROOT%{_datadir}/mythweb
+%if %{with mythweb}
+install -d $RPM_BUILD_ROOT%{_datadir}/mythweb/{includes,languages}
+install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
+install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
 cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
-cp -a mythweb/{images,includes,js,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/{images,includes,js,languages,themes,vxml} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/config/* $RPM_BUILD_ROOT%{_sysconfdir}/mythweb
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/apache.conf
-touch $RPM_BUILD_ROOT%{_sysconfdir}/mythweb/htpasswd
+cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
+cp -a mythweb/{images,js,skins,modules,themes,templates} $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
+touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
+%endif
+
+for p in mythmusic mythvideo mythweather mythgallery mythgame mythdvd mythnews mythbrowser mythphone mythflix mythcontrols; do
+	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
+		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+	done > $p.lang
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -n mythweb -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/mythweb/apache.conf
+%triggerin -n mythweb -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -n mythweb -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%triggerun -n mythweb -- apache1
+%webapp_unregister apache %{_webapp}
 
-%triggerin -n mythweb -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/mythweb/apache.conf
+%triggerin -n mythweb -- apache < 2.2.0, apache-base
+%webapp_register httpd %{_webapp}
 
-%triggerun -n mythweb -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%triggerun -n mythweb -- apache < 2.2.0, apache-base
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -n mythweb -- mythweb < 0.19
+for i in canned_searches.php conf.php htpasswd theme_Default.php theme_compact.php theme_vxml.php theme_wap.php theme_wml.php weathertypes.dat; do
+	if [ -f /etc/mythweb/$i.rpmsave ]; then
+		mv -f %{_webapps}/%{_webapp}/$i{,.rpmnew}
+		mv -f /etc/mythweb/$i.rpmsave %{_webapps}/%{_webapp}/$i
+	fi
+done
+sed -i -e 's,/etc/mythweb,%{_webapps}/%{_webapp},' %{_webapps}/%{_webapp}/{apache,httpd}.conf
+
+# migrate from apache-config macros
+if [ -f /etc/mythweb/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/apache.conf{,.rpmnew}
+		cp -f /etc/mythweb/apache.conf.rpmsave %{_webapps}/%{_webapp}/apache.conf
+	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/httpd.conf{,.rpmnew}
+		cp -f /etc/mythweb/apache.conf.rpmsave %{_webapps}/%{_webapp}/httpd.conf
+	fi
+	rm -f /etc/mythweb/apache.conf.rpmsave
+fi
+
+if [ -L /etc/apache/conf.d/99_mythplugins.conf ]; then
+	rm -f /etc/apache/conf.d/99_mythplugins.conf
+	/usr/sbin/webapp register apache %{_webapp}
+	%service -q apache reload
+fi
+if [ -L /etc/httpd/httpd.conf/99_mythplugins.conf ]; then
+	rm -f /etc/httpd/httpd.conf/99_mythplugins.conf
+	/usr/sbin/webapp register httpd %{_webapp}
+	%service -q httpd reload
+fi
 
 %files
 %defattr(644,root,root,755)
 
-%files -n mythmusic
+%if %{with mythmusic}
+%files -n mythmusic -f mythmusic.lang
 %defattr(644,root,root,755)
 %doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
 /var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
-%{_datadir}/mythtv/i18n/mythmusic_*.qm
+%{_datadir}/mythtv/themes/default/music-ui.xml
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
 %{_datadir}/mythtv/themes/default/ff_button_pushed.png
@@ -335,7 +466,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/mm_volume_tick.png
 %{_datadir}/mythtv/themes/default/mm_waiting.png
 %{_datadir}/mythtv/themes/default/music-sel-bg.png
-%{_datadir}/mythtv/themes/default/music-ui.xml
 %{_datadir}/mythtv/themes/default/next_button_off.png
 %{_datadir}/mythtv/themes/default/next_button_on.png
 %{_datadir}/mythtv/themes/default/next_button_pushed.png
@@ -359,12 +489,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/text_button_on.png
 %{_datadir}/mythtv/themes/default/text_button_pushed.png
 %{_datadir}/mythtv/themes/default/track_info_background.png
+%endif
 
-%files -n mythvideo
+%if %{with mythvideo}
+%files -n mythvideo -f mythvideo.lang
 %defattr(644,root,root,755)
 %doc mythvideo/README mythvideo/UPGRADING mythvideo/videodb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
-%{_datadir}/mythtv/i18n/mythvideo_*.qm
 %{_datadir}/mythtv/themes/default/video-ui.xml
 %{_datadir}/mythtv/themes/default/mv-*.png
 %{_datadir}/mythtv/themes/default/mv_*.png
@@ -375,13 +506,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/mythvideo/scripts/README
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/ofdb.pl
 /var/lib/mythvideo
 
-%files -n mythweather
+%endif
+
+%if %{with mythweather}
+%files -n mythweather -f mythweather.lang
 %defattr(644,root,root,755)
 %doc mythweather/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
-%{_datadir}/mythtv/i18n/mythweather_*.qm
 %{_datadir}/mythtv/mythweather
 %{_datadir}/mythtv/themes/default/weather-ui.xml
 %{_datadir}/mythtv/themes/default/cloudy.png
@@ -400,57 +534,63 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/sunny.png
 %{_datadir}/mythtv/themes/default/thunshowers.png
 %{_datadir}/mythtv/themes/default/unknown.png
+%endif
 
-%files -n mythgallery
+%if %{with mythgallery}
+%files -n mythgallery -f mythgallery.lang
 %defattr(644,root,root,755)
 %doc mythgallery/README mythgallery/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
-%{_datadir}/mythtv/i18n/mythgallery_*.qm
+# FIXME: this is definately stupid path
 /var/lib/pictures
+%endif
 
-%files -n mythgame
+%if %{with mythgame}
+%files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
 %doc mythgame/README mythgame/UPGRADING
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
-#%config %{_datadir}/mythtv/games/PC/gamelist.xml
-#%{_datadir}/xmame/screens
-#%{_datadir}/xmame/flyers
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
-%{_datadir}/mythtv/i18n/mythgame_*.qm
+%endif
 
-%files -n mythdvd
+%if %{with mythdvd}
+%files -n mythdvd -f mythdvd.lang
 %defattr(644,root,root,755)
 %doc mythdvd/README mythdvd/UPGRADING mythdvd/AUTHORS
+%attr(755,root,root) %{_bindir}/mtd
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
 %{_datadir}/mythtv/dvd_settings.xml
 %{_datadir}/mythtv/dvdmenu.xml
 %{_datadir}/mythtv/themes/default/dvd-ui.xml
 %{_datadir}/mythtv/themes/default/md_*.png
-%{_datadir}/mythtv/i18n/mythdvd_*.qm
-%attr(755,root,root) %{_bindir}/mtd
+%endif
 
-%files -n mythnews
+%if %{with mythnews}
+%files -n mythnews -f mythnews.lang
 %defattr(644,root,root,755)
 %doc mythnews/README mythnews/AUTHORS
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
+# DUPLICATE WITH MYTHFLIX?
 %{_datadir}/mythtv/themes/default/news-info-bg.png
-%{_datadir}/mythtv/i18n/mythnews_*.qm
+%endif
 
-%files -n mythbrowser
+%if %{with mythbrowser}
+%files -n mythbrowser -f mythbrowser.lang
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
 %attr(755,root,root) %{_bindir}/mythbrowser
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
 %{_datadir}/mythtv/themes/default/webpage.png
-%{_datadir}/mythtv/i18n/mythbrowser_*.qm
+%endif
 
-%files -n mythphone
+%if %{with mythphone}
+%files -n mythphone -f mythphone.lang
 %defattr(644,root,root,755)
 %doc mythphone/README mythphone/AUTHORS mythphone/TODO
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythphone.so
@@ -458,17 +598,47 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mythtv/themes/default/webcam-ui.xml
 %{_datadir}/mythtv/themes/default/mp_*.png
 %{_datadir}/mythtv/themes/default/phone.png
-%{_datadir}/mythtv/i18n/mythphone_*.qm
+%endif
 
+%if %{with mythweb}
 %files -n mythweb
 %defattr(644,root,root,755)
 %doc mythweb/{README,TODO} mythweb/languages/*.{pl,txt}
-%attr(750,root,http) %dir %{_sysconfdir}/mythweb
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/apache.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/*.dat
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mythweb/htpasswd
+%dir %attr(750,root,http) %{_webapps}/%{_webapp}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
 %{_datadir}/mythweb
-%dir /var/cache/mythweb
+%dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
 %dir %attr(771,root,http) /var/cache/mythweb/php_sessions
+%dir %attr(771,root,http) /var/cache/mythweb/tv_icons
+%endif
+
+%if %{with mythflix}
+%files -n mythflix -f mythflix.lang
+%defattr(644,root,root,755)
+%doc mythflix/{AUTHORS,ChangeLog,README}
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
+%dir %{_datadir}/mythtv/mythflix
+%{_datadir}/mythtv/mythflix/netflix-rss.xml
+%dir %{_datadir}/mythtv/mythflix/scripts
+%attr(755,root,root) %{_datadir}/mythtv/mythflix/scripts/netflix.pl
+%{_datadir}/mythtv/netflix_menu.xml
+%{_datadir}/mythtv/themes/default/title_netflix.png
+%{_datadir}/mythtv/themes/default/netflix-ui.xml
+# DUPLICATE WITH MYTHNEWS?
+%{_datadir}/mythtv/themes/default/news-info-bg.png
+%endif
+
+%if %{with mythcontrols}
+%files -n mythcontrols -f mythcontrols.lang
+%defattr(644,root,root,755)
+%doc mythcontrols/{AUTHORS,README,TODO}
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythcontrols.so
+%{_datadir}/mythtv/themes/default/controls-ui.xml
+%{_datadir}/mythtv/themes/default/kb-button-off.png
+%{_datadir}/mythtv/themes/default/kb-button-on.png
+%endif
