@@ -86,7 +86,7 @@ BuildRequires:	zlib-devel
 %{?with_mythvideo:Requires:	mythvideo}
 %{?with_mythweather:Requires:	mythweather}
 %{?with_mythweb:Requires:	mythweb}
-ExclusiveArch:	%{ix86} %{x8664}
+ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		myth_api_version %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
