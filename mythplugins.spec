@@ -29,19 +29,15 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-%define	_snap 20060204
-%define	_rev 8859
-%define	_rel 1
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	0.%{_snap}.%{_rev}.%{_rel}
+Release:	0.20060213.1
 License:	GPL v2
 Group:		Applications/Multimedia
-#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	8bc1d93b2c92c6c47b4038e5162e8167
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	201d60d5d60222038d8c97831f7e4288
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
@@ -93,7 +89,7 @@ BuildRequires:	zlib-devel
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		api_ver %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
+%define		myth_api_version %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
 %define		_webapps	/etc/webapps
 %define		_webapp		mythweb
 
@@ -109,7 +105,7 @@ wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
 Summary:	The music player add-on module for MythTV
 Summary(pl):	Modu³ odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
 Music add-on for MythTV.
@@ -122,7 +118,7 @@ Summary:	A generic video player frontend module for MythTV
 Summary(pl):	Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythvideo
 A generic video player frontend module for MythTV.
@@ -134,7 +130,7 @@ Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV.
 Summary:	A MythTV module that displays a weather forcast
 Summary(pl):	Modu³ MythTV wy¶wietlaj±cy prognozê pogody
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
@@ -146,7 +142,7 @@ Modu³ MythTV wy¶wietlaj±cy prognozê pogody.
 Summary:	A gallery/slideshow module for MythTV
 Summary(pl):	Modu³ galerii/pokazu slajdów dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
@@ -158,7 +154,7 @@ Modu³ galerii/pokazu slajdów dla MythTV.
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
 Summary(pl):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
@@ -170,7 +166,7 @@ Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 Summary:	A DVD player module for MythTV
 Summary(pl):	Modu³ odtwarzacza DVD dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 Requires:	transcode >= 0.6.8
 
 %description -n mythdvd
@@ -193,7 +189,7 @@ oparte i wywodzi siê z wspania³ego pakietu transcode.
 Summary:	A RSS News Feed plugin for MythTV
 Summary(pl):	Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythnews
 A RSS News Feed plugin for MythTV.
@@ -205,7 +201,7 @@ Wtyczka czytnika nowinek RSS dla MythTV.
 Summary:	A small web browser module for MythTV
 Summary(pl):	Modu³ ma³ej przegl±darki WWW dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythbrowser
 MythBrowser is a full fledged web-browser (multiple tabs) to display
@@ -230,7 +226,7 @@ do stron w prostej wtyczce myth.
 Summary:	A video conferencing module for MythTV
 Summary(pl):	Modu³ wideokonferencji dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythphone
 Mythphone is a phone and videophone capability on Myth using the
@@ -265,7 +261,7 @@ Interfejs WWW do MythTV.
 Summary:	MythFlix (A NetFlix MythTV)
 Summary(pl):	MythFlix (NetFlix MythTV)
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythflix
 MythFlix is a MythTV plugin for adding movies to your Netflix queue.
@@ -285,7 +281,7 @@ innego.
 Summary:	MythTV keybindings editor
 Summary(pl):	Edytor przypisañ klawiszy MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{api_ver}
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythcontrols
 This plugin allows you to configure your keybindings on the frontend
