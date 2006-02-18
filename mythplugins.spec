@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
@@ -508,7 +509,6 @@ fi
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/ofdb.pl
 /var/lib/mythvideo
-
 %endif
 
 %if %{with mythweather}
