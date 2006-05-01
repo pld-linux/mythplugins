@@ -34,7 +34,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
