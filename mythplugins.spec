@@ -30,19 +30,19 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-%define _snap 20060905
-%define _rev 11046
+#define _snap 20060905
+#define _rev 11046
 %define _rel 0.1
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
-Version:	0.19
-Release:	0.%{_snap}.%{_rev}.%{_rel}
+Version:	0.20a
+Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	0d654e21fe60c03fecfafe416b71fe51
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	8a28e3e24a11364e883a43a6e23b3497
+#Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
