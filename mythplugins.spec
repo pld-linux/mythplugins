@@ -30,20 +30,24 @@
 
 %include	/usr/lib/rpm/macros.perl
 
+%define _snap 20060905
+%define _rev 11046
+%define _rel 0.1
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	4
+Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	201d60d5d60222038d8c97831f7e4288
+#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
+# Source0-md5:	0d654e21fe60c03fecfafe416b71fe51
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
 Patch2:		mythweb-config.patch
-Patch3:		mythtv-branch.diff
+Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
@@ -297,11 +301,11 @@ bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
 %prep
 %setup -q %{?_snap:-n %{name}}
 %if %{_lib} != "lib"
-%patch0 -p1
+#%patch0 -p1
 %endif
 %patch1 -p1
 %patch2 -p1
-filterdiff -i 'mythplugins/*' %{PATCH3} | %{__patch} -p1 -s
+#filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
 # make it visible
 mv mythweb/{.,}htaccess
@@ -321,6 +325,7 @@ exit 1
 export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
+	--libdir-name=%{_lib} \
 	--enable-all \
 	%{!?with_mythbrowser:--disable-mythbrowser} \
 	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
