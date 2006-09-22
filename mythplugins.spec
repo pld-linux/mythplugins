@@ -32,7 +32,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.1
+%define _rel 0.2
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
@@ -372,20 +372,19 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 %endif
 
 %if %{with mythweb}
-install -d $RPM_BUILD_ROOT%{_datadir}/mythweb/{includes,languages}
+cd mythweb
+install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
-cp -a mythweb/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/languages/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/languages
-cp -a mythweb/includes/*.php $RPM_BUILD_ROOT%{_datadir}/mythweb/includes
-cp -a mythweb/{images,js,skins,modules,themes,templates} $RPM_BUILD_ROOT%{_datadir}/mythweb
-cp -a mythweb/config/*.{php,dat} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+cp -a *.php *.pl data includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
+cd -
 %endif
 
-for p in mythmusic mythvideo mythweather mythgallery mythgame mythdvd mythnews mythbrowser mythphone mythflix mythcontrols; do
+mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
+for p in mytharchive mythbrowser mythcontrols mythdvd mythflix mythgallery mythgame mythmusic mythnews mythphone mythvideo mythweather; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
 	done > $p.lang
@@ -611,12 +610,12 @@ fi
 %if %{with mythweb}
 %files -n mythweb
 %defattr(644,root,root,755)
-%doc mythweb/{README,TODO} mythweb/languages/*.{pl,txt}
+%doc mythweb/{README,TODO,htaccess}
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
+#%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
+#%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
 %{_datadir}/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb
