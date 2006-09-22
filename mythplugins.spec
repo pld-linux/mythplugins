@@ -1,8 +1,11 @@
 #
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
+%bcond_without	mytharchive	# disable mytharchive plugin
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
+%bcond_without	mythcontrols	# disable mythcontrols plugin
 %bcond_without	mythdvd		# disable building mythgallery plugin
+%bcond_without	mythflix	# disable building mythflix plugin
 %bcond_without	mythgallery	# disable building mythgallery plugin
 %bcond_without	mythgame	# disable building mythgallery plugin
 %bcond_without	mythmusic	# disable building mythmusic plugin
@@ -11,12 +14,13 @@
 %bcond_without	mythvideo	# disable building mythgallery plugin
 %bcond_without	mythweather	# disable building mythgallery plugin
 %bcond_without	mythweb		# disable building mythgallery plugin
-%bcond_without	mythflix	# disable building mythflix plugin
-%bcond_without	mythcontrols	# disable mythcontrols plugin
 #
 %if %{without binary}
+%undefine	with_mytharchive
 %undefine	with_mythbrowser
+%undefine	with_mythcontrols
 %undefine	with_mythdvd
+%undefine	with_mythflix
 %undefine	with_mythgallery
 %undefine	with_mythgame
 %undefine	with_mythmusic
@@ -24,15 +28,13 @@
 %undefine	with_mythphone
 %undefine	with_mythvideo
 %undefine	with_mythweather
-%undefine	with_mythcontrols
-%undefine	with_mythflix
 %endif
 
 %include	/usr/lib/rpm/macros.perl
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.2
+%define _rel 0.3
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
@@ -56,7 +58,6 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
 BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
-BuildRequires:	patchutils
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
 %{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
@@ -76,12 +77,14 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
+BuildRequires:	patchutils
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
 %{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
+%{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythdvd:Requires:	mythdvd}
 %{?with_mythflix:Requires:	mythflix}
@@ -107,6 +110,18 @@ to be distributed as separate downloads from mythtv.org.
 %description -l pl
 Jest to zbiór wszystkich oficjalnych wtyczek MythTV, które by³y
 wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
+
+%package -n mytharchive
+Summary:	A MythTV module to create and burn DVD's
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{myth_api_version}
+
+%description -n mytharchive
+MythArchive is a MythTV style plugin that uses the Mythburn Script to
+create and burn DVD's from MythTV recordings, MythVideo files or any
+video files available on a MythTV system. It can also export
+recordings to a native archive format that can then be imported back
+into a mythtv system restoring all the associated metadata.
 
 %package -n mythmusic
 Summary:	The music player add-on module for MythTV
@@ -327,6 +342,7 @@ export QTDIR="%{_prefix}"
 %configure \
 	--libdir-name=%{_lib} \
 	--enable-all \
+	%{!?with_mytharchive:--disable-mytharchive} \
 	%{!?with_mythbrowser:--disable-mythbrowser} \
 	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
 	%{!?with_mythgallery:--disable-mythgallery}%{?with_mythgallery:--enable-exif --enable-new-exif --enable-opengl} \
@@ -384,6 +400,7 @@ cd -
 %endif
 
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
+rm $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythflix_nb.ts # i18n source
 for p in mytharchive mythbrowser mythcontrols mythdvd mythflix mythgallery mythgame mythmusic mythnews mythphone mythvideo mythweather; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
@@ -442,10 +459,25 @@ fi
 %files
 %defattr(644,root,root,755)
 
+%if %{with mytharchive}
+%files -n mytharchive -f mytharchive.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mytharchivehelper
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmytharchive.so
+%{_datadir}/mythtv/archiveformat.xml
+%{_datadir}/mythtv/archivemenu.xml
+%{_datadir}/mythtv/archiveselect.xml
+%{_datadir}/mythtv/themes/default/ma_*.png
+%{_datadir}/mythtv/themes/default/mytharchive-ui.xml
+%{_datadir}/mythtv/themes/default/mythburn-ui.xml
+%{_datadir}/mythtv/themes/default/mythnative-ui.xml
+%{_datadir}/mythtv/mytharchive
+%endif
+
 %if %{with mythmusic}
 %files -n mythmusic -f mythmusic.lang
 %defattr(644,root,root,755)
-%doc mythmusic/README mythmusic/UPGRADING mythmusic/AUTHORS mythmusic/musicdb
+%doc mythmusic/README mythmusic/AUTHORS mythmusic/musicdb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmusic.so
 /var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
@@ -502,7 +534,7 @@ fi
 %if %{with mythvideo}
 %files -n mythvideo -f mythvideo.lang
 %defattr(644,root,root,755)
-%doc mythvideo/README mythvideo/UPGRADING mythvideo/videodb
+%doc mythvideo/README mythvideo/videodb
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
 %{_datadir}/mythtv/themes/default/video-ui.xml
 %{_datadir}/mythtv/themes/default/mv-*.png
@@ -546,7 +578,7 @@ fi
 %if %{with mythgallery}
 %files -n mythgallery -f mythgallery.lang
 %defattr(644,root,root,755)
-%doc mythgallery/README mythgallery/UPGRADING
+%doc mythgallery/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
@@ -557,7 +589,7 @@ fi
 %if %{with mythgame}
 %files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
-%doc mythgame/README mythgame/UPGRADING
+%doc mythgame/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 %{_datadir}/mythtv/game_settings.xml
@@ -567,7 +599,7 @@ fi
 %if %{with mythdvd}
 %files -n mythdvd -f mythdvd.lang
 %defattr(644,root,root,755)
-%doc mythdvd/README mythdvd/UPGRADING mythdvd/AUTHORS
+%doc mythdvd/README mythdvd/AUTHORS
 %attr(755,root,root) %{_bindir}/mtd
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
 %{_datadir}/mythtv/dvd_settings.xml
