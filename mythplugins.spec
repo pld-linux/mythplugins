@@ -410,10 +410,10 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -n mythweb -- apache1
+%triggerin -n mythweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -n mythweb -- apache1
+%triggerun -n mythweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
 %triggerin -n mythweb -- apache < 2.2.0, apache-base
