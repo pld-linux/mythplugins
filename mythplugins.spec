@@ -34,7 +34,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -389,10 +389,10 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -n mythweb -- apache1
+%triggerin -n mythweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -n mythweb -- apache1
+%triggerun -n mythweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
 %triggerin -n mythweb -- apache < 2.2.0, apache-base
