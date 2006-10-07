@@ -112,16 +112,25 @@ Jest to zbiór wszystkich oficjalnych wtyczek MythTV, które by³y
 wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
 
 %package -n mytharchive
-Summary:	A MythTV module to create and burn DVD's
+Summary:	A MythTV module to create and burn DVDs
+Summary(pl):	Modu³ MythTV do tworzenia i wypalania DVD
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mytharchive
 MythArchive is a MythTV style plugin that uses the Mythburn Script to
-create and burn DVD's from MythTV recordings, MythVideo files or any
+create and burn DVDs from MythTV recordings, MythVideo files or any
 video files available on a MythTV system. It can also export
 recordings to a native archive format that can then be imported back
-into a mythtv system restoring all the associated metadata.
+into a MythTV system restoring all the associated metadata.
+
+%description -n mytharchive -l pl
+MythArchive to wtyczka MythTV u¿ywaj±ca skryptu Mythburn do tworzenia
+i wypalania p³yt DVD z nagrañ MythTV, plików MythVideo lub dowolnych
+innych plików z filmami dostêpnych w systemie MythTV. Mo¿e tak¿e
+eksportowaæ nagrania do natywnego formatu archiwum, który potem mo¿na
+zaimportowaæ z powrotem do systemu MythTV przywracaj±c wszystkie
+zwi±zane z nimi metadane.
 
 %package -n mythmusic
 Summary:	The music player add-on module for MythTV
