@@ -15,7 +15,7 @@
 %bcond_without	mythweather	# disable building mythgallery plugin
 %bcond_without	mythweb		# disable building mythgallery plugin
 #
-%if %{without binary}
+%if !%{with binary}
 %undefine	with_mytharchive
 %undefine	with_mythbrowser
 %undefine	with_mythcontrols
