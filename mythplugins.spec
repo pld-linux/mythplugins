@@ -34,7 +34,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	5
+Release:	6
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -52,7 +52,6 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	SDL-devel
 BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
-BuildRequires:	patchutils
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
 %{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
@@ -72,6 +71,7 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
+BuildRequires:	patchutils
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
 %{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
@@ -250,9 +250,9 @@ Group:		Applications/Multimedia
 Requires:	webapps
 #Suggests:	apache(mod_auth)
 #Suggests:	apache(mod_env)
-Requires:	php >= 3:4.3
-Requires:	php-mysql
-Requires:	php-posix
+Requires:	php(mysql)
+Requires:	php(posix)
+Requires:	webserver(php) >= 4.3
 
 %description -n mythweb
 The web interface to MythTV.
