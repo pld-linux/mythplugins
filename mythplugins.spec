@@ -34,7 +34,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.3
+%define _rel 0.4
 Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
@@ -278,9 +278,9 @@ Group:		Applications/Multimedia
 Requires:	webapps
 #Suggests:	apache(mod_auth)
 #Suggests:	apache(mod_env)
-Requires:	php >= 3:4.3
-Requires:	php-mysql
-Requires:	php-posix
+Requires:	php(mysql)
+Requires:	php(posix)
+Requires:	webserver(php) >= 4.3
 
 %description -n mythweb
 The web interface to MythTV.
