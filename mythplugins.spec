@@ -36,7 +36,7 @@
 #define _rev 11046
 %define _rel 0.4
 Summary:	Main MythTV plugins
-Summary(pl):	G³ówne wtyczki MythTV
+Summary(pl.UTF-8):   GÅ‚Ã³wne wtyczki MythTV
 Name:		mythplugins
 Version:	0.20a
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
@@ -107,13 +107,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This is a consolidation of all the official MythTV plugins that used
 to be distributed as separate downloads from mythtv.org.
 
-%description -l pl
-Jest to zbiór wszystkich oficjalnych wtyczek MythTV, które by³y
-wcze¶niej rozpowszechniane jako osobne pakiety na mythtv.org.
+%description -l pl.UTF-8
+Jest to zbiÃ³r wszystkich oficjalnych wtyczek MythTV, ktÃ³re byÅ‚y
+wczeÅ›niej rozpowszechniane jako osobne pakiety na mythtv.org.
 
 %package -n mytharchive
 Summary:	A MythTV module to create and burn DVDs
-Summary(pl):	Modu³ MythTV do tworzenia i wypalania DVD
+Summary(pl.UTF-8):   ModuÅ‚ MythTV do tworzenia i wypalania DVD
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -124,29 +124,29 @@ video files available on a MythTV system. It can also export
 recordings to a native archive format that can then be imported back
 into a MythTV system restoring all the associated metadata.
 
-%description -n mytharchive -l pl
-MythArchive to wtyczka MythTV u¿ywaj±ca skryptu Mythburn do tworzenia
-i wypalania p³yt DVD z nagrañ MythTV, plików MythVideo lub dowolnych
-innych plików z filmami dostêpnych w systemie MythTV. Mo¿e tak¿e
-eksportowaæ nagrania do natywnego formatu archiwum, który potem mo¿na
-zaimportowaæ z powrotem do systemu MythTV przywracaj±c wszystkie
-zwi±zane z nimi metadane.
+%description -n mytharchive -l pl.UTF-8
+MythArchive to wtyczka MythTV uÅ¼ywajÄ…ca skryptu Mythburn do tworzenia
+i wypalania pÅ‚yt DVD z nagraÅ„ MythTV, plikÃ³w MythVideo lub dowolnych
+innych plikÃ³w z filmami dostÄ™pnych w systemie MythTV. MoÅ¼e takÅ¼e
+eksportowaÄ‡ nagrania do natywnego formatu archiwum, ktÃ³ry potem moÅ¼na
+zaimportowaÄ‡ z powrotem do systemu MythTV przywracajÄ…c wszystkie
+zwiÄ…zane z nimi metadane.
 
 %package -n mythmusic
 Summary:	The music player add-on module for MythTV
-Summary(pl):	Modu³ odtwarzacza muzyki dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
 Music add-on for MythTV.
 
-%description -n mythmusic -l pl
+%description -n mythmusic -l pl.UTF-8
 Odtwarzacz muzyki dla MythTV.
 
 %package -n mythvideo
 Summary:	A generic video player frontend module for MythTV
-Summary(pl):	Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ ogÃ³lnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
 Requires:	mythtv-frontend-api = %{myth_api_version}
@@ -154,48 +154,48 @@ Requires:	mythtv-frontend-api = %{myth_api_version}
 %description -n mythvideo
 A generic video player frontend module for MythTV.
 
-%description -n mythvideo -l pl
-Modu³ ogólnego interfejsu do odtwarzania obrazu dla MythTV.
+%description -n mythvideo -l pl.UTF-8
+ModuÅ‚ ogÃ³lnego interfejsu do odtwarzania obrazu dla MythTV.
 
 %package -n mythweather
 Summary:	A MythTV module that displays a weather forcast
-Summary(pl):	Modu³ MythTV wy¶wietlaj±cy prognozê pogody
+Summary(pl.UTF-8):   ModuÅ‚ MythTV wyÅ›wietlajÄ…cy prognozÄ™ pogody
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
 
-%description -n mythweather -l pl
-Modu³ MythTV wy¶wietlaj±cy prognozê pogody.
+%description -n mythweather -l pl.UTF-8
+ModuÅ‚ MythTV wyÅ›wietlajÄ…cy prognozÄ™ pogody.
 
 %package -n mythgallery
 Summary:	A gallery/slideshow module for MythTV
-Summary(pl):	Modu³ galerii/pokazu slajdów dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ galerii/pokazu slajdÃ³w dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
 
-%description -n mythgallery -l pl
-Modu³ galerii/pokazu slajdów dla MythTV.
+%description -n mythgallery -l pl.UTF-8
+ModuÅ‚ galerii/pokazu slajdÃ³w dla MythTV.
 
 %package -n mythgame
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
-Summary(pl):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
+Summary(pl.UTF-8):   Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
 
-%description -n mythgame -l pl
+%description -n mythgame -l pl.UTF-8
 Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 
 %package -n mythdvd
 Summary:	A DVD player module for MythTV
-Summary(pl):	Modu³ odtwarzacza DVD dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ odtwarzacza DVD dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 Requires:	transcode >= 0.6.8
@@ -208,29 +208,29 @@ myth-style wrappers for your favourite DVD playing software (mplayer,
 ogle, xine, etc). The transcoding is based on and derived from the
 excellent transcode package.
 
-%description -n mythdvd -l pl
-MythDVD to modu³ MythTV umo¿liwiaj±cy odtwarzanie p³yt DVD w MythTV i
-(opcjonalnie) rippowanie ich oraz przekodowywanie obrazu i d¼wiêku do
-innych (zwykle mniej zajmuj±cych) formatów. Mo¿liwo¶ci odtwarzania to
+%description -n mythdvd -l pl.UTF-8
+MythDVD to moduÅ‚ MythTV umoÅ¼liwiajÄ…cy odtwarzanie pÅ‚yt DVD w MythTV i
+(opcjonalnie) rippowanie ich oraz przekodowywanie obrazu i dÅºwiÄ™ku do
+innych (zwykle mniej zajmujÄ…cych) formatÃ³w. MoÅ¼liwoÅ›ci odtwarzania to
 po prostu obudowanie w stylu myth dla ulubionego oprogramowania do
 odtwarzania DVD (mplayer, ogle, xine itp.). Przekodowywanie jest
-oparte i wywodzi siê z wspania³ego pakietu transcode.
+oparte i wywodzi siÄ™ z wspaniaÅ‚ego pakietu transcode.
 
 %package -n mythnews
 Summary:	A RSS News Feed plugin for MythTV
-Summary(pl):	Wtyczka czytnika nowinek RSS dla MythTV
+Summary(pl.UTF-8):   Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythnews
 A RSS News Feed plugin for MythTV.
 
-%description -n mythnews -l pl
+%description -n mythnews -l pl.UTF-8
 Wtyczka czytnika nowinek RSS dla MythTV.
 
 %package -n mythbrowser
 Summary:	A small web browser module for MythTV
-Summary(pl):	Modu³ ma³ej przegl±darki WWW dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ maÅ‚ej przeglÄ…darki WWW dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -243,19 +243,19 @@ navigation (right mouse opens and closes the popup menu).
 MythBrowser also contains a BookmarkManager to manage the website
 links in a simple mythplugin.
 
-%description -n mythbrowser -l pl
-MythBrowser to w pe³ni funkcjonalna przegl±darka WWW (z wieloma
-zak³adkami) wy¶wietlaj±ca strony WWW w trybie pe³noekranowym. Mo¿liwa
-jest prosta nawigacja po stronie. Pocz±wszy od wersji 0.13 ma pe³n±
-obs³ugê nawigacji myszk± (prawy przycisk otwiera i zamywa wyskakuj±ce
+%description -n mythbrowser -l pl.UTF-8
+MythBrowser to w peÅ‚ni funkcjonalna przeglÄ…darka WWW (z wieloma
+zakÅ‚adkami) wyÅ›wietlajÄ…ca strony WWW w trybie peÅ‚noekranowym. MoÅ¼liwa
+jest prosta nawigacja po stronie. PoczÄ…wszy od wersji 0.13 ma peÅ‚nÄ…
+obsÅ‚ugÄ™ nawigacji myszkÄ… (prawy przycisk otwiera i zamywa wyskakujÄ…ce
 menu).
 
-MythBrowser zawiera tak¿e BookmarkManagera do zarz±dzania odno¶nikami
+MythBrowser zawiera takÅ¼e BookmarkManagera do zarzÄ…dzania odnoÅ›nikami
 do stron w prostej wtyczce myth.
 
 %package -n mythphone
 Summary:	A video conferencing module for MythTV
-Summary(pl):	Modu³ wideokonferencji dla MythTV
+Summary(pl.UTF-8):   ModuÅ‚ wideokonferencji dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -265,15 +265,15 @@ standard SIP protocol. It is compatible with Microsoft XP Messenger
 and with SIP Service Providers such as Free World Dialup
 (fwd.pulver.com).
 
-%description -n mythphone -l pl
-Mythphone to funkcjonalno¶æ telefonu i wideofonu w Myth przy u¿yciu
-standardowego protoko³u SIP. Jest kompatybilny z Microsoft XP
-Messengerem oraz dostawcami us³ug SIP, takimi jak Free World Dialup
+%description -n mythphone -l pl.UTF-8
+Mythphone to funkcjonalnoÅ›Ä‡ telefonu i wideofonu w Myth przy uÅ¼yciu
+standardowego protokoÅ‚u SIP. Jest kompatybilny z Microsoft XP
+Messengerem oraz dostawcami usÅ‚ug SIP, takimi jak Free World Dialup
 (fwd.pulver.com).
 
 %package -n mythweb
 Summary:	The web interface to MythTV
-Summary(pl):	Interfejs WWW do MythTV
+Summary(pl.UTF-8):   Interfejs WWW do MythTV
 Group:		Applications/Multimedia
 Requires:	webapps
 #Suggests:	apache(mod_auth)
@@ -285,12 +285,12 @@ Requires:	webserver(php) >= 4.3
 %description -n mythweb
 The web interface to MythTV.
 
-%description -n mythweb -l pl
+%description -n mythweb -l pl.UTF-8
 Interfejs WWW do MythTV.
 
 %package -n mythflix
 Summary:	MythFlix (A NetFlix MythTV)
-Summary(pl):	MythFlix (NetFlix MythTV)
+Summary(pl.UTF-8):   MythFlix (NetFlix MythTV)
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -301,16 +301,16 @@ your queue. The browse feature is based on the Netflix RSS feeds. This
 plugin is not very mature, which means things might not work right
 and/or it might break other things.
 
-%description -n mythflix -l pl
-MythFlix to wtyczka MythTV do dodawania filmów do kolejki Netfliksa.
-Aktualnie daje mo¿liwo¶æ ogl±dania kolejki i dodawania do niej filmów.
-Przegl±danie jest oparte na kanale RSS Netfliksa. Ta wtyczka nie jest
-jeszcze zbyt dojrza³a, co znaczy, ¿e co¶ mo¿e nie dzia³aæ lub psuæ co¶
+%description -n mythflix -l pl.UTF-8
+MythFlix to wtyczka MythTV do dodawania filmÃ³w do kolejki Netfliksa.
+Aktualnie daje moÅ¼liwoÅ›Ä‡ oglÄ…dania kolejki i dodawania do niej filmÃ³w.
+PrzeglÄ…danie jest oparte na kanale RSS Netfliksa. Ta wtyczka nie jest
+jeszcze zbyt dojrzaÅ‚a, co znaczy, Å¼e coÅ› moÅ¼e nie dziaÅ‚aÄ‡ lub psuÄ‡ coÅ›
 innego.
 
 %package -n mythcontrols
 Summary:	MythTV keybindings editor
-Summary(pl):	Edytor przypisañ klawiszy MythTV
+Summary(pl.UTF-8):   Edytor przypisaÅ„ klawiszy MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -318,9 +318,9 @@ Requires:	mythtv-frontend-api = %{myth_api_version}
 This plugin allows you to configure your keybindings on the frontend
 without having to use mythweb or edit tables by hand.
 
-%description -n mythcontrols -l pl
-Ta wtyczka pozwala konfigurowaæ przypisania klawiszy we frontendzie
-bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
+%description -n mythcontrols -l pl.UTF-8
+Ta wtyczka pozwala konfigurowaÄ‡ przypisania klawiszy we frontendzie
+bez koniecznoÅ›ci uÅ¼ywania mythweba ani rÄ™cznego modyfikowania tabel.
 
 %prep
 %setup -q %{?_snap:-n %{name}}
