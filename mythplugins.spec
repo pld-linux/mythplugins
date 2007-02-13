@@ -36,7 +36,7 @@
 #define _rev 11046
 %define _rel 0.4
 Summary:	Main MythTV plugins
-Summary(pl.UTF-8):   Główne wtyczki MythTV
+Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.20a
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
@@ -113,7 +113,7 @@ wcześniej rozpowszechniane jako osobne pakiety na mythtv.org.
 
 %package -n mytharchive
 Summary:	A MythTV module to create and burn DVDs
-Summary(pl.UTF-8):   Moduł MythTV do tworzenia i wypalania DVD
+Summary(pl.UTF-8):	Moduł MythTV do tworzenia i wypalania DVD
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -134,7 +134,7 @@ związane z nimi metadane.
 
 %package -n mythmusic
 Summary:	The music player add-on module for MythTV
-Summary(pl.UTF-8):   Moduł odtwarzacza muzyki dla MythTV
+Summary(pl.UTF-8):	Moduł odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -146,7 +146,7 @@ Odtwarzacz muzyki dla MythTV.
 
 %package -n mythvideo
 Summary:	A generic video player frontend module for MythTV
-Summary(pl.UTF-8):   Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV
+Summary(pl.UTF-8):	Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
 Requires:	mythtv-frontend-api = %{myth_api_version}
@@ -159,7 +159,7 @@ Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV.
 
 %package -n mythweather
 Summary:	A MythTV module that displays a weather forcast
-Summary(pl.UTF-8):   Moduł MythTV wyświetlający prognozę pogody
+Summary(pl.UTF-8):	Moduł MythTV wyświetlający prognozę pogody
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -171,7 +171,7 @@ Moduł MythTV wyświetlający prognozę pogody.
 
 %package -n mythgallery
 Summary:	A gallery/slideshow module for MythTV
-Summary(pl.UTF-8):   Moduł galerii/pokazu slajdów dla MythTV
+Summary(pl.UTF-8):	Moduł galerii/pokazu slajdów dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -183,7 +183,7 @@ Moduł galerii/pokazu slajdów dla MythTV.
 
 %package -n mythgame
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
-Summary(pl.UTF-8):   Interfejs do gier (xmame, nes, snes, pc) dla MythTV
+Summary(pl.UTF-8):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -195,7 +195,7 @@ Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 
 %package -n mythdvd
 Summary:	A DVD player module for MythTV
-Summary(pl.UTF-8):   Moduł odtwarzacza DVD dla MythTV
+Summary(pl.UTF-8):	Moduł odtwarzacza DVD dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 Requires:	transcode >= 0.6.8
@@ -218,7 +218,7 @@ oparte i wywodzi się z wspaniałego pakietu transcode.
 
 %package -n mythnews
 Summary:	A RSS News Feed plugin for MythTV
-Summary(pl.UTF-8):   Wtyczka czytnika nowinek RSS dla MythTV
+Summary(pl.UTF-8):	Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -230,7 +230,7 @@ Wtyczka czytnika nowinek RSS dla MythTV.
 
 %package -n mythbrowser
 Summary:	A small web browser module for MythTV
-Summary(pl.UTF-8):   Moduł małej przeglądarki WWW dla MythTV
+Summary(pl.UTF-8):	Moduł małej przeglądarki WWW dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -255,7 +255,7 @@ do stron w prostej wtyczce myth.
 
 %package -n mythphone
 Summary:	A video conferencing module for MythTV
-Summary(pl.UTF-8):   Moduł wideokonferencji dla MythTV
+Summary(pl.UTF-8):	Moduł wideokonferencji dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -273,7 +273,7 @@ Messengerem oraz dostawcami usług SIP, takimi jak Free World Dialup
 
 %package -n mythweb
 Summary:	The web interface to MythTV
-Summary(pl.UTF-8):   Interfejs WWW do MythTV
+Summary(pl.UTF-8):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
 Requires:	webapps
 #Suggests:	apache(mod_auth)
@@ -290,7 +290,7 @@ Interfejs WWW do MythTV.
 
 %package -n mythflix
 Summary:	MythFlix (A NetFlix MythTV)
-Summary(pl.UTF-8):   MythFlix (NetFlix MythTV)
+Summary(pl.UTF-8):	MythFlix (NetFlix MythTV)
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
@@ -310,7 +310,7 @@ innego.
 
 %package -n mythcontrols
 Summary:	MythTV keybindings editor
-Summary(pl.UTF-8):   Edytor przypisań klawiszy MythTV
+Summary(pl.UTF-8):	Edytor przypisań klawiszy MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
