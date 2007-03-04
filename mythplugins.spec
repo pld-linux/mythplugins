@@ -34,7 +34,7 @@ Summary:	Main MythTV plugins
 Summary(pl):	G³ówne wtyczki MythTV
 Name:		mythplugins
 Version:	0.19
-Release:	8
+Release:	9
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -44,6 +44,7 @@ Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
 Patch2:		mythweb-config.patch
 Patch3:		mythtv-branch.diff
+Patch4:		%{name}-flac.patch
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
@@ -302,6 +303,7 @@ bez konieczno¶ci u¿ywania mythweba ani rêcznego modyfikowania tabel.
 %patch1 -p1
 %patch2 -p1
 filterdiff -i 'mythplugins/*' %{PATCH3} | %{__patch} -p1 -s
+%patch4 -p4
 
 # make it visible
 mv mythweb/{.,}htaccess
