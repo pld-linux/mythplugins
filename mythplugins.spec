@@ -34,16 +34,16 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.4
+%define _rel 0.1
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.20a
+Version:	0.20.2
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	8a28e3e24a11364e883a43a6e23b3497
+# Source0-md5:	53fcf62c3d2bac31cde610621a08ef33
 #Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
