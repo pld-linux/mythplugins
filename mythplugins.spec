@@ -549,7 +549,26 @@ fi
 %defattr(644,root,root,755)
 %doc mythweather/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
-%{_datadir}/mythtv/mythweather
+%dir %{_datadir}/mythtv/mythweather
+%dir %{_datadir}/mythtv/mythweather/scripts
+%{_datadir}/mythtv/mythweather/scripts/README
+%dir %{_datadir}/mythtv/mythweather/scripts/ca_envcan
+%attr(755,root,root) %{_datadir}/mythtv/mythweather/scripts/ca_envcan/*.pl
+%{_datadir}/mythtv/mythweather/scripts/ca_envcan/*.pm
+%{_datadir}/mythtv/mythweather/scripts/ca_envcan/*.xml
+%{_datadir}/mythtv/mythweather/scripts/ca_envcan/ENVCAN_icons
+%dir %{_datadir}/mythtv/mythweather/scripts/uk_bbc
+%attr(755,root,root) %{_datadir}/mythtv/mythweather/scripts/uk_bbc/*.pl
+%{_datadir}/mythtv/mythweather/scripts/uk_bbc/*.pm
+%dir %{_datadir}/mythtv/mythweather/scripts/us_nws
+%attr(755,root,root) %{_datadir}/mythtv/mythweather/scripts/us_nws/*.pl
+%{_datadir}/mythtv/mythweather/scripts/us_nws/*.pm
+%{_datadir}/mythtv/mythweather/scripts/us_nws/*.xml
+%{_datadir}/mythtv/mythweather/scripts/us_nws/*.dbx
+%{_datadir}/mythtv/mythweather/scripts/us_nws/icons
+%{_datadir}/mythtv/mythweather/scripts/us_nws/maps
+%{_datadir}/mythtv/mythweather/scripts/us_nws/weather_types
+%{_datadir}/mythtv/mythweather/weather-screens.xml
 %{_datadir}/mythtv/themes/default/weather-ui.xml
 %{_datadir}/mythtv/themes/default/cloudy.png
 %{_datadir}/mythtv/themes/default/fair.png
