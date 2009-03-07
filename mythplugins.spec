@@ -1,10 +1,13 @@
 #
+# TODO:
+#	- fix mytharchive
+#	- check 64-bit build
+#
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
-%bcond_without	mytharchive	# disable mytharchive plugin
+%bcond_with	mytharchive	# enable mytharchive plugin
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
 %bcond_without	mythcontrols	# disable mythcontrols plugin
-%bcond_without	mythdvd		# disable building mythgallery plugin
 %bcond_without	mythflix	# disable building mythflix plugin
 %bcond_without	mythgallery	# disable building mythgallery plugin
 %bcond_without	mythgame	# disable building mythgallery plugin
@@ -14,12 +17,13 @@
 %bcond_without	mythvideo	# disable building mythgallery plugin
 %bcond_without	mythweather	# disable building mythgallery plugin
 %bcond_without	mythweb		# disable building mythgallery plugin
+%bcond_without	mythmovies	# disable building mythmovies plugin
+%bcond_without	mythzoneminder	# disable building mythzoneminder plugin
 #
 %if !%{with binary}
 %undefine	with_mytharchive
 %undefine	with_mythbrowser
 %undefine	with_mythcontrols
-%undefine	with_mythdvd
 %undefine	with_mythflix
 %undefine	with_mythgallery
 %undefine	with_mythgame
@@ -28,6 +32,8 @@
 %undefine	with_mythphone
 %undefine	with_mythvideo
 %undefine	with_mythweather
+%undefine	with_mythmovies
+%undefine	with_mythzoneminder
 %endif
 
 %include	/usr/lib/rpm/macros.perl
@@ -38,25 +44,22 @@
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.20.2
+Version:	0.21
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	53fcf62c3d2bac31cde610621a08ef33
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	6c08043227bef1384858deee12b5cdc3
 #Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythweb.conf
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-paths.patch
-Patch2:		mythweb-config.patch
-Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
 BuildRequires:	OpenGL-devel
 %endif
 BuildRequires:	SDL-devel
-BuildRequires:	XFree86-devel
 BuildRequires:	a52dec-libs-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
@@ -71,7 +74,7 @@ BuildRequires:	libdvdread-devel >= 0.9.4
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel >= 0.19
+BuildRequires:	libmyth-devel >= 0.21
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
@@ -80,13 +83,13 @@ BuildRequires:	nasm
 BuildRequires:	patchutils
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
-%{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
+BuildRequires:	xorg-lib-libXext-devel
+BuildRequires:	xorg-lib-libXxf86vm-devel
 %endif
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
-%{?with_mythdvd:Requires:	mythdvd}
 %{?with_mythflix:Requires:	mythflix}
 %{?with_mythgallery:Requires:	mythgallery}
 %{?with_mythgame:Requires:	mythgame}
@@ -96,6 +99,8 @@ BuildRequires:	zlib-devel
 %{?with_mythvideo:Requires:	mythvideo}
 %{?with_mythweather:Requires:	mythweather}
 %{?with_mythweb:Requires:	mythweb}
+%{?with_mythmovies:Requires:	mythmovies}
+%{?with_mythzoneminder:Requires:	mythzoneminder}
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -192,29 +197,6 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 
 %description -n mythgame -l pl.UTF-8
 Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
-
-%package -n mythdvd
-Summary:	A DVD player module for MythTV
-Summary(pl.UTF-8):	Moduł odtwarzacza DVD dla MythTV
-Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
-Requires:	transcode >= 0.6.8
-
-%description -n mythdvd
-MythDVD is a MythTV module that allows you to play DVDs on a myth-box
-and (optionally) rip DVD's and transcode their video and audio content
-to other (generally smaller) formats. The playing features are simply
-myth-style wrappers for your favourite DVD playing software (mplayer,
-ogle, xine, etc). The transcoding is based on and derived from the
-excellent transcode package.
-
-%description -n mythdvd -l pl.UTF-8
-MythDVD to moduł MythTV umożliwiający odtwarzanie płyt DVD w MythTV i
-(opcjonalnie) rippowanie ich oraz przekodowywanie obrazu i dźwięku do
-innych (zwykle mniej zajmujących) formatów. Możliwości odtwarzania to
-po prostu obudowanie w stylu myth dla ulubionego oprogramowania do
-odtwarzania DVD (mplayer, ogle, xine itp.). Przekodowywanie jest
-oparte i wywodzi się z wspaniałego pakietu transcode.
 
 %package -n mythnews
 Summary:	A RSS News Feed plugin for MythTV
@@ -322,17 +304,37 @@ without having to use mythweb or edit tables by hand.
 Ta wtyczka pozwala konfigurować przypisania klawiszy we frontendzie
 bez konieczności używania mythweba ani ręcznego modyfikowania tabel.
 
+%package -n mythmovies
+Summary:	MythTV plugin for looking up movie showtimes in a given area
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{myth_api_version}
+
+%description -n mythmovies
+MythMovies is a plugin for looking up movie showtimes in a given area. 
+
+%package -n mythzoneminder
+Summary:	MythTV plugin to interface ZoneMinder
+Group:		Applications/Multimedia
+Requires:	mythtv-frontend-api = %{myth_api_version}
+
+%description -n mythzoneminder
+MythZoneMinder is a plugin to interface to some of the features of ZoneMinder.
+You can use it to view a status window similar to the console window in ZM.
+Also there are screens to view live camera shots and replay recorded events.
+Other features may be added at a later time if there is sufficient interest.
+
+ZoneMinder is a Linux video camera security and surveillance solution .
+
 %prep
 %setup -q %{?_snap:-n %{name}}
 %if %{_lib} != "lib"
 #%patch0 -p1
 %endif
 %patch1 -p1
-%patch2 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
 # make it visible
-mv mythweb/{.,}htaccess
+mv mythweb/{data/.,}htaccess
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
@@ -353,7 +355,6 @@ export QTDIR="%{_prefix}"
 	--enable-all \
 	%{!?with_mytharchive:--disable-mytharchive} \
 	%{!?with_mythbrowser:--disable-mythbrowser} \
-	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
 	%{!?with_mythgallery:--disable-mythgallery}%{?with_mythgallery:--enable-exif --enable-new-exif --enable-opengl} \
 	%{!?with_mythgame:--disable-mythgame} \
 	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
@@ -410,9 +411,11 @@ cd -
 
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
 rm $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythflix_nb.ts # i18n source
-for p in mytharchive mythbrowser mythcontrols mythdvd mythflix mythgallery mythgame mythmusic mythnews mythphone mythvideo mythweather; do
+for p in mytharchive mythbrowser mythcontrols mythflix mythgallery mythgame mythmusic mythnews mythphone mythvideo mythweather mythmovies mythzoneminder; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
-		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+		if [ -f "$l" ] ; then
+			echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+		fi
 	done > $p.lang
 done
 
@@ -495,25 +498,7 @@ fi
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
 %{_datadir}/mythtv/themes/default/ff_button_pushed.png
-%{_datadir}/mythtv/themes/default/mm_blackhole_border.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_off.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_on.png
-%{_datadir}/mythtv/themes/default/mm_blankbutton_pushed.png
-%{_datadir}/mythtv/themes/default/mm_checked.png
-%{_datadir}/mythtv/themes/default/mm_checked_high.png
-%{_datadir}/mythtv/themes/default/mm_down_arrow.png
-%{_datadir}/mythtv/themes/default/mm_left_arrow.png
-%{_datadir}/mythtv/themes/default/mm_leftright_off.png
-%{_datadir}/mythtv/themes/default/mm_leftright_on.png
-%{_datadir}/mythtv/themes/default/mm_leftright_pushed.png
-%{_datadir}/mythtv/themes/default/mm_rating.png
-%{_datadir}/mythtv/themes/default/mm_right_arrow.png
-%{_datadir}/mythtv/themes/default/mm_unchecked.png
-%{_datadir}/mythtv/themes/default/mm_unchecked_high.png
-%{_datadir}/mythtv/themes/default/mm_up_arrow.png
-%{_datadir}/mythtv/themes/default/mm_volume_background.png
-%{_datadir}/mythtv/themes/default/mm_volume_tick.png
-%{_datadir}/mythtv/themes/default/mm_waiting.png
+%{_datadir}/mythtv/themes/default/mm_*.png
 %{_datadir}/mythtv/themes/default/music-sel-bg.png
 %{_datadir}/mythtv/themes/default/next_button_off.png
 %{_datadir}/mythtv/themes/default/next_button_on.png
@@ -534,28 +519,32 @@ fi
 %{_datadir}/mythtv/themes/default/stop_button_off.png
 %{_datadir}/mythtv/themes/default/stop_button_on.png
 %{_datadir}/mythtv/themes/default/stop_button_pushed.png
-%{_datadir}/mythtv/themes/default/text_button_off.png
-%{_datadir}/mythtv/themes/default/text_button_on.png
-%{_datadir}/mythtv/themes/default/text_button_pushed.png
 %{_datadir}/mythtv/themes/default/track_info_background.png
+%{_datadir}/mythtv/themes/default/miniplayer*.png
 %endif
 
 %if %{with mythvideo}
 %files -n mythvideo -f mythvideo.lang
 %defattr(644,root,root,755)
 %doc mythvideo/README mythvideo/videodb
+%attr(755,root,root) %{_bindir}/mtd
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
+%{_datadir}/mythtv/themes/default/dvd-ui.xml
 %{_datadir}/mythtv/themes/default/video-ui.xml
 %{_datadir}/mythtv/themes/default/mv-*.png
 %{_datadir}/mythtv/themes/default/mv_*.png
+%{_datadir}/mythtv/themes/default/md_*.png
+%{_datadir}/mythtv/themes/default-wide/dvd-ui.xml
+%{_datadir}/mythtv/themes/default-wide/video-ui.xml
+%{_datadir}/mythtv/themes/default-wide/mv-*.png
+%{_datadir}/mythtv/themes/default-wide/mv_*.png
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
 %dir %{_datadir}/mythtv/mythvideo
 %dir %{_datadir}/mythtv/mythvideo/scripts
 %{_datadir}/mythtv/mythvideo/scripts/README
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/imdb.pl
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/allocine.pl
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/ofdb.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
 /var/lib/mythvideo
 %endif
 
@@ -573,7 +562,7 @@ fi
 %{_datadir}/mythtv/themes/default/logo.png
 %{_datadir}/mythtv/themes/default/lshowers.png
 %{_datadir}/mythtv/themes/default/mcloudy.png
-%{_datadir}/mythtv/themes/default/mw-*.png
+%{_datadir}/mythtv/themes/default/mw_*.png
 %{_datadir}/mythtv/themes/default/mwmain.png
 %{_datadir}/mythtv/themes/default/pcloudy.png
 %{_datadir}/mythtv/themes/default/rainsnow.png
@@ -582,6 +571,9 @@ fi
 %{_datadir}/mythtv/themes/default/sunny.png
 %{_datadir}/mythtv/themes/default/thunshowers.png
 %{_datadir}/mythtv/themes/default/unknown.png
+%{_datadir}/mythtv/themes/default-wide/weather-ui.xml
+%{_datadir}/mythtv/themes/default-wide/mw-*.png
+%{_datadir}/mythtv/weather_settings.xml
 %endif
 
 %if %{with mythgallery}
@@ -598,23 +590,10 @@ fi
 %if %{with mythgame}
 %files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
-%doc mythgame/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
-%endif
-
-%if %{with mythdvd}
-%files -n mythdvd -f mythdvd.lang
-%defattr(644,root,root,755)
-%doc mythdvd/README mythdvd/AUTHORS
-%attr(755,root,root) %{_bindir}/mtd
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythdvd.so
-%{_datadir}/mythtv/dvd_settings.xml
-%{_datadir}/mythtv/dvdmenu.xml
-%{_datadir}/mythtv/themes/default/dvd-ui.xml
-%{_datadir}/mythtv/themes/default/md_*.png
 %endif
 
 %if %{with mythnews}
@@ -624,6 +603,8 @@ fi
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
+%{_datadir}/mythtv/themes/default/enclosures.png
+%{_datadir}/mythtv/themes/default/need-download.png
 # DUPLICATE WITH MYTHFLIX?
 %{_datadir}/mythtv/themes/default/news-info-bg.png
 %endif
@@ -651,7 +632,7 @@ fi
 %if %{with mythweb}
 %files -n mythweb
 %defattr(644,root,root,755)
-%doc mythweb/{README,TODO,htaccess}
+%doc mythweb/{README,INSTALL,data,htaccess,mythweb.conf.*}
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
@@ -689,4 +670,26 @@ fi
 %{_datadir}/mythtv/themes/default/controls-ui.xml
 %{_datadir}/mythtv/themes/default/kb-button-off.png
 %{_datadir}/mythtv/themes/default/kb-button-on.png
+%endif
+
+%if %{with mythmovies}
+%files -n mythmovies -f mythmovies.lang
+%defattr(644,root,root,755)
+%doc mythmovies/{README,TODO}
+%attr(755,root,root) %{_bindir}/ignyte
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmovies.so
+%{_datadir}/mythtv/themes/default/movies-ui.xml
+%{_datadir}/mythtv/themes/default-wide/movies-ui.xml
+%endif
+
+%if %{with mythzoneminder}
+%files -n mythzoneminder -f mythzoneminder.lang
+%defattr(644,root,root,755)
+%doc mythzoneminder/{README,AUTHORS}
+%attr(755,root,root) %{_bindir}/mythzmserver
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythzoneminder.so
+%{_datadir}/mythtv/themes/default/zoneminder-ui.xml
+%{_datadir}/mythtv/themes/default-wide/zoneminder-ui.xml
+%{_datadir}/mythtv/themes/default/mz_*.png
+%{_datadir}/mythtv/zonemindermenu.xml
 %endif
