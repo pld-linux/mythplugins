@@ -52,8 +52,7 @@ Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 # Source0-md5:	6c08043227bef1384858deee12b5cdc3
 #Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythweb.conf
-Patch0:		%{name}-lib64.patch
-Patch1:		%{name}-paths.patch
+Patch0:		%{name}-paths.patch
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
@@ -327,10 +326,7 @@ ZoneMinder is a Linux video camera security and surveillance solution .
 
 %prep
 %setup -q %{?_snap:-n %{name}}
-%if %{_lib} != "lib"
-#%patch0 -p1
-%endif
-%patch1 -p1
+%patch0 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
 # make it visible
@@ -402,7 +398,7 @@ cd mythweb
 install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
-cp -a *.php *.pl data includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a *.php *.pl data includes js modules objects skins $RPM_BUILD_ROOT%{_datadir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
