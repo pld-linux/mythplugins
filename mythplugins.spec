@@ -56,25 +56,21 @@ URL:		http://www.mythtv.org/
 %if %{with mythgallery} || %{with myhtmusic}
 BuildRequires:	OpenGL-devel
 %endif
+BuildRequires:	Qt3Support-devel
+BuildRequires:	QtCore-devel
+BuildRequires:	QtGui-devel
+BuildRequires:	QtNetwork-devel
+BuildRequires:	QtOpenGL-devel
+BuildRequires:	QtSql-devel
+BuildRequires:	QtWebKit-devel
+BuildRequires:	QtXml-devel
 BuildRequires:	SDL-devel
-BuildRequires:  xorg-lib-libX11-devel	
 BuildRequires:	a52dec-libs-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
 %{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
-%{?with_mythmusic:BuildRequires:        taglib-devel}
 BuildRequires:	flac-devel >= 1.0.4
 BuildRequires:	freetype-devel
-BuildRequires:  qt4-qmake
-BuildRequires:  Qt3Support-devel
-BuildRequires:  QtOpenGL-devel
-BuildRequires:  QtXml-devel
-BuildRequires:  qt4-build
-BuildRequires:  QtNetwork-devel
-BuildRequires:  QtGui-devel
-BuildRequires:  QtSql-devel
-BuildRequires:  QtCore-devel
-BuildRequires:  QtWebKit-devel
 BuildRequires:	libcdaudio-devel >= 0.99.12p2
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
@@ -89,9 +85,13 @@ BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	patchutils
+BuildRequires:	qt4-build
+BuildRequires:	qt4-qmake
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
+%{?with_mythmusic:BuildRequires:        taglib-devel}
 %{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
+BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
@@ -126,11 +126,11 @@ wcześniej rozpowszechniane jako osobne pakiety na mythtv.org.
 Summary:	A MythTV module to create and burn DVDs
 Summary(pl.UTF-8):	Moduł MythTV do tworzenia i wypalania DVD
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
-Requires:	python-PIL
-Requires:	python-MySQLdb
-Requires:	mjpegtools
 Requires:	dvdauthor
+Requires:	mjpegtools
+Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	python-MySQLdb
+Requires:	python-PIL
 Suggests:	dvdrtools-mkisofs
 
 %description -n mytharchive
@@ -214,23 +214,22 @@ Summary:	A DVD ripper module for MythTV
 Summary(pl.UTF-8):	Moduł rippujący DVD dla MythTV
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
-Requires:	transcode >= 0.6.8
 Requires:	mythvideo
+Requires:	transcode >= 0.6.8
 
 %description -n mythdvd
-MythDVD is a MythTV module that allows you to rip DVD's and transcode 
-their video and audio content to other (generally smaller) formats. 
-The playing features are simply myth-style wrappers for your 
-favourite DVD playing software (mplayer, ogle, xine, etc). 
-The transcoding is based on and derived from the excellent transcode 
-package.
+MythDVD is a MythTV module that allows you to rip DVD's and transcode
+their video and audio content to other (generally smaller) formats.
+The playing features are simply myth-style wrappers for your favourite
+DVD playing software (mplayer, ogle, xine, etc). The transcoding is
+based on and derived from the excellent transcode package.
 
 %description -n mythdvd -l pl.UTF-8
-MythDVD to moduł MythTV umożliwiający rippowanie DVD oraz 
-przekodowywanie obrazu i dźwięku do innych (zwykle mniej zajmujących) 
-formatów. Możliwości odtwarzania to po prostu obudowanie w stylu myth 
-dla ulubionego oprogramowania do odtwarzania DVD (mplayer, ogle, xine 
-itp.). Przekodowywanie jest oparte i wywodzi się ze wspaniałego 
+MythDVD to moduł MythTV umożliwiający rippowanie DVD oraz
+przekodowywanie obrazu i dźwięku do innych (zwykle mniej zajmujących)
+formatów. Możliwości odtwarzania to po prostu obudowanie w stylu myth
+dla ulubionego oprogramowania do odtwarzania DVD (mplayer, ogle, xine
+itp.). Przekodowywanie jest oparte i wywodzi się ze wspaniałego
 pakietu transcode.
 
 %package -n mythnews
@@ -292,12 +291,12 @@ Messengerem oraz dostawcami usług SIP, takimi jak Free World Dialup
 Summary:	The web interface to MythTV
 Summary(pl.UTF-8):	Interfejs WWW do MythTV
 Group:		Applications/Multimedia
-Requires:	webapps
-#Suggests:	apache(mod_auth)
-#Suggests:	apache(mod_env)
 Requires:	php(mysql)
 Requires:	php(posix)
+Requires:	webapps
 Requires:	webserver(php) >= 4.3
+#Suggests:	apache(mod_auth)
+#Suggests:	apache(mod_env)
 
 %description -n mythweb
 The web interface to MythTV.
@@ -339,11 +338,11 @@ MythTV cinemas timetable.
 Moduł MythTV do repertuaru kinowego.
 
 %package -n mythzoneminder
-Summary:        MythTV security TV manager
-Summary(pl.UTF-8):      Obsługa kamer przemysłowych dla MythTV
-Group:          Applications/Multimedia
-BuildRequires:  mysql-devel
-Requires:       mythtv-frontend-api = %{myth_api_version}
+Summary:	MythTV security TV manager
+Summary(pl.UTF-8):	Obsługa kamer przemysłowych dla MythTV
+Group:		Applications/Multimedia
+BuildRequires:	mysql-devel
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythzoneminder
 MythTV security TV manager.
@@ -714,6 +713,7 @@ fi
 
 %if %{with mythmovies}
 %files -n mythmovies
+%defattr(644,root,root,755)
 #-f mythmovies.lang
 %defattr(644,root,root,755)
 %doc mythmovies/{README,TODO}
@@ -725,6 +725,7 @@ fi
 
 %if %{with mythzoneminder}
 %files -n mythzoneminder
+%defattr(644,root,root,755)
 #-f mythmovies.lang
 %defattr(644,root,root,755)
 %doc mythzoneminder/{AUTHORS,README}
