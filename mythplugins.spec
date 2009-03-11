@@ -49,7 +49,7 @@ Source1:	mythweb.conf
 #Patch0:		%{name}-lib64.patch
 #Patch1:		%{name}-paths.patch
 Patch2:		mythweb-config.patch
-Patch20:	mytharchive-INT64.patch
+Patch20:	%{name}-mytharchive-INT64.patch
 Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
