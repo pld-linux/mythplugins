@@ -1,0 +1,14 @@
+diff -urN mythplugins-0.22.orig/mytharchive/mytharchivehelper/main.cpp mythplugins-0.22/mytharchive/mytharchivehelper/main.cpp
+--- mythplugins-0.22.orig/mytharchive/mytharchivehelper/main.cpp	2009-02-12 13:53:35.000000000 +0100
++++ mythplugins-0.22/mytharchive/mytharchivehelper/main.cpp	2009-02-12 18:00:33.000000000 +0100
+@@ -39,6 +39,10 @@
+ // mytharchive headers
+ #include "../mytharchive/archiveutil.h"
+ 
++#ifndef INT64_C    // Used in ffmpeg headers to define some constants
++#define INT64_C(v)   (v ## LL)
++#endif
++
+ class NativeArchive
+ {
+   public:
