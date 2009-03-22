@@ -1,0 +1,102 @@
+diff -urN mythplugins-0.22.orig/mytharchive/mytharchive/dbcheck.cpp mythplugins-0.22/mytharchive/mytharchive/dbcheck.cpp
+--- mythplugins-0.22.orig/mytharchive/mytharchive/dbcheck.cpp	2008-12-06 17:35:03.000000000 +0100
++++ mythplugins-0.22/mytharchive/mytharchive/dbcheck.cpp	2009-03-22 18:34:34.307418870 +0100
+@@ -43,9 +43,8 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+-
+-        if (query.lastError().type() != QSqlError::NoError)
++       
++	if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythflix/mythflix/dbcheck.cpp mythplugins-0.22/mythflix/mythflix/dbcheck.cpp
+--- mythplugins-0.22.orig/mythflix/mythflix/dbcheck.cpp	2008-11-02 23:56:33.000000000 +0100
++++ mythplugins-0.22/mythflix/mythflix/dbcheck.cpp	2009-03-22 18:34:59.834080778 +0100
+@@ -39,9 +39,8 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+ 
+-        if (query.lastError().type() != QSqlError::None)
++	if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythgallery/mythgallery/dbcheck.cpp mythplugins-0.22/mythgallery/mythgallery/dbcheck.cpp
+--- mythplugins-0.22.orig/mythgallery/mythgallery/dbcheck.cpp	2008-11-02 23:56:18.000000000 +0100
++++ mythplugins-0.22/mythgallery/mythgallery/dbcheck.cpp	2009-03-22 18:35:36.766890534 +0100
+@@ -41,9 +41,9 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+ 
+-        if (query.lastError().type() != QSqlError::NoError)
++
++	if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythgame/mythgame/dbcheck.cpp mythplugins-0.22/mythgame/mythgame/dbcheck.cpp
+--- mythplugins-0.22.orig/mythgame/mythgame/dbcheck.cpp	2008-11-02 23:57:19.000000000 +0100
++++ mythplugins-0.22/mythgame/mythgame/dbcheck.cpp	2009-03-22 18:36:00.066795259 +0100
+@@ -41,9 +41,8 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+ 
+-        if (query.lastError().type() != QSqlError::None)
++        if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythmusic/mythmusic/dbcheck.cpp mythplugins-0.22/mythmusic/mythmusic/dbcheck.cpp
+--- mythplugins-0.22.orig/mythmusic/mythmusic/dbcheck.cpp	2009-03-14 21:09:23.000000000 +0100
++++ mythplugins-0.22/mythmusic/mythmusic/dbcheck.cpp	2009-03-22 18:36:26.577404848 +0100
+@@ -41,9 +41,8 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+-
+-        if (query.lastError().type() != QSqlError::NoError)
++	
++	if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythnews/mythnews/dbcheck.cpp mythplugins-0.22/mythnews/mythnews/dbcheck.cpp
+--- mythplugins-0.22.orig/mythnews/mythnews/dbcheck.cpp	2008-11-02 23:57:22.000000000 +0100
++++ mythplugins-0.22/mythnews/mythnews/dbcheck.cpp	2009-03-22 18:36:50.006989331 +0100
+@@ -42,9 +42,8 @@
+ 
+     while (thequery != "")
+     {
+-        query.exec(thequery);
+-
+-        if (query.lastError().type() != QSqlError::NoError)
++       
++        if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
+diff -urN mythplugins-0.22.orig/mythweather/mythweather/dbcheck.cpp mythplugins-0.22/mythweather/mythweather/dbcheck.cpp
+--- mythplugins-0.22.orig/mythweather/mythweather/dbcheck.cpp	2008-12-06 17:35:03.000000000 +0100
++++ mythplugins-0.22/mythweather/mythweather/dbcheck.cpp	2009-03-22 18:34:16.484084324 +0100
+@@ -35,9 +35,8 @@
+     while (it != updates.end())
+     {
+         QString thequery = *it;
+-        query.exec(thequery);
+ 
+-        if (query.lastError().type() != QSqlError::NoError)
++        if (!query.exec(thequery))
+         {
+             QString msg =
+                 QString("DB Error (Performing database upgrade): \n"
