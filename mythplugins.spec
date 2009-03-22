@@ -33,7 +33,7 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-%define snap 20090302
+%define snap 20090322
 #define _rev 11046
 #%define rel 0.1
 Summary:	Main MythTV plugins
@@ -44,11 +44,12 @@ Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:  34c75ba4d8d3569909374d0613f34919
+# Source0-md5:  3d3927c4fef380bfabdeb19e520a7aa7
 Source1:	mythweb.conf
-#Patch0:		%{name}-lib64.patch
-#Patch1:		%{name}-paths.patch
+#Patch0: %{name}-lib64.patch
+#Patch1: %{name}-paths.patch
 Patch2:		mythweb-config.patch
+Patch3:		%{name}-qt45-workaround.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
@@ -341,7 +342,6 @@ Moduł MythTV do repertuaru kinowego.
 Summary:	MythTV security TV manager
 Summary(pl.UTF-8):	Obsługa kamer przemysłowych dla MythTV
 Group:		Applications/Multimedia
-BuildRequires:	mysql-devel
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythzoneminder
@@ -359,6 +359,7 @@ Obsługa kamer przemysłowych dla MythTV.
 #%endif
 #%patch1 -p1
 #%patch2 -p1
+%patch3 -p1
 %patch20 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
