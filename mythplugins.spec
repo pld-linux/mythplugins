@@ -12,7 +12,8 @@
 %bcond_without	mythnews	# disable building mythgallery plugin
 %bcond_with	mythphone	# discontnued ??
 %bcond_without	mythvideo	# disable building mythgallery plugin
-%bcond_without	mythweather	# disable building mythgallery plugin
+%bcond_with	mythweather	# building mythgallery plugin disabled by default
+				# it looks unusable "due to msnbc webpage structure change
 %bcond_without	mythweb		# disable building mythgallery plugin
 %bcond_without  mythzoneminder  # disable building mythzoneminder plugin
 
