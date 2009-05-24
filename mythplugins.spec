@@ -51,7 +51,7 @@ Source1:	mythweb.conf
 #Patch1: %{name}-paths.patch
 Patch2:		mythweb-config.patch
 Patch20:	%{name}-mytharchive-INT64.patch
-Patch100:	mythtv-branch.diff
+#Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
