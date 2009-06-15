@@ -1,0 +1,19 @@
+--- mythplugins-o.22.orig/mythmusic/mythmusic/visualize.h	2009-04-12 13:38:46.000000000 +0200
++++ mythplugins-0.22/mythmusic/mythmusic/visualize.h	2009-06-15 20:46:07.480534125 +0200
+@@ -28,13 +28,13 @@
+ #define myth_fftw_float double /* need to use different plan function to change */
+ #define fftw_real myth_fftw_float
+ #define myth_fftw_complex std::complex<myth_fftw_float>
+-#if (myth_fftw_float == double)
++/*#if (myth_fftw_float == double)*/
+ #define myth_fftw_complex_cast fftw_complex
+-#elif (myth_fftw_float == float)
++/*#elif (myth_fftw_float == float)
+ #define myth_fftw_complex_cast fftwf_complex
+ #elif (myth_fftw_float == long double)
+ #define myth_fftw_complex_cast fftwl_complex
+-#endif
++#endif*/
+ #elif	FFTW2_SUPPORT
+ #include <rfftw.h>
+ #include <fftw.h>
