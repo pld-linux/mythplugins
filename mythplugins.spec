@@ -34,18 +34,18 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-%define snap 20090518
+%define snap rc1
 #define _rev 11046
 #%define rel 0.1
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.22
-Release:	0.%{snap}.3
+Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:  c489ac9ff8033e41112af2e17fc5d65d
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
+# Source0-md5: 1c03d3f4ccedcd9de1c0ac2226e0031c 
 Source1:	mythweb.conf
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
@@ -154,6 +154,7 @@ związane z nimi metadane.
 Summary:	The music player add-on module for MythTV
 Summary(pl.UTF-8):	Moduł odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
+BuildRequires:	libvisual-devel
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
@@ -354,14 +355,14 @@ Obsługa kamer przemysłowych dla MythTV.
 
 %prep
 #%setup -q %{?_snap:-n %{name}}
-%setup -q %{SOURCE0}
+%setup -q -n %{name}-%{version}%{snap}
 #%if %{_lib} != "lib"
 #%patch0 -p1
 #%endif
 #%patch1 -p1
 #%patch2 -p1
 %patch20 -p1
-%patch21 -p1
+#%patch21 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
 # make it visible
@@ -527,7 +528,9 @@ fi
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
 %{_datadir}/mythtv/themes/default/music-ui.xml
+%{_datadir}/mythtv/themes/default/mm-titlelines.png
 %{_datadir}/mythtv/themes/default-wide/music-ui.xml
+%{_datadir}/mythtv/themes/default-wide/mm-titlelines.png
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
 %{_datadir}/mythtv/themes/default/ff_button_pushed.png
@@ -571,9 +574,14 @@ fi
 %{_datadir}/mythtv/videomenu.xml
 %dir %{_datadir}/mythtv/mythvideo
 %dir %{_datadir}/mythtv/mythvideo/scripts
+%dir %{_datadir}/mythtv/mythvideo/scripts/ttvdb
 %{_datadir}/mythtv/mythvideo/scripts/README
+%{_datadir}/mythtv/mythvideo/scripts/jamu.README
+%{_datadir}/mythtv/mythvideo/scripts/jamu-example.conf
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
+%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/ttvdb/*
+
 %dir %{_datadir}/mythtv/mythvideo/scripts/MythTV
 %attr(644,root,root)%{_datadir}/mythtv/mythvideo/scripts/MythTV/MythVideoCommon.pm
 /var/lib/mythvideo
@@ -658,8 +666,8 @@ fi
 %files -n mythbrowser -f mythbrowser.lang
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
-%attr(755,root,root) %{_bindir}/mythbrowser
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbookmarkmanager.so
+#%attr(755,root,root) %{_bindir}/mythbrowser
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/themes/default/mb_progress*.png
 %{_datadir}/mythtv/themes/default/browser-ui.xml
 %{_datadir}/mythtv/themes/default-wide/browser-ui.xml
@@ -723,6 +731,7 @@ fi
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmovies.so
 %{_datadir}/mythtv/themes/default/movies-ui.xml
 %{_datadir}/mythtv/themes/default-wide/movies-ui.xml
+%{_datadir}/mythtv/i18n/mythmovies_*.qm
 %endif
 
 %if %{with mythzoneminder}
@@ -737,4 +746,5 @@ fi
 %{_datadir}/mythtv/themes/default/zoneminder-ui.xml
 %{_datadir}/mythtv/themes/default-wide/zoneminder-ui.xml
 %{_datadir}/mythtv/themes/default/mz_*png
+%{_datadir}/mythtv/i18n/mythzoneminder_*.qm
 %endif
