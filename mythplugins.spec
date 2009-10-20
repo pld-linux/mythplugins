@@ -80,7 +80,7 @@ BuildRequires:	libdvdread-devel >= 0.9.4
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel >= 0.19
+BuildRequires:	libmyth-devel > 0.21
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
@@ -362,7 +362,7 @@ Obsługa kamer przemysłowych dla MythTV.
 #%patch1 -p1
 #%patch2 -p1
 %patch20 -p1
-#%patch21 -p1
+%patch21 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
 
 # make it visible
