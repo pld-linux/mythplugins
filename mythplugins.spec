@@ -34,7 +34,7 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-%define snap rc1
+%define snap rc2
 #define _rev 11046
 #%define rel 0.1
 Summary:	Main MythTV plugins
@@ -45,7 +45,7 @@ Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
-# Source0-md5: 1c03d3f4ccedcd9de1c0ac2226e0031c 
+# Source0-md5: de15246c1f59665f3960015c49138da3
 Source1:	mythweb.conf
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
