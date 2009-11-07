@@ -10,9 +10,8 @@
 %bcond_without	mythgame	# disable building mythgallery plugin
 %bcond_without	mythmusic	# disable building mythmusic plugin
 %bcond_without	mythnews	# disable building mythgallery plugin
-%bcond_with	mythphone	# discontnued ??
 %bcond_without	mythvideo	# disable building mythgallery plugin
-%bcond_with	mythweather	# building mythgallery plugin disabled by default
+%bcond_without	mythweather	# building mythgallery plugin disabled by default
 				# it looks unusable "due to msnbc webpage structure change
 %bcond_without	mythweb		# disable building mythgallery plugin
 %bcond_without  mythzoneminder  # disable building mythzoneminder plugin
@@ -27,31 +26,27 @@
 %undefine	with_mythgame
 %undefine	with_mythmusic
 %undefine	with_mythnews
-%undefine	with_mythphone
 %undefine	with_mythvideo
 %undefine	with_mythweather
 %endif
 
 %include	/usr/lib/rpm/macros.perl
 
-%define snap rc2
-#define _rev 11046
-#%define rel 0.1
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.22
-Release:	0.%{snap}.2
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
-# Source0-md5: de15246c1f59665f3960015c49138da3
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	09c8fa1058399a0c5db169a71561e985
 Source1:	mythweb.conf
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
 Patch2:		mythweb-config.patch
 Patch20:	%{name}-mytharchive-INT64.patch
-Patch21:	mythmusic_fftw3.patch
+#Patch21:	mythmusic_fftw3.patch
 #Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
@@ -105,7 +100,6 @@ BuildRequires:	zlib-devel
 %{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
 %{?with_mythnews:Requires:	mythnews}
-%{?with_mythphone:Requires:	mythphone}
 %{?with_mythvideo:Requires:	mythvideo}
 %{?with_mythweather:Requires:	mythweather}
 %{?with_mythweb:Requires:	mythweb}
@@ -272,24 +266,6 @@ menu).
 MythBrowser zawiera także BookmarkManagera do zarządzania odnośnikami
 do stron w prostej wtyczce myth.
 
-%package -n mythphone
-Summary:	A video conferencing module for MythTV
-Summary(pl.UTF-8):	Moduł wideokonferencji dla MythTV
-Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
-
-%description -n mythphone
-Mythphone is a phone and videophone capability on Myth using the
-standard SIP protocol. It is compatible with Microsoft XP Messenger
-and with SIP Service Providers such as Free World Dialup
-(fwd.pulver.com).
-
-%description -n mythphone -l pl.UTF-8
-Mythphone to funkcjonalność telefonu i wideofonu w Myth przy użyciu
-standardowego protokołu SIP. Jest kompatybilny z Microsoft XP
-Messengerem oraz dostawcami usług SIP, takimi jak Free World Dialup
-(fwd.pulver.com).
-
 %package -n mythweb
 Summary:	The web interface to MythTV
 Summary(pl.UTF-8):	Interfejs WWW do MythTV
@@ -354,8 +330,7 @@ MythTV security TV manager.
 Obsługa kamer przemysłowych dla MythTV.
 
 %prep
-#%setup -q %{?_snap:-n %{name}}
-%setup -q -n %{name}-%{version}%{snap}
+%setup -q -n %{name}-%{version}
 #%if %{_lib} != "lib"
 #%patch0 -p1
 #%endif
@@ -392,7 +367,6 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythgame:--disable-mythgame} \
 	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
 	%{!?with_mythnews:--disable-mythnews} \
-	%{!?with_mythphone:--disable-mythphone}%{?with_mythphone:--disable-festival} \
 	%{!?with_mythvideo:--disable-mythvideo} \
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
@@ -444,7 +418,7 @@ cd -
 
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
 rm $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythflix_nb.ts # i18n source
-for p in mytharchive mythbrowser mythmovies mythdvd mythflix mythgallery mythgame mythmusic mythnews mythphone mythvideo mythweather mythzoneminder; do
+for p in mytharchive mythbrowser mythmovies mythdvd mythflix mythgallery mythgame mythmusic mythnews mythvideo mythweather mythzoneminder; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
 	done > $p.lang
@@ -671,17 +645,6 @@ fi
 %{_datadir}/mythtv/themes/default/mb_progress*.png
 %{_datadir}/mythtv/themes/default/browser-ui.xml
 %{_datadir}/mythtv/themes/default-wide/browser-ui.xml
-%endif
-
-%if %{with mythphone}
-%files -n mythphone -f mythphone.lang
-%defattr(644,root,root,755)
-%doc mythphone/README mythphone/AUTHORS mythphone/TODO
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythphone.so
-%{_datadir}/mythtv/themes/default/phone-ui.xml
-%{_datadir}/mythtv/themes/default/webcam-ui.xml
-%{_datadir}/mythtv/themes/default/mp_*.png
-%{_datadir}/mythtv/themes/default/phone.png
 %endif
 
 %if %{with mythweb}
