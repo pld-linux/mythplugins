@@ -409,7 +409,7 @@ cd mythweb
 install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
-cp -a *.php *.pl data includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a *.php *.pl classes configuration data includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
@@ -650,7 +650,7 @@ fi
 %if %{with mythweb}
 %files -n mythweb
 %defattr(644,root,root,755)
-%doc mythweb/README
+%doc mythweb/README mythweb/mythweb.conf.lighttpd
 #%doc mythweb/data/htaccess
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
