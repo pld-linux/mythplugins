@@ -36,7 +36,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.22
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -44,7 +44,7 @@ Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 Source1:	mythweb.conf
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
-Patch2:		mythweb-config.patch
+Patch2:		mythweb-chdir.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 #Patch21:	mythmusic_fftw3.patch
 #Patch100:	mythtv-branch.diff
@@ -335,7 +335,7 @@ Obsługa kamer przemysłowych dla MythTV.
 #%patch0 -p1
 #%endif
 #%patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch20 -p1
 #%patch21 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
@@ -409,7 +409,8 @@ cd mythweb
 install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
-cp -a *.php *.pl classes configuration data includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
+cp -a *.php *.pl classes configuration includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
+ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/mythweb
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
