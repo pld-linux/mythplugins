@@ -5,7 +5,7 @@
 %bcond_without	mythbrowser	# disable building mythbrowser plugin
 %bcond_without	mythmovies	# disable mythmovies plugin
 %bcond_without	mythdvd		# mythvideo part
-%bcond_without	mythflix	# disable building mythflix plugin
+%bcond_without	mythnetvision	# disable building mythnetvision plugin
 %bcond_without	mythgallery	# disable building mythgallery plugin
 %bcond_without	mythgame	# disable building mythgallery plugin
 %bcond_without	mythmusic	# disable building mythmusic plugin
@@ -21,7 +21,7 @@
 %undefine	with_mythbrowser
 %undefine	with_mythmovies
 %undefine	with_mythdvd
-%undefine	with_mythflix
+%undefine	with_mythnetvision
 %undefine	with_mythgallery
 %undefine	with_mythgame
 %undefine	with_mythmusic
@@ -32,15 +32,18 @@
 
 %include	/usr/lib/rpm/macros.perl
 
+#%define fix     24635
+
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.22
-Release:	2
+Version:	0.23
+#Release:	fix%{fix}.1
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	09c8fa1058399a0c5db169a71561e985
+# Source0-md5:	be44db841f9e03d0d17ab449545b38aa
 Source1:	mythweb.conf
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
@@ -95,7 +98,7 @@ BuildRequires:	zlib-devel
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythdvd:Requires:	mythdvd}
-%{?with_mythflix:Requires:	mythflix}
+%{?with_mythnetvision:Requires:	mythnetvision}
 %{?with_mythgallery:Requires:	mythgallery}
 %{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
@@ -283,25 +286,18 @@ The web interface to MythTV.
 %description -n mythweb -l pl.UTF-8
 Interfejs WWW do MythTV.
 
-%package -n mythflix
-Summary:	MythFlix (A NetFlix MythTV)
-Summary(pl.UTF-8):	MythFlix (NetFlix MythTV)
+%package -n mythnetvision
+Summary:	Mythtv extension to watch network movie shows
+Summary(pl.UTF-8):	Dodatek do MythTV do oglądania sieciowych transmisji
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
-%description -n mythflix
-MythFlix is a MythTV plugin for adding movies to your Netflix queue.
-It currently supports the ability to view your queue and add movies to
-your queue. The browse feature is based on the Netflix RSS feeds. This
-plugin is not very mature, which means things might not work right
-and/or it might break other things.
+%description -n mythnetvision
+Mythtv extension to watch network movie shows (ex. YouTube).
 
-%description -n mythflix -l pl.UTF-8
-MythFlix to wtyczka MythTV do dodawania filmów do kolejki Netfliksa.
-Aktualnie daje możliwość oglądania kolejki i dodawania do niej filmów.
-Przeglądanie jest oparte na kanale RSS Netfliksa. Ta wtyczka nie jest
-jeszcze zbyt dojrzała, co znaczy, że coś może nie działać lub psuć coś
-innego.
+%description -n mythnetvision -l pl.UTF-8
+Dodatek do MythTV do oglądania sieciowych transmisji.
+Na przykład z YouTube.
 
 %package -n mythmovies
 Summary:	MythTV cinemas timetable
@@ -371,7 +367,7 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
 	%{!?with_mythmovies:--disable-mythmovies} \
-	%{!?with_mythflix:--disable-mythflix} \
+	%{!?with_mythnetvision:--disable-mythnetvision} \
 
 mv mythconfig.mak mythconfig.mak.old
 cp mythconfig.mak.old mythconfig.mak
@@ -388,7 +384,6 @@ EOF
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %if %{with binary}
 export QTDIR="%{_prefix}"
 %{__make} install \
@@ -417,9 +412,9 @@ touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 cd -
 %endif
 
+rm -f $RPM_BUILD_ROOT%{_datadir}/data
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
-rm $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythflix_nb.ts # i18n source
-for p in mytharchive mythbrowser mythmovies mythdvd mythflix mythgallery mythgame mythmusic mythnews mythvideo mythweather mythzoneminder; do
+for p in mytharchive mythbrowser mythmovies mythdvd mythgallery mythgame mythmusic mythnews mythnetvision mythvideo mythweather mythzoneminder; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
 	done > $p.lang
@@ -549,16 +544,17 @@ fi
 %{_datadir}/mythtv/videomenu.xml
 %dir %{_datadir}/mythtv/mythvideo
 %dir %{_datadir}/mythtv/mythvideo/scripts
-%dir %{_datadir}/mythtv/mythvideo/scripts/ttvdb
+%dir %{_datadir}/mythtv/mythvideo/scripts/Movie
+%dir %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV
+%dir %{_datadir}/mythtv/mythvideo/scripts/Television
 %{_datadir}/mythtv/mythvideo/scripts/README
 %{_datadir}/mythtv/mythvideo/scripts/jamu.README
 %{_datadir}/mythtv/mythvideo/scripts/jamu-example.conf
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.pl
+%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.py
+%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV/*
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
-%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/ttvdb/*
-
-%dir %{_datadir}/mythtv/mythvideo/scripts/MythTV
-%attr(644,root,root)%{_datadir}/mythtv/mythvideo/scripts/MythTV/MythVideoCommon.pm
+%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/Television/*
 /var/lib/mythvideo
 %endif
 
@@ -666,23 +662,27 @@ fi
 %dir %attr(771,root,http) /var/cache/mythweb/tv_icons
 %endif
 
-%if %{with mythflix}
-%files -n mythflix -f mythflix.lang
+%if %{with mythnetvision}
+%files -n mythnetvision -f mythnetvision.lang
 %defattr(644,root,root,755)
-%doc mythflix/{AUTHORS,ChangeLog,README}
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythflix.so
-%dir %{_datadir}/mythtv/mythflix
-%{_datadir}/mythtv/mythflix/netflix-rss.xml
-%dir %{_datadir}/mythtv/mythflix/scripts
-%attr(755,root,root) %{_datadir}/mythtv/mythflix/scripts/netflix.pl
-%{_datadir}/mythtv/netflix_menu.xml
-%{_datadir}/mythtv/themes/default/title_netflix.png
-%{_datadir}/mythtv/themes/default/mythflix_background.png
-%{_datadir}/mythtv/themes/default/netflix-ui.xml
-%{_datadir}/mythtv/themes/default-wide/netflix-ui.xml
-%{_datadir}/mythtv/themes/default-wide/netflix-bg.png
-# DUPLICATE WITH MYTHNEWS?
-%{_datadir}/mythtv/themes/default/news-info-bg.png
+%doc mythnetvision/{AUTHORS,ChangeLog,README}
+%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnetvision.so
+%dir %{_datadir}/mythtv/mythnetvision
+%{_datadir}/mythtv/netvisionmenu.xml
+%dir %{_datadir}/mythtv/mythnetvision/scripts
+%attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/twit.tv.pl
+%dir %{_datadir}/mythtv/mythnetvision/icons
+%dir %{_datadir}/mythtv/mythnetvision/icons/directories
+%{_datadir}/mythtv/mythnetvision/icons/*.png
+%{_datadir}/mythtv/mythnetvision/icons/vimeo.jpg
+%{_datadir}/mythtv/mythnetvision/icons/directories/film_genres/*.png
+%{_datadir}/mythtv/mythnetvision/icons/directories/music_genres/*.png
+%{_datadir}/mythtv/mythnetvision/icons/directories/topics/*.png
+%attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/*.py
+%dir %{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs
+%{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs/*
+%{_datadir}/mythtv/themes/default-wide/netvision-ui.xml   
+%{_datadir}/mythtv/themes/default/netvision-ui.xml
 %endif
 
 %if %{with mythmovies}
