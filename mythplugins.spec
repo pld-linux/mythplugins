@@ -675,8 +675,11 @@ fi
 %dir %{_datadir}/mythtv/mythnetvision/icons/directories
 %{_datadir}/mythtv/mythnetvision/icons/*.png
 %{_datadir}/mythtv/mythnetvision/icons/vimeo.jpg
+%dir %{_datadir}/mythtv/mythnetvision/icons/directories/film_genres
 %{_datadir}/mythtv/mythnetvision/icons/directories/film_genres/*.png
+%dir %{_datadir}/mythtv/mythnetvision/icons/directories/music_genres
 %{_datadir}/mythtv/mythnetvision/icons/directories/music_genres/*.png
+%dir %{_datadir}/mythtv/mythnetvision/icons/directories/topics
 %{_datadir}/mythtv/mythnetvision/icons/directories/topics/*.png
 %attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/*.py
 %dir %{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs
