@@ -414,17 +414,13 @@ cp -a %{SOURCE4} ./
 install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
-install -d $RPM_BUILD_ROOT/etc/lighthttpd/webapps.d
-#install -d $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}
 cp -a *.php *.pl classes configuration includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
-ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/data
+ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/mythweb/data
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/lighthttpd/webapps.d/mythweb.conf
-#install %{SOURCE3} $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}/htdigest.sh
-#install %{SOURCE4} $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}/http_servers_conf_tips.txt
+install %{SOURCE2} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/lighttpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
-touch $RPM_BUILD_ROOT%{_datadir}/mythweb/htdigest
+touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htdigest
 cd -
 %endif
 
@@ -448,8 +444,14 @@ rm -rf $RPM_BUILD_ROOT
 %triggerin -n mythweb -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
+%triggerin -n mythweb -- lighttpd
+%webapp_register lighttpd %{_webapp}
+
 %triggerun -n mythweb -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
+
+%triggerun -n mythweb -- lighttpd
+%webapp_unregister lighttpd %{_webapp}
 
 %triggerpostun -n mythweb -- mythweb < 0.19
 for i in canned_searches.php conf.php htpasswd theme_Default.php theme_compact.php theme_vxml.php theme_wap.php theme_wml.php weathertypes.dat; do
@@ -670,15 +672,14 @@ which packages you can need to run mythweb and how to set it quickly."
 %doc mythweb/README mythweb/mythweb.conf.lighttpd
 %doc mythweb/htdigest.sh
 %doc mythweb/http_servers_conf_tips.txt
-
-#%doc mythweb/data/htaccess
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
 #%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
 #%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/lighthttpd/webapps.d/mythweb.conf
+%attr(640,root,lighttpd) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/lighttpd.conf
+%attr(640,root,lighttpd) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htdigest
 %{_datadir}/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
