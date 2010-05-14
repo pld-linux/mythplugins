@@ -1,0 +1,58 @@
+I. PASSWORD
+Distrubuted configs requires to set passwd
+1) for apache use package htpasswd-apache
+2) for lighttpd use htdigest.sh script with arguments:
+   htdigest.sh <username> mythweb <password> > /usr/share/mythweb/htdigest
+   and then
+   chown lighthttpd /usr/share/mythweb/htdigest
+
+II. PACKAGES
+Here are lists of packages which I had to* install 
+to run mythweb with 1) apache or 2) lighttpd servers 
+and 3) php - always required.
+*it is possible, that some are unnecessary 
+
+1) apache
+apache-mod_alias
+apache-mod_rewrite
+apache-mod_authz_user
+apache-mod_env
+apache-mod_authz_groupfile
+apache-base
+apache-mod_authn_file
+apache-mod_auth_basic
+apache-mod_authz_host
+apache-mod_mime
+htpasswd-apache
+apache-mod_php
+apache-mod_auth
+apache-mod_dir
+apache-mod_unique_id
+
+2) lighttpd
+lighttpd-mod_access
+lighttpd-mod_h264_streaming
+lighttpd-mod_auth
+lighttpd-mod_alias
+lighttpd-mod_mysql_vhost
+lighttpd-mod_dirlisting
+lighttpd-mod_evhost
+lighttpd-mod_cgi
+lighttpd-mod_setenv
+lighttpd
+lighttpd-mod_staticfile
+lighttpd-mod_indexfile
+lighttpd-mod_fastcgi
+lighttpd-mod_rewrite
+
+3) php
+php-common
+php-pcre
+php-recode
+php-session
+php-dirs
+php-simplexml
+php-spl
+php-posix
+php-mysql
+php-fcgi
