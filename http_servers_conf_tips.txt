@@ -2,9 +2,9 @@ I. PASSWORD
 Distrubuted configs requires to set passwd
 1) for apache use package htpasswd-apache
 2) for lighttpd use htdigest.sh script with arguments:
-   htdigest.sh <username> mythweb <password> > /usr/share/mythweb/htdigest
+   htdigest.sh <username> mythweb <password> > /etc/webapps/mythweb/htdigest
    and then
-   chown lighthttpd /usr/share/mythweb/htdigest
+   chgrp lighttpd /etc/webapps/mythweb/htdigest
 
 II. PACKAGES
 Here are lists of packages which I had to* install 
