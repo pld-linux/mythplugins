@@ -39,12 +39,15 @@ Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.23
 #Release:	fix%{fix}.1
-Release:	0.1
+Release:	0.2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 # Source0-md5:	be44db841f9e03d0d17ab449545b38aa
 Source1:	mythweb.conf
+Source2:        mythweb_lighttpd.conf
+Source3:	htdigest.sh
+Source4:	http_servers_conf_tips.txt
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
 Patch2:		mythweb-chdir.patch
@@ -406,14 +409,22 @@ cp -a mythgame/gamelist.xml $RPM_BUILD_ROOT%{_datadir}/mythtv/games/PC
 
 %if %{with mythweb}
 cd mythweb
+cp -a %{SOURCE3} ./
+cp -a %{SOURCE4} ./
 install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+install -d $RPM_BUILD_ROOT/etc/lighthttpd/webapps.d
+#install -d $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}
 cp -a *.php *.pl classes configuration includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
 ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/data
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/lighthttpd/webapps.d/mythweb.conf
+#install %{SOURCE3} $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}/htdigest.sh
+#install %{SOURCE4} $RPM_BUILD_ROOT%{_docdir}/mythweb-%{version}/http_servers_conf_tips.txt
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
+touch $RPM_BUILD_ROOT%{_datadir}/mythweb/htdigest
 cd -
 %endif
 
@@ -473,6 +484,10 @@ if [ -L /etc/httpd/httpd.conf/99_mythplugins.conf ]; then
 	/usr/sbin/webapp register httpd %{_webapp}
 	%service -q httpd reload
 fi
+
+%post -n mythweb
+echo "Read %{_docdir}/mythweb-%{version}/http_servers_conf_tips.txt.gz to find
+which packages you can need to run mythweb and how to set it quickly."
 
 %files
 %defattr(644,root,root,755)
@@ -653,6 +668,9 @@ fi
 %files -n mythweb
 %defattr(644,root,root,755)
 %doc mythweb/README mythweb/mythweb.conf.lighttpd
+%doc mythweb/htdigest.sh
+%doc mythweb/http_servers_conf_tips.txt
+
 #%doc mythweb/data/htaccess
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
@@ -660,6 +678,7 @@ fi
 #%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
 #%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/lighthttpd/webapps.d/mythweb.conf
 %{_datadir}/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb
 %dir %attr(771,root,http) /var/cache/mythweb/image_cache
