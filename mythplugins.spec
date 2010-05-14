@@ -155,10 +155,14 @@ BuildRequires:	libvisual-devel
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
-Music add-on for MythTV.
+Music add-on for MythTV. Support playlists, visualisations, tag editing
+and plays many popular audio file formats - mp3, flac, wav, ogg etc.
 
 %description -n mythmusic -l pl.UTF-8
-Odtwarzacz muzyki dla MythTV.
+Odtwarzacz muzyki dla MythTV. Obsługuje listy odtwarzania, wizualizacje,
+edycję tagów.
+Potrafi odtwarzać wiele popularnych formatów audio - mp3, flac, wav, ogg
+itd.
 
 %package -n mythvideo
 Summary:	A generic video player frontend module for MythTV
@@ -291,6 +295,7 @@ Summary:	Mythtv extension to watch network movie shows
 Summary(pl.UTF-8):	Dodatek do MythTV do oglądania sieciowych transmisji
 Group:		Applications/Multimedia
 Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythbrowser
 
 %description -n mythnetvision
 Mythtv extension to watch network movie shows (ex. YouTube).
