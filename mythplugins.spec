@@ -11,7 +11,9 @@
 %bcond_without	mythmusic	# disable building mythmusic plugin
 %bcond_without	mythnews	# disable building mythgallery plugin
 %bcond_without	mythvideo	# disable building mythgallery plugin
-%bcond_without	mythweather	# building mythgallery plugin disabled by default
+# Mythweather disabled, as we need DateTime::Format::ISO8601 first
+# not present by default in PLD
+%bcond_with	mythweather	# building mythgallery plugin disabled by default
 				# it looks unusable "due to msnbc webpage structure change
 %bcond_without	mythweb		# disable building mythgallery plugin
 %bcond_without  mythzoneminder  # disable building mythzoneminder plugin
@@ -37,13 +39,13 @@
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.23
+Version:	0.23.1
 #Release:	fix%{fix}.1
 Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	be44db841f9e03d0d17ab449545b38aa
+# Source0-md5:	edd9c5f8a9ae0189b1c8951fa8282c4d
 Source1:	mythweb.conf
 Source2:        mythweb_lighttpd.conf
 Source3:	htdigest.sh
@@ -51,6 +53,7 @@ Source4:	http_servers_conf_tips.txt
 #Patch0: %{name}-lib64.patch
 #Patch1: %{name}-paths.patch
 Patch2:		mythweb-chdir.patch
+Patch3:		%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 #Patch21:	mythmusic_fftw3.patch
 #Patch100:	mythtv-branch.diff
@@ -88,6 +91,10 @@ BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	patchutils
+%{?with_mythweather:BuildRequires:	perl-XML-Simple}
+%{?with_mythweather:BuildRequires:      perl-XML-XPath}
+%{?with_mythweather:BuildRequires:      perl-Image-Size}
+%{?with_mythweather:BuildRequires:      perl-DateTime-Format-ISO8601}
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -340,6 +347,7 @@ Obsługa kamer przemysłowych dla MythTV.
 #%endif
 #%patch1 -p1
 %patch2 -p1
+%patch3 -p1
 %patch20 -p1
 #%patch21 -p1
 #filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
