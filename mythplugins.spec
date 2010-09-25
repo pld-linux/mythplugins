@@ -119,7 +119,7 @@ BuildRequires:	zlib-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		myth_api_version %(awk -vFS=. '/^LIBVERSION/{sub("LIBVERSION = ", ""); printf ("%s.%s\n", $1, $2)}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
+%define		myth_api_version %(awk -vFS=. '/^LIBVERSION/{sub("LIBVERSION = ", ""); printf ("%s.%s", $1, $2)}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
 %define		_webapps	/etc/webapps
 %define		_webapp		mythweb
 
