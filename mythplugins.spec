@@ -119,7 +119,7 @@ BuildRequires:	zlib-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		myth_api_version %(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro | cut -d. -f1,2 2>/dev/null || echo ERROR)
+%define     myth_api_version %%(awk '/LIBVERSION/{print $3}' %{_datadir}/mythtv/build/settings.pro | cut -d. -f1,2 2>/dev/null || echo ERROR)
 %define		_webapps	/etc/webapps
 %define		_webapp		mythweb
 
@@ -137,7 +137,7 @@ Summary(pl.UTF-8):	Moduł MythTV do tworzenia i wypalania DVD
 Group:		Applications/Multimedia
 Requires:	dvdauthor
 Requires:	mjpegtools
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 Requires:	python-MySQLdb
 Requires:	python-PIL
 Suggests:	dvdrtools-mkisofs
@@ -162,7 +162,7 @@ Summary:	The music player add-on module for MythTV
 Summary(pl.UTF-8):	Moduł odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
 BuildRequires:	libvisual-devel
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythmusic
 Music add-on for MythTV. Support playlists, visualisations, tag editing
@@ -179,7 +179,7 @@ Summary:	A generic video player frontend module for MythTV
 Summary(pl.UTF-8):	Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV
 Group:		Applications/Multimedia
 Requires:	mplayer
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythvideo
 A generic video and dvd player frontend module for MythTV.
@@ -191,7 +191,7 @@ Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV.
 Summary:	A MythTV module that displays a weather forcast
 Summary(pl.UTF-8):	Moduł MythTV wyświetlający prognozę pogody
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythweather
 A MythTV module that displays a weather forcast.
@@ -203,7 +203,7 @@ Moduł MythTV wyświetlający prognozę pogody.
 Summary:	A gallery/slideshow module for MythTV
 Summary(pl.UTF-8):	Moduł galerii/pokazu slajdów dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythgallery
 A gallery/slideshow module for MythTV.
@@ -215,7 +215,7 @@ Moduł galerii/pokazu slajdów dla MythTV.
 Summary:	A game frontend (xmame, nes, snes, pc) for MythTV
 Summary(pl.UTF-8):	Interfejs do gier (xmame, nes, snes, pc) dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythgame
 A game frontend (xmame, nes, snes, pc) for MythTV.
@@ -227,7 +227,7 @@ Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 Summary:	A DVD ripper module for MythTV
 Summary(pl.UTF-8):	Moduł rippujący DVD dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 Requires:	mythvideo
 Requires:	transcode >= 0.6.8
 
@@ -250,7 +250,7 @@ pakietu transcode.
 Summary:	A RSS News Feed plugin for MythTV
 Summary(pl.UTF-8):	Wtyczka czytnika nowinek RSS dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythnews
 A RSS News Feed plugin for MythTV.
@@ -262,7 +262,7 @@ Wtyczka czytnika nowinek RSS dla MythTV.
 Summary:	A small web browser module for MythTV
 Summary(pl.UTF-8):	Moduł małej przeglądarki WWW dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythbrowser
 MythBrowser is a full fledged web-browser (multiple tabs) to display
@@ -304,7 +304,7 @@ Interfejs WWW do MythTV.
 Summary:	Mythtv extension to watch network movie shows
 Summary(pl.UTF-8):	Dodatek do MythTV do oglądania sieciowych transmisji
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 Requires:	mythbrowser
 
 %description -n mythnetvision
@@ -318,7 +318,7 @@ Na przykład z YouTube.
 Summary:	MythTV cinemas timetable
 Summary(pl.UTF-8):	Moduł MythTV do repertuaru kinowego
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythmovies
 MythTV cinemas timetable.
@@ -331,7 +331,7 @@ Moduł MythTV do repertuaru kinowego.
 Summary:	MythTV security TV manager
 Summary(pl.UTF-8):	Obsługa kamer przemysłowych dla MythTV
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	mythtv-frontend-api = %{expand:myth_api_version}
 
 %description -n mythzoneminder
 MythTV security TV manager.
