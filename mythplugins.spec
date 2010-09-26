@@ -40,23 +40,19 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.23.1
-#Release:	fix%{fix}.1
 Release:	2
+#Release:	fix%{fix}.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 # Source0-md5:	edd9c5f8a9ae0189b1c8951fa8282c4d
 Source1:	mythweb.conf
-Source2:        mythweb_lighttpd.conf
+Source2:	mythweb_lighttpd.conf
 Source3:	htdigest.sh
 Source4:	http_servers_conf_tips.txt
-#Patch0: %{name}-lib64.patch
-#Patch1: %{name}-paths.patch
-Patch2:		mythweb-chdir.patch
-Patch3:		%{name}-compile_fixes_for_qt_4_7.patch
+Patch0:		mythweb-chdir.patch
+Patch10:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
-#Patch21:	mythmusic_fftw3.patch
-#Patch100:	mythtv-branch.diff
 URL:		http://www.mythtv.org/
 %if %{with binary}
 %if %{with mythgallery} || %{with myhtmusic}
@@ -91,10 +87,10 @@ BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	patchutils
+%{?with_mythweather:BuildRequires:      perl-DateTime-Format-ISO8601}
+%{?with_mythweather:BuildRequires:      perl-Image-Size}
 %{?with_mythweather:BuildRequires:	perl-XML-Simple}
 %{?with_mythweather:BuildRequires:      perl-XML-XPath}
-%{?with_mythweather:BuildRequires:      perl-Image-Size}
-%{?with_mythweather:BuildRequires:      perl-DateTime-Format-ISO8601}
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -108,10 +104,10 @@ BuildRequires:	zlib-devel
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythdvd:Requires:	mythdvd}
-%{?with_mythnetvision:Requires:	mythnetvision}
 %{?with_mythgallery:Requires:	mythgallery}
 %{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
+%{?with_mythnetvision:Requires:	mythnetvision}
 %{?with_mythnews:Requires:	mythnews}
 %{?with_mythvideo:Requires:	mythvideo}
 %{?with_mythweather:Requires:	mythweather}
@@ -165,14 +161,14 @@ BuildRequires:	libvisual-devel
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
-Music add-on for MythTV. Support playlists, visualisations, tag editing
-and plays many popular audio file formats - mp3, flac, wav, ogg etc.
+Music add-on for MythTV. Support playlists, visualisations, tag
+editing and plays many popular audio file formats - mp3, flac, wav,
+ogg etc.
 
 %description -n mythmusic -l pl.UTF-8
-Odtwarzacz muzyki dla MythTV. Obsługuje listy odtwarzania, wizualizacje,
-edycję tagów.
-Potrafi odtwarzać wiele popularnych formatów audio - mp3, flac, wav, ogg
-itd.
+Odtwarzacz muzyki dla MythTV. Obsługuje listy odtwarzania,
+wizualizacje, edycję tagów. Potrafi odtwarzać wiele popularnych
+formatów audio - mp3, flac, wav, ogg itd.
 
 %package -n mythvideo
 Summary:	A generic video player frontend module for MythTV
@@ -291,8 +287,6 @@ Requires:	php(mysql)
 Requires:	php(posix)
 Requires:	webapps
 Requires:	webserver(php) >= 4.3
-#Suggests:	apache(mod_auth)
-#Suggests:	apache(mod_env)
 
 %description -n mythweb
 The web interface to MythTV.
@@ -304,15 +298,15 @@ Interfejs WWW do MythTV.
 Summary:	Mythtv extension to watch network movie shows
 Summary(pl.UTF-8):	Dodatek do MythTV do oglądania sieciowych transmisji
 Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
 Requires:	mythbrowser
+Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythnetvision
 Mythtv extension to watch network movie shows (ex. YouTube).
 
 %description -n mythnetvision -l pl.UTF-8
-Dodatek do MythTV do oglądania sieciowych transmisji.
-Na przykład z YouTube.
+Dodatek do MythTV do oglądania sieciowych transmisji. Na przykład z
+YouTube.
 
 %package -n mythmovies
 Summary:	MythTV cinemas timetable
@@ -341,25 +335,16 @@ MythTV security TV manager.
 Obsługa kamer przemysłowych dla MythTV.
 
 %prep
-%setup -q -n %{name}-%{version}
-#%if %{_lib} != "lib"
-#%patch0 -p1
-#%endif
-#%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%setup -q
+%patch0 -p1
+%patch10 -p1
 %patch20 -p1
-#%patch21 -p1
-#filterdiff -i 'mythplugins/*' %{PATCH100} | %{__patch} -p1 -s
-
-# make it visible
-#mv mythweb/data/{.,}htaccess
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib/ . | xargs sed -i -e '
-	s,/usr/lib/,/%{_lib}/,g
+s,%{_prefix}/lib/,/%{_lib}/,g
 	s,{PREFIX}/lib,{PREFIX}/%{_lib},g
 '
 exit 1
@@ -582,9 +567,9 @@ which packages you can need to run mythweb and how to set it quickly."
 %{_datadir}/mythtv/mythvideo/scripts/jamu-example.conf
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.pl
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.py
-%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV/*
+%{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV/*
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
-%attr(644,root,root) %{_datadir}/mythtv/mythvideo/scripts/Television/*
+%{_datadir}/mythtv/mythvideo/scripts/Television/*
 /var/lib/mythvideo
 %endif
 
@@ -717,7 +702,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/*.py
 %dir %{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs
 %{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs/*
-%{_datadir}/mythtv/themes/default-wide/netvision-ui.xml   
+%{_datadir}/mythtv/themes/default-wide/netvision-ui.xml
 %{_datadir}/mythtv/themes/default/netvision-ui.xml
 %endif
 
