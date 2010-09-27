@@ -1,21 +1,20 @@
 #
 # Conditional build:
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
-%bcond_without	mytharchive	# disable mytharchive plugin
-%bcond_without	mythbrowser	# disable building mythbrowser plugin
+%bcond_without	mytharchive	# disable building mytharchive plugin
+%bcond_without	mythbrowser	# disable building building mythbrowser plugin
 %bcond_without	mythmovies	# disable mythmovies plugin
-%bcond_without	mythdvd		# mythvideo part
+%bcond_without	mythdvd		# disable mythdvd plugin - mythvideo part
 %bcond_without	mythnetvision	# disable building mythnetvision plugin
 %bcond_without	mythgallery	# disable building mythgallery plugin
-%bcond_without	mythgame	# disable building mythgallery plugin
+%bcond_without	mythgame	# disable building mythgame plugin
 %bcond_without	mythmusic	# disable building mythmusic plugin
-%bcond_without	mythnews	# disable building mythgallery plugin
-%bcond_without	mythvideo	# disable building mythgallery plugin
+%bcond_without	mythnews	# disable building mythnews plugin
+%bcond_without	mythvideo	# disable building mythvideo plugin
 # Mythweather disabled, as we need DateTime::Format::ISO8601 first
 # not present by default in PLD
-%bcond_with	mythweather	# building mythgallery plugin disabled by default
-				# it looks unusable "due to msnbc webpage structure change
-%bcond_without	mythweb		# disable building mythgallery plugin
+%bcond_with	mythweather	# enable building mythweather plugin
+%bcond_without	mythweb		# disable building mythweb plugin
 %bcond_without  mythzoneminder  # disable building mythzoneminder plugin
 
 %if !%{with binary}
@@ -609,14 +608,12 @@ which packages you can need to run mythweb and how to set it quickly."
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default-wide/gallery-ui.xml
 %{_datadir}/mythtv/themes/default/gallery-*.png
-# FIXME: this is definately stupid path
 /var/lib/pictures
 %endif
 
 %if %{with mythgame}
 %files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
-#%doc mythgame/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 %{_datadir}/mythtv/game_settings.xml
@@ -640,7 +637,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnews.so
 %{_datadir}/mythtv/mythnews
 %{_datadir}/mythtv/themes/default/news-ui.xml
-# DUPLICATE WITH MYTHFLIX?
 %{_datadir}/mythtv/themes/default/news-info-bg.png
 %{_datadir}/mythtv/themes/default/enclosures.png
 %{_datadir}/mythtv/themes/default/need-download.png
@@ -652,7 +648,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %files -n mythbrowser -f mythbrowser.lang
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
-#%attr(755,root,root) %{_bindir}/mythbrowser
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbrowser.so
 %{_datadir}/mythtv/themes/default/mb_progress*.png
 %{_datadir}/mythtv/themes/default/browser-ui.xml
@@ -668,8 +663,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %dir %attr(750,root,http) %{_webapps}/%{_webapp}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
-#%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.php
-#%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/*.dat
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
 %attr(640,root,lighttpd) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/lighttpd.conf
 %attr(640,root,lighttpd) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htdigest
@@ -709,7 +702,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythmovies}
 %files -n mythmovies
 %defattr(644,root,root,755)
-#-f mythmovies.lang
 %defattr(644,root,root,755)
 %doc mythmovies/{README,TODO}
 %attr(755,root,root) %{_bindir}/ignyte
@@ -722,7 +714,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythzoneminder}
 %files -n mythzoneminder
 %defattr(644,root,root,755)
-#-f mythmovies.lang
 %defattr(644,root,root,755)
 %doc mythzoneminder/{AUTHORS,README}
 %attr(755,root,root) %{_bindir}/mythzmserver
