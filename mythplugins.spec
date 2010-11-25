@@ -39,7 +39,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.23.1
-Release:	2
+Release:	3
 #Release:	fix%{fix}.1
 License:	GPL v2
 Group:		Applications/Multimedia
