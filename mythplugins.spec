@@ -489,6 +489,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mytharchive}
 %files -n mytharchive -f mytharchive.lang
 %defattr(644,root,root,755)
+%doc mytharchive/AUTHORS mytharchive/README mytharchive/TODO
 %attr(755,root,root) %{_bindir}/mytharchivehelper
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmytharchive.so
 %{_datadir}/mythtv/archivemenu.xml
@@ -548,7 +549,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythvideo}
 %files -n mythvideo -f mythvideo.lang
 %defattr(644,root,root,755)
-%doc mythvideo/README mythvideo/videodb
+%doc mythvideo/README* mythvideo/videodb mythvideo/contrib
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
 %{_datadir}/mythtv/themes/default/video-ui.xml
 %{_datadir}/mythtv/themes/default-wide/video-ui.xml
@@ -575,7 +576,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythweather}
 %files -n mythweather -f mythweather.lang
 %defattr(644,root,root,755)
-%doc mythweather/README
+%doc mythweather/AUTHORS mythweather/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythweather.so
 %{_datadir}/mythtv/mythweather
 %{_datadir}/mythtv/weather_settings.xml
@@ -603,7 +604,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythgallery}
 %files -n mythgallery -f mythgallery.lang
 %defattr(644,root,root,755)
-%doc mythgallery/README
+%doc mythgallery/AUTHORS mythgallery/README
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgallery.so
 %{_datadir}/mythtv/themes/default/gallery-ui.xml
 %{_datadir}/mythtv/themes/default-wide/gallery-ui.xml
@@ -614,6 +615,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %if %{with mythgame}
 %files -n mythgame -f mythgame.lang
 %defattr(644,root,root,755)
+%doc mythgame/contrib
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythgame.so
 %{_datadir}/mythtv/games
 %{_datadir}/mythtv/game_settings.xml
