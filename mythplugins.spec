@@ -17,7 +17,7 @@
 %bcond_without	mythweb		# disable building mythweb plugin
 %bcond_without  mythzoneminder  # disable building mythzoneminder plugin
 
-%if !%{with binary}
+%if %{without binary}
 %undefine	with_mytharchive
 %undefine	with_mythbrowser
 %undefine	with_mythmovies
@@ -33,14 +33,11 @@
 
 %include	/usr/lib/rpm/macros.perl
 
-#%define fix     24635
-
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.23.1
-Release:	3
-#Release:	fix%{fix}.1
+Release:	4
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -338,6 +335,9 @@ Obsługa kamer przemysłowych dla MythTV.
 %patch0 -p1
 %patch10 -p1
 %patch20 -p1
+
+%{__sed} -i -e 's,/var/lib/mythdvd/temp,/var/lib/mythtv/tmp,' \
+	mythvideo/mythvideo/globalsettings.cpp
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
