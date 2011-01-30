@@ -79,6 +79,7 @@ BuildRequires:	libmad-devel
 BuildRequires:	libmyth-devel > 0.21
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
+BuildRequires:	libvisual-devel
 BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
@@ -153,7 +154,6 @@ związane z nimi metadane.
 Summary:	The music player add-on module for MythTV
 Summary(pl.UTF-8):	Moduł odtwarzacza muzyki dla MythTV
 Group:		Applications/Multimedia
-BuildRequires:	libvisual-devel
 Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythmusic
