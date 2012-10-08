@@ -3,8 +3,6 @@
 %bcond_without	binary		# skip building binary plugins (build only mythweb)
 %bcond_without	mytharchive	# disable building mytharchive plugin
 %bcond_without	mythbrowser	# disable building building mythbrowser plugin
-%bcond_without	mythmovies	# disable mythmovies plugin
-%bcond_without	mythdvd		# disable mythdvd plugin - mythvideo part
 %bcond_without	mythnetvision	# disable building mythnetvision plugin
 %bcond_without	mythgallery	# disable building mythgallery plugin
 %bcond_without	mythgame	# disable building mythgame plugin
@@ -20,8 +18,6 @@
 %if %{without binary}
 %undefine	with_mytharchive
 %undefine	with_mythbrowser
-%undefine	with_mythmovies
-%undefine	with_mythdvd
 %undefine	with_mythnetvision
 %undefine	with_mythgallery
 %undefine	with_mythgame
@@ -36,12 +32,12 @@
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.23.1
-Release:	5
+Version:	0.24.3
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	edd9c5f8a9ae0189b1c8951fa8282c4d
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/old_releases/%{name}-%{version}.tar.bz2
+# Source0-md5:	8483036df0a9fa4e821e0066ed35b544
 Source1:	mythweb.conf
 Source2:	mythweb_lighttpd.conf
 Source3:	htdigest.sh
@@ -88,19 +84,19 @@ BuildRequires:	patchutils
 %{?with_mythweather:BuildRequires:      perl-Image-Size}
 %{?with_mythweather:BuildRequires:	perl-XML-Simple}
 %{?with_mythweather:BuildRequires:      perl-XML-XPath}
+%{?with_mythnetvision:BuildRequires:	python-MythTV}
+%{?with_mythnetvision:BuildRequires:	python-oauth}
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	sed >= 4.0
 %{?with_mythmusic:BuildRequires:        taglib-devel}
-%{?with_mythdvd:BuildRequires:	transcode >= 0.6.8}
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
-%{?with_mythdvd:Requires:	mythdvd}
 %{?with_mythgallery:Requires:	mythgallery}
 %{?with_mythgame:Requires:	mythgame}
 %{?with_mythmysic:Requires:	mythmusic}
@@ -215,29 +211,6 @@ A game frontend (xmame, nes, snes, pc) for MythTV.
 %description -n mythgame -l pl.UTF-8
 Interfejs do gier (xmame, nes, snes, pc) dla MythTV.
 
-%package -n mythdvd
-Summary:	A DVD ripper module for MythTV
-Summary(pl.UTF-8):	Moduł rippujący DVD dla MythTV
-Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
-Requires:	mythvideo
-Requires:	transcode >= 0.6.8
-
-%description -n mythdvd
-MythDVD is a MythTV module that allows you to rip DVD's and transcode
-their video and audio content to other (generally smaller) formats.
-The playing features are simply myth-style wrappers for your favourite
-DVD playing software (mplayer, ogle, xine, etc). The transcoding is
-based on and derived from the excellent transcode package.
-
-%description -n mythdvd -l pl.UTF-8
-MythDVD to moduł MythTV umożliwiający rippowanie DVD oraz
-przekodowywanie obrazu i dźwięku do innych (zwykle mniej zajmujących)
-formatów. Możliwości odtwarzania to po prostu obudowanie w stylu myth
-dla ulubionego oprogramowania do odtwarzania DVD (mplayer, ogle, xine
-itp.). Przekodowywanie jest oparte i wywodzi się ze wspaniałego
-pakietu transcode.
-
 %package -n mythnews
 Summary:	A RSS News Feed plugin for MythTV
 Summary(pl.UTF-8):	Wtyczka czytnika nowinek RSS dla MythTV
@@ -296,6 +269,8 @@ Summary(pl.UTF-8):	Dodatek do MythTV do oglądania sieciowych transmisji
 Group:		Applications/Multimedia
 Requires:	mythbrowser
 Requires:	mythtv-frontend-api = %{myth_api_version}
+Requires:	python-MythTV
+Requires:	python-oauth
 
 %description -n mythnetvision
 Mythtv extension to watch network movie shows (ex. YouTube).
@@ -303,19 +278,6 @@ Mythtv extension to watch network movie shows (ex. YouTube).
 %description -n mythnetvision -l pl.UTF-8
 Dodatek do MythTV do oglądania sieciowych transmisji. Na przykład z
 YouTube.
-
-%package -n mythmovies
-Summary:	MythTV cinemas timetable
-Summary(pl.UTF-8):	Moduł MythTV do repertuaru kinowego
-Group:		Applications/Multimedia
-Requires:	mythtv-frontend-api = %{myth_api_version}
-
-%description -n mythmovies
-MythTV cinemas timetable.
-
-
-%description -n mythmovies -l pl.UTF-8
-Moduł MythTV do repertuaru kinowego.
 
 %package -n mythzoneminder
 Summary:	MythTV security TV manager
@@ -333,11 +295,8 @@ Obsługa kamer przemysłowych dla MythTV.
 %prep
 %setup -q
 %patch0 -p1
-%patch10 -p1
+#%patch10 -p1
 %patch20 -p1
-
-%{__sed} -i -e 's,/var/lib/mythdvd/temp,/var/lib/mythtv/tmp,' \
-	mythvideo/mythvideo/globalsettings.cpp
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
@@ -358,7 +317,6 @@ export QTDIR="%{_prefix}"
 	--enable-all \
 	%{!?with_mytharchive:--disable-mytharchive} \
 	%{!?with_mythbrowser:--disable-mythbrowser} \
-	%{!?with_mythdvd:--disable-mythdvd}%{?with_mythdvd:--enable-transcode --enable-vcd} \
 	%{!?with_mythgallery:--disable-mythgallery}%{?with_mythgallery:--enable-exif --enable-new-exif --enable-opengl} \
 	%{!?with_mythgame:--disable-mythgame} \
 	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
@@ -366,7 +324,6 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythvideo:--disable-mythvideo} \
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
-	%{!?with_mythmovies:--disable-mythmovies} \
 	%{!?with_mythnetvision:--disable-mythnetvision} \
 
 mv mythconfig.mak mythconfig.mak.old
@@ -375,8 +332,8 @@ cat <<'EOF'>> mythconfig.mak
 QMAKE_CXX=%{__cxx}
 QMAKE_CC=%{__cc}
 OPTFLAGS=%{rpmcflags} -Wall -Wno-switch
-ECFLAGS=%{rpmcflags} -fomit-frame-pointer
-ECXXFLAGS=%{rpmcflags} -fomit-frame-pointer
+ECFLAGS=%{rpmcflags} %{rpmcppflags} -fomit-frame-pointer
+ECXXFLAGS=%{rpmcflags} %{rpmcppflags} -fomit-frame-pointer -D__STDC_CONSTANT_MACROS
 EOF
 
 %{__make}
@@ -418,7 +375,7 @@ cd -
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/data
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
-for p in mytharchive mythbrowser mythmovies mythdvd mythgallery mythgame mythmusic mythnews mythnetvision mythvideo mythweather mythzoneminder; do
+for p in mytharchive mythbrowser mythgallery mythgame mythmusic mythnetvision mythnews mythvideo mythweather mythzoneminder; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
 	done > $p.lang
@@ -555,21 +512,18 @@ which packages you can need to run mythweb and how to set it quickly."
 %{_datadir}/mythtv/themes/default-wide/video-ui.xml
 %{_datadir}/mythtv/themes/default/mv_*.png
 %{_datadir}/mythtv/themes/default-wide/mv_*.png
+%{_datadir}/mythtv/themes/default/md_*.png
 %{_datadir}/mythtv/video_settings.xml
 %{_datadir}/mythtv/videomenu.xml
 %dir %{_datadir}/mythtv/mythvideo
 %dir %{_datadir}/mythtv/mythvideo/scripts
 %dir %{_datadir}/mythtv/mythvideo/scripts/Movie
 %dir %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV
-%dir %{_datadir}/mythtv/mythvideo/scripts/Television
 %{_datadir}/mythtv/mythvideo/scripts/README
 %{_datadir}/mythtv/mythvideo/scripts/jamu.README
 %{_datadir}/mythtv/mythvideo/scripts/jamu-example.conf
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.pl
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/Movie/*.py
 %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV/*
 %attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
-%{_datadir}/mythtv/mythvideo/scripts/Television/*
 /var/lib/mythvideo
 %endif
 
@@ -621,15 +575,9 @@ which packages you can need to run mythweb and how to set it quickly."
 %{_datadir}/mythtv/game_settings.xml
 %{_datadir}/mythtv/themes/default/game-ui.xml
 %{_datadir}/mythtv/themes/default-wide/game-ui.xml
-%endif
-
-%if %{with mythdvd}
-%files -n mythdvd
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mtd
-%{_datadir}/mythtv/themes/default/dvd-ui.xml
-%{_datadir}/mythtv/themes/default-wide/dvd-ui.xml
-%{_datadir}/mythtv/themes/default/md_*.png
+%dir %{_datadir}/mythtv/metadata/Game
+%attr(755,root,root) %{_datadir}/mythtv/metadata/Game/giantbomb.py
+%{_datadir}/mythtv/metadata/Game/giantbomb
 %endif
 
 %if %{with mythnews}
@@ -679,38 +627,21 @@ which packages you can need to run mythweb and how to set it quickly."
 %files -n mythnetvision -f mythnetvision.lang
 %defattr(644,root,root,755)
 %doc mythnetvision/{AUTHORS,ChangeLog,README}
+%attr(755,root,root) %{_bindir}/mythfillnetvision
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythnetvision.so
 %dir %{_datadir}/mythtv/mythnetvision
 %{_datadir}/mythtv/netvisionmenu.xml
-%dir %{_datadir}/mythtv/mythnetvision/scripts
-%attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/twit.tv.pl
 %dir %{_datadir}/mythtv/mythnetvision/icons
 %dir %{_datadir}/mythtv/mythnetvision/icons/directories
 %{_datadir}/mythtv/mythnetvision/icons/*.png
-%{_datadir}/mythtv/mythnetvision/icons/vimeo.jpg
 %dir %{_datadir}/mythtv/mythnetvision/icons/directories/film_genres
 %{_datadir}/mythtv/mythnetvision/icons/directories/film_genres/*.png
 %dir %{_datadir}/mythtv/mythnetvision/icons/directories/music_genres
 %{_datadir}/mythtv/mythnetvision/icons/directories/music_genres/*.png
 %dir %{_datadir}/mythtv/mythnetvision/icons/directories/topics
 %{_datadir}/mythtv/mythnetvision/icons/directories/topics/*.png
-%attr(755,root,root) %{_datadir}/mythtv/mythnetvision/scripts/*.py
-%dir %{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs
-%{_datadir}/mythtv/mythnetvision/scripts/nv_python_libs/*
 %{_datadir}/mythtv/themes/default-wide/netvision-ui.xml
 %{_datadir}/mythtv/themes/default/netvision-ui.xml
-%endif
-
-%if %{with mythmovies}
-%files -n mythmovies
-%defattr(644,root,root,755)
-%defattr(644,root,root,755)
-%doc mythmovies/{README,TODO}
-%attr(755,root,root) %{_bindir}/ignyte
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythmovies.so
-%{_datadir}/mythtv/themes/default/movies-ui.xml
-%{_datadir}/mythtv/themes/default-wide/movies-ui.xml
-%{_datadir}/mythtv/i18n/mythmovies_*.qm
 %endif
 
 %if %{with mythzoneminder}
