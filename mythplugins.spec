@@ -95,6 +95,8 @@ BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
+Obsoletes:	mythdvd < %{version}-%{release}
+Obsoletes:	mythmovies < %{version}-%{release}
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythgallery:Requires:	mythgallery}
