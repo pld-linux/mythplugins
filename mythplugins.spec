@@ -32,12 +32,12 @@
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.24.3
+Version:	0.26.0
 Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/old_releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	8483036df0a9fa4e821e0066ed35b544
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	15bd7b2f4173488966f3d761e0eacffa
 Source1:	mythweb.conf
 Source2:	mythweb_lighttpd.conf
 Source3:	htdigest.sh
@@ -72,7 +72,7 @@ BuildRequires:	libdvdread-devel >= 0.9.4
 BuildRequires:	libfame-devel >= 0.9.0
 BuildRequires:	libid3tag-devel
 BuildRequires:	libmad-devel
-BuildRequires:	libmyth-devel > 0.21
+BuildRequires:	libmyth-devel > 0.26
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvisual-devel
