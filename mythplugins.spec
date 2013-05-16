@@ -38,10 +38,11 @@ License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 # Source0-md5:	15bd7b2f4173488966f3d761e0eacffa
-Source1:	mythweb.conf
+Source1:	mythweb-apache.conf
 Source2:	mythweb_lighttpd.conf
 Source3:	htdigest.sh
 Source4:	http_servers_conf_tips.txt
+Source5:	mythweb-httpd.conf
 Patch0:		mythweb-chdir.patch
 Patch10:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
@@ -258,6 +259,7 @@ Requires:	php(mysql)
 Requires:	php(posix)
 Requires:	webapps
 Requires:	webserver(php) >= 4.3
+Conflicts:	apache-base < 2.4.0-1
 
 %description -n mythweb
 The web interface to MythTV.
@@ -368,7 +370,7 @@ install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
 cp -a *.php *.pl classes configuration includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
 ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/mythweb/data
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
+install %{SOURCE5} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/lighttpd.conf
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htdigest
@@ -392,13 +394,13 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun -n mythweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -n mythweb -- apache < 2.2.0, apache-base
+%triggerin -n mythweb -- apache-base
 %webapp_register httpd %{_webapp}
 
 %triggerin -n mythweb -- lighttpd
 %webapp_register lighttpd %{_webapp}
 
-%triggerun -n mythweb -- apache < 2.2.0, apache-base
+%triggerun -n mythweb -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerun -n mythweb -- lighttpd
