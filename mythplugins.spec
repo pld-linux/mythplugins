@@ -8,7 +8,6 @@
 %bcond_without	mythgame	# disable building mythgame plugin
 %bcond_without	mythmusic	# disable building mythmusic plugin
 %bcond_without	mythnews	# disable building mythnews plugin
-%bcond_without	mythvideo	# disable building mythvideo plugin
 # Mythweather disabled, as we need DateTime::Format::ISO8601 first
 # not present by default in PLD
 %bcond_with	mythweather	# enable building mythweather plugin
@@ -23,7 +22,6 @@
 %undefine	with_mythgame
 %undefine	with_mythmusic
 %undefine	with_mythnews
-%undefine	with_mythvideo
 %undefine	with_mythweather
 %endif
 
@@ -44,6 +42,7 @@ Source3:	htdigest.sh
 Source4:	http_servers_conf_tips.txt
 Source5:	mythweb-httpd.conf
 Patch0:		mythweb-chdir.patch
+Patch1:		system-zmq.patch
 Patch10:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 URL:		http://www.mythtv.org/
@@ -105,9 +104,9 @@ Obsoletes:	mythmovies < %{version}-%{release}
 %{?with_mythmysic:Requires:	mythmusic}
 %{?with_mythnetvision:Requires:	mythnetvision}
 %{?with_mythnews:Requires:	mythnews}
-%{?with_mythvideo:Requires:	mythvideo}
 %{?with_mythweather:Requires:	mythweather}
 %{?with_mythweb:Requires:	mythweb}
+Obsoletes:	mythvideo
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -164,19 +163,6 @@ ogg etc.
 Odtwarzacz muzyki dla MythTV. Obsługuje listy odtwarzania,
 wizualizacje, edycję tagów. Potrafi odtwarzać wiele popularnych
 formatów audio - mp3, flac, wav, ogg itd.
-
-%package -n mythvideo
-Summary:	A generic video player frontend module for MythTV
-Summary(pl.UTF-8):	Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV
-Group:		Applications/Multimedia
-Requires:	mplayer
-Requires:	mythtv-frontend-api = %{myth_api_version}
-
-%description -n mythvideo
-A generic video and dvd player frontend module for MythTV.
-
-%description -n mythvideo -l pl.UTF-8
-Moduł ogólnego interfejsu do odtwarzania obrazu dla MythTV.
 
 %package -n mythweather
 Summary:	A MythTV module that displays a weather forcast
@@ -299,6 +285,7 @@ Obsługa kamer przemysłowych dla MythTV.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 #%patch10 -p1
 %patch20 -p1
 
@@ -325,7 +312,6 @@ export QTDIR="%{_prefix}"
 	%{!?with_mythgame:--disable-mythgame} \
 	%{!?with_mythmusic:--disable-mythmusic}%{?with_mythmysic:--enable-fftw --enable-sdl --enable-aac --enable-opengl} \
 	%{!?with_mythnews:--disable-mythnews} \
-	%{!?with_mythvideo:--disable-mythvideo} \
 	%{!?with_mythweather:--disable-mythweather} \
 	%{!?with_mythweb:--disable-mythweb} \
 	%{!?with_mythnetvision:--disable-mythnetvision} \
@@ -350,7 +336,7 @@ export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythbrowser,mythvideo,pictures}
+install -d $RPM_BUILD_ROOT/var/lib/{mythmusic,mythbrowser,pictures}
 %if %{with mythgame}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/nes/{roms,screens}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/games/snes/{roms,screens}
@@ -379,7 +365,7 @@ cd -
 
 rm -f $RPM_BUILD_ROOT%{_datadir}/data
 mv $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/mythbrowser_{pt_br,pt}.qm
-for p in mytharchive mythbrowser mythgallery mythgame mythmusic mythnetvision mythnews mythvideo mythweather mythzoneminder; do
+for p in mytharchive mythbrowser mythgallery mythgame mythmusic mythnetvision mythnews mythweather mythzoneminder; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
 		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
 	done > $p.lang
@@ -473,10 +459,17 @@ which packages you can need to run mythweb and how to set it quickly."
 /var/lib/mythmusic
 %{_datadir}/mythtv/musicmenu.xml
 %{_datadir}/mythtv/music_settings.xml
+%dir %{_datadir}/mythtv/mythmusic
+%{_datadir}/mythtv/mythmusic/streams.xml
+%{_datadir}/mythtv/themes/default/music-base.xml
 %{_datadir}/mythtv/themes/default/music-ui.xml
+%{_datadir}/mythtv/themes/default/musicsettings-ui.xml
 %{_datadir}/mythtv/themes/default/mm-titlelines.png
+%{_datadir}/mythtv/themes/default-wide/music-base.xml
 %{_datadir}/mythtv/themes/default-wide/music-ui.xml
+%{_datadir}/mythtv/themes/default-wide/musicsettings-ui.xml
 %{_datadir}/mythtv/themes/default-wide/mm-titlelines.png
+%{_datadir}/mythtv/themes/default-wide/stream-ui.xml
 %{_datadir}/mythtv/themes/default/ff_button_off.png
 %{_datadir}/mythtv/themes/default/ff_button_on.png
 %{_datadir}/mythtv/themes/default/ff_button_pushed.png
@@ -505,30 +498,6 @@ which packages you can need to run mythweb and how to set it quickly."
 %{_datadir}/mythtv/themes/default/track_info_background.png
 %{_datadir}/mythtv/themes/default-wide/mm_*.png
 %{_datadir}/mythtv/themes/default-wide/music-sel-bg.png
-%endif
-
-%if %{with mythvideo}
-%files -n mythvideo -f mythvideo.lang
-%defattr(644,root,root,755)
-%doc mythvideo/README* mythvideo/videodb mythvideo/contrib
-%attr(755,root,root) %{_libdir}/mythtv/plugins/libmythvideo.so
-%{_datadir}/mythtv/themes/default/video-ui.xml
-%{_datadir}/mythtv/themes/default-wide/video-ui.xml
-%{_datadir}/mythtv/themes/default/mv_*.png
-%{_datadir}/mythtv/themes/default-wide/mv_*.png
-%{_datadir}/mythtv/themes/default/md_*.png
-%{_datadir}/mythtv/video_settings.xml
-%{_datadir}/mythtv/videomenu.xml
-%dir %{_datadir}/mythtv/mythvideo
-%dir %{_datadir}/mythtv/mythvideo/scripts
-%dir %{_datadir}/mythtv/mythvideo/scripts/Movie
-%dir %{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV
-%{_datadir}/mythtv/mythvideo/scripts/README
-%{_datadir}/mythtv/mythvideo/scripts/jamu.README
-%{_datadir}/mythtv/mythvideo/scripts/jamu-example.conf
-%{_datadir}/mythtv/mythvideo/scripts/Movie/MythTV/*
-%attr(755,root,root) %{_datadir}/mythtv/mythvideo/scripts/*.py
-/var/lib/mythvideo
 %endif
 
 %if %{with mythweather}
@@ -603,7 +572,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %defattr(644,root,root,755)
 %doc mythbrowser/README mythbrowser/AUTHORS
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythbrowser.so
-%{_datadir}/mythtv/themes/default/mb_progress*.png
+%{_datadir}/mythtv/themes/default/mb_*.png
 %{_datadir}/mythtv/themes/default/browser-ui.xml
 %{_datadir}/mythtv/themes/default-wide/browser-ui.xml
 %endif
