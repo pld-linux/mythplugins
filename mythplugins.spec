@@ -31,7 +31,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.0
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -60,12 +60,18 @@ BuildRequires:	QtWebKit-devel
 BuildRequires:	QtXml-devel
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-libs-devel
-BuildRequires:	cdparanoia-III-devel
 BuildRequires:	faad2-devel >= 2.0-5.2
-%{?with_mythmusic:BuildRequires:	fftw-devel >= 2.1.3}
+%if %{with mythmusic}
+BuildRequires:	cdparanoia-III-devel
+BuildRequires:	fftw3-devel
+BuildRequires:	fftw3-single-devel
 BuildRequires:	flac-devel >= 1.0.4
-BuildRequires:	freetype-devel
+BuildRequires:	lame-libs-devel
 BuildRequires:	libcdaudio-devel >= 0.99.12p2
+BuildRequires:	libvorbis-devel >= 1:1.0
+BuildRequires:	taglib-devel
+%endif
+BuildRequires:	freetype-devel
 BuildRequires:	libdvdcss-devel >= 1.2.7
 BuildRequires:	libdvdread-devel >= 0.9.4
 %{?with_mythgallery:BuildRequires:	libexif-devel >= 1:0.6.9}
@@ -76,7 +82,6 @@ BuildRequires:	libmyth-devel > 0.26
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libvisual-devel
-BuildRequires:	libvorbis-devel >= 1:1.0
 BuildRequires:	mjpegtools-devel >= 1.6.1
 BuildRequires:	nasm
 BuildRequires:	patchutils
@@ -95,8 +100,6 @@ BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xvid-devel >= 1:0.9.1
 BuildRequires:	zlib-devel
 %endif
-Obsoletes:	mythdvd < %{version}-%{release}
-Obsoletes:	mythmovies < %{version}-%{release}
 %{?with_mytharchive:Requires:	mytharchive}
 %{?with_mythbrowser:Requires:	mythbrowser}
 %{?with_mythgallery:Requires:	mythgallery}
@@ -106,6 +109,8 @@ Obsoletes:	mythmovies < %{version}-%{release}
 %{?with_mythnews:Requires:	mythnews}
 %{?with_mythweather:Requires:	mythweather}
 %{?with_mythweb:Requires:	mythweb}
+Obsoletes:	mythdvd < %{version}-%{release}
+Obsoletes:	mythmovies < %{version}-%{release}
 Obsoletes:	mythvideo
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
