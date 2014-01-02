@@ -31,7 +31,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.0
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -89,8 +89,11 @@ BuildRequires:	patchutils
 %{?with_mythweather:BuildRequires:      perl-Image-Size}
 %{?with_mythweather:BuildRequires:	perl-XML-Simple}
 %{?with_mythweather:BuildRequires:      perl-XML-XPath}
-%{?with_mythnetvision:BuildRequires:	python-MythTV}
-%{?with_mythnetvision:BuildRequires:	python-oauth}
+%if %{with mythnetvision}
+BuildRequires:	python-MythTV
+BuildRequires:	python-lxml
+BuildRequires:	python-oauth
+%endif
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-perlprov >= 4.1-13
