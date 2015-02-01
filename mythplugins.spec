@@ -30,12 +30,12 @@
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
-Version:	0.26.0
-Release:	6
+Version:	0.26.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	15bd7b2f4173488966f3d761e0eacffa
+# Source0-md5:	d896d9f9313ba5dd95e2e977bf9c0f8f
 Source1:	mythweb-apache.conf
 Source2:	mythweb_lighttpd.conf
 Source3:	htdigest.sh
