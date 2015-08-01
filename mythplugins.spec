@@ -115,7 +115,7 @@ BuildRequires:	zlib-devel
 Obsoletes:	mythdvd < %{version}-%{release}
 Obsoletes:	mythmovies < %{version}-%{release}
 Obsoletes:	mythvideo
-ExclusiveArch:	%{ix86} %{x8664} ppc
+ExclusiveArch:	%{ix86} %{x8664} x32 ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		myth_api_version %(awk -vFS=. '/^LIBVERSION/{sub("LIBVERSION = ", ""); printf ("%s.%s", $1, $2)}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
