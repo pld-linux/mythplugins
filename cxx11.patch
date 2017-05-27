@@ -1,0 +1,30 @@
+--- mythplugins-0.26.1/mythmusic/mythmusic/metaio.h~	2013-08-15 16:44:02.000000000 +0200
++++ mythplugins-0.26.1/mythmusic/mythmusic/metaio.h	2017-05-27 07:18:20.791635440 +0200
+@@ -95,7 +95,7 @@
+     {
+         (void)filename;
+         (void)type;
+-        return false;
++        return nullptr;
+     }
+ 
+     void readFromFilename(const QString &filename, QString &artist,
+--- mythplugins-0.26.1/mythzoneminder/mythzmserver/zmserver.cpp.orig	2013-08-15 16:44:02.000000000 +0200
++++ mythplugins-0.26.1/mythzoneminder/mythzmserver/zmserver.cpp	2017-05-27 07:23:00.152442302 +0200
+@@ -1376,14 +1376,14 @@
+     if (mapFile >= 0)
+     {
+         if (m_debug)
+-            cout << "Opened mmap file: " << mmap_filename << endl;
++            cout << "Opened mmap file: " << mmap_filename.rdbuf() << endl;
+ 
+         shm_ptr = mmap(NULL, shared_data_size, PROT_READ,
+                                             MAP_SHARED, mapFile, 0x0);
+         if (shm_ptr == NULL)
+         {
+             cout << "Failed to map shared memory from file [" << 
+-                mmap_filename << "] " <<
++                mmap_filename.rdbuf() << "] " <<
+                 "for monitor: " << 
+                 monitor->mon_id << 
+                 endl;

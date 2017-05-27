@@ -31,7 +31,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.1
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -43,6 +43,7 @@ Source4:	http_servers_conf_tips.txt
 Source5:	mythweb-httpd.conf
 Patch0:		mythweb-chdir.patch
 Patch1:		system-zmq.patch
+Patch2:		cxx11.patch
 Patch10:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 URL:		http://www.mythtv.org/
@@ -294,6 +295,7 @@ Obsługa kamer przemysłowych dla MythTV.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 #%patch10 -p1
 %patch20 -p1
 
