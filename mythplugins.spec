@@ -31,7 +31,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.1
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -48,7 +48,7 @@ Patch10:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-mytharchive-INT64.patch
 URL:		http://www.mythtv.org/
 %if %{with binary}
-%if %{with mythgallery} || %{with myhtmusic}
+%if %{with mythgallery} || %{with mythmusic}
 BuildRequires:	OpenGL-devel
 %endif
 BuildRequires:	Qt3Support-devel
@@ -286,7 +286,6 @@ Requires:	mythtv-frontend-api = %{myth_api_version}
 
 %description -n mythzoneminder
 MythTV security TV manager.
-
 
 %description -n mythzoneminder -l pl.UTF-8
 Obsługa kamer przemysłowych dla MythTV.
