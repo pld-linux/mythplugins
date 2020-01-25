@@ -25,7 +25,6 @@
 %undefine	with_mythweather
 %endif
 
-%include	/usr/lib/rpm/macros.perl
 
 Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
