@@ -30,7 +30,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.1
-Release:	10
+Release:	11
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -309,6 +309,12 @@ s,%{_prefix}/lib/,/%{_lib}/,g
 exit 1
 %endif
 
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' \
+      mytharchive/mythburn/scripts/mythburn.py \
+      mythgame/mythgame/scripts/giantbomb.py \
+      mythgame/mythgame/scripts/giantbomb/giantbomb_api.py \
+      mythgame/mythgame/scripts/giantbomb/giantbomb_exceptions.py
+
 %build
 %if %{with binary}
 export QTDIR="%{_prefix}"
@@ -364,7 +370,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/mythweb
 install -d $RPM_BUILD_ROOT/var/cache/mythweb/{image_cache,php_sessions,tv_icons}
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
 cp -a *.php *.pl classes configuration includes js modules skins $RPM_BUILD_ROOT%{_datadir}/mythweb
-ln -sf /var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/mythweb/data
+ln -sfr $RPM_BUILD_ROOT/var/cache/mythweb $RPM_BUILD_ROOT%{_datadir}/mythweb/data
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
 install %{SOURCE5} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/lighttpd.conf
@@ -634,7 +640,7 @@ which packages you can need to run mythweb and how to set it quickly."
 %doc mythzoneminder/{AUTHORS,README}
 %attr(755,root,root) %{_bindir}/mythzmserver
 %attr(755,root,root) %{_libdir}/mythtv/plugins/libmythzoneminder.so
-%dir %{_datadir}/mythtv/zonemindermenu.xml
+%{_datadir}/mythtv/zonemindermenu.xml
 %{_datadir}/mythtv/themes/default/zoneminder-ui.xml
 %{_datadir}/mythtv/themes/default-wide/zoneminder-ui.xml
 %{_datadir}/mythtv/themes/default/mz_*png
