@@ -1,0 +1,20 @@
+--- mythplugins-0.26.1/mythmusic/mythmusic/importmusic.cpp~	2013-08-15 16:44:02.000000000 +0200
++++ mythplugins-0.26.1/mythmusic/mythmusic/importmusic.cpp	2021-09-26 12:23:50.262781479 +0200
+@@ -1114,13 +1114,13 @@
+     QFileInfo fi(filename);
+     filename = fi.fileName();
+ 
+-    if (filename.contains("front", Qt::CaseInsensitive) > 0)
++    if (filename.contains("front", Qt::CaseInsensitive) != 0)
+         m_typeList->SetValue(tr("Front Cover"));
+-    else if (filename.contains("back", Qt::CaseInsensitive) > 0)
++    else if (filename.contains("back", Qt::CaseInsensitive) != 0)
+         m_typeList->SetValue(tr("Back Cover"));
+-    else if (filename.contains("inlay", Qt::CaseInsensitive) > 0)
++    else if (filename.contains("inlay", Qt::CaseInsensitive) != 0)
+         m_typeList->SetValue(tr("Inlay"));
+-    else if (filename.contains("cd", Qt::CaseInsensitive) > 0)
++    else if (filename.contains("cd", Qt::CaseInsensitive) != 0)
+         m_typeList->SetValue(tr("CD"));
+     else
+         m_typeList->SetValue(tr("<Unknown>"));

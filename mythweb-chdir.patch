@@ -1,7 +1,7 @@
-diff -dur -x'*~' mythplugins-0.22.orig/mythweb/mythweb.php mythplugins-0.22/mythweb/mythweb.php
---- mythplugins-0.22.orig/mythweb/mythweb.php	2009-01-20 07:42:03.000000000 +0100
-+++ mythplugins-0.22/mythweb/mythweb.php	2010-01-23 14:34:35.000000000 +0100
-@@ -12,6 +12,9 @@
+diff -urNp -x '*.orig' mythplugins-0.26.1.org/mythweb/mythweb.php mythplugins-0.26.1/mythweb/mythweb.php
+--- mythplugins-0.26.1.org/mythweb/mythweb.php	2013-06-26 23:10:02.000000000 +0200
++++ mythplugins-0.26.1/mythweb/mythweb.php	2021-09-26 12:19:53.182932909 +0200
+@@ -8,6 +8,9 @@
   *
  /**/
  
@@ -9,5 +9,5 @@ diff -dur -x'*~' mythplugins-0.22.orig/mythweb/mythweb.php mythplugins-0.22/myth
 +  chdir('/usr/share/mythweb');
 +
  // Add a custom include path?
-     if (!empty($_SERVER['include_path']) && $_SERVER['include_path'] != '.')
+     if (!empty($_SERVER['include_path']) && $_SERVER['include_path'] != '.') {
          ini_set('include_path', $_SERVER['include_path'].PATH_SEPARATOR.ini_get('include_path'));
