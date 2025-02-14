@@ -292,12 +292,12 @@ Obsługa kamer przemysłowych dla MythTV.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-#%patch10 -p1
-%patch20 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+#%patch -P10 -p1
+%patch -P20 -p1
 
 # lib64 fix - enable to update patch
 %if "%{_lib}" != "lib" && 0
