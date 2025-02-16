@@ -30,7 +30,7 @@ Summary:	Main MythTV plugins
 Summary(pl.UTF-8):	Główne wtyczki MythTV
 Name:		mythplugins
 Version:	0.26.1
-Release:	13
+Release:	14
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -122,6 +122,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		myth_api_version %(awk -vFS=. '/^LIBVERSION/{sub("LIBVERSION = ", ""); printf ("%s.%s", $1, $2)}' %{_datadir}/mythtv/build/settings.pro 2>/dev/null || echo ERROR)
 %define		_webapps	/etc/webapps
 %define		_webapp		mythweb
+
+# internal deps
+%define                _noautoreq_pear                (classes|configuration|includes|modules)/.* handler.php
 
 %description
 This is a consolidation of all the official MythTV plugins that used
