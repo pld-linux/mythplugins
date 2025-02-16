@@ -320,6 +320,7 @@ exit 1
 export QTDIR="%{_prefix}"
 # Not gnu configure
 %configure \
+	--python="%{__python}" \
 	--libdir-name=`basename %{_lib}` \
 	--enable-all \
 	%{!?with_mytharchive:--disable-mytharchive} \
