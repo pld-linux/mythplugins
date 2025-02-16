@@ -296,7 +296,7 @@ Obsługa kamer przemysłowych dla MythTV.
 %patch -P1 -p1
 %patch -P2 -p1
 %patch -P3 -p1
-#%patch -P10 -p1
+#%%patch -P10 -p1
 %patch -P20 -p1
 
 # lib64 fix - enable to update patch
